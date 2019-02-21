@@ -86,3 +86,6 @@ sw.*
 # Firebase
 .firebaserc
 services/fireinit.js
+
+# Vim
+.*.swp

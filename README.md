@@ -64,3 +64,7 @@ To run the Firebase server locally:
   firebase serve
 ```
 
+## Nuxt Firebase Auth setup
+
+As described here: https://www.davidroyer.me/blog/nuxtjs-firebase-auth/ (plus some linting)
+

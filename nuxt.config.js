@@ -1,6 +1,23 @@
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 const pkg = require('./package')
 
+const logOptions = {
+  // optional : defaults to true if not specified
+  isEnabled: true,
+  // required ['debug', 'info', 'warn', 'error', 'fatal']
+  logLevel : 'debug',
+  // optional : defaults to false if not specified
+  stringifyArguments : false,
+  // optional : defaults to false if not specified
+  showLogLevel : false,
+  // optional : defaults to false if not specified
+  showMethodName : false,
+  // optional : defaults to '|' if not specified
+  separator: '|',
+  // optional : defaults to false if not specified
+  showConsoleColors: true
+}
+
 module.exports = {
   mode: 'spa',
 
@@ -37,12 +54,21 @@ module.exports = {
   /*
   ** Plugins to load before mounting the App
   */
-  plugins: ['@/plugins/vuetify'],
+  plugins: ['@/plugins/vuetify',
+            '~/plugins/fireauth.js'],
 
   /*
   ** Nuxt.js modules
   */
-  modules: ['@nuxtjs/pwa'],
+  modules: ['@nuxtjs/pwa',
+            ['nuxt-log', logOptions]],
+
+  /*
+  ** Login-sensitive routing
+  */
+  router: {
+    middleware: 'router-auth'
+  },
 
   /*
   ** Build configuration

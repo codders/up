@@ -2,17 +2,19 @@ import * as firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
 
-var config = {
-    apiKey: "",
-    authDomain: "",
-    databaseURL: "",
-    projectId: "",
-    storageBucket: "",
-    messagingSenderId: ""
-};
+const config = {
+  apiKey: '',
+  authDomain: '',
+  databaseURL: '',
+  projectId: '',
+  storageBucket: '',
+  messagingSenderId: ''
+}
 
-!firebase.apps.length ? firebase.initializeApp(config) : ''
-export const GoogleProvider = new firebase.auth.GoogleAuthProvider();
-export const auth = firebase.auth();
-export const StoreDB = firebase.firestore();
+if (!firebase.apps.length) {
+  firebase.initializeApp(config)
+}
+export const GoogleProvider = new firebase.auth.GoogleAuthProvider()
+export const auth = firebase.auth()
+export const StoreDB = firebase.firestore()
 export default firebase

@@ -53,6 +53,19 @@
             href="https://github.com/nuxt/nuxt.js"
             target="_blank"
           >Nuxt GitHub</a>
+          <div class="mt-5">
+            <div v-if="!$store.state.user">
+              <login-form />
+            </div>
+            <div v-else class="flexWrapper align-center">
+              <h4 class="blue--text">
+                You're logged in!
+              </h4>
+              <v-btn icon class="blue white--text">
+                <v-icon>thumb_up</v-icon>
+              </v-btn>
+            </div>
+          </div>
         </v-card-text>
         <v-card-actions>
           <v-spacer />
@@ -73,11 +86,13 @@
 <script>
 import Logo from '~/components/Logo.vue'
 import VuetifyLogo from '~/components/VuetifyLogo.vue'
+import LoginForm from '~/components/LoginForm.vue'
 
 export default {
   components: {
     Logo,
-    VuetifyLogo
+    VuetifyLogo,
+    LoginForm
   }
 }
 </script>
