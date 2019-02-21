@@ -1,18 +1,36 @@
 import { auth, GoogleProvider } from '@/services/fireinit.js'
 
+const emptyUser = {
+  email: null,
+  displayName: null,
+  uid: null,
+  photoURL: null
+}
+
 export const state = () => ({
-  user: null
+  user: Object.assign({}, emptyUser)
 })
 
 export const getters = {
   activeUser: (state, getters) => {
-    return state.user
+    if (state.user.uid !== null) {
+      return state.user
+    } else {
+      return null
+    }
   }
 }
 
 export const mutations = {
   setUser(state, payload) {
-    state.user = payload
+    if (payload === null) {
+      state.user = Object.assign({}, emptyUser)
+    } else {
+      state.user.email = payload.email
+      state.user.displayName = payload.displayName
+      state.user.uid = payload.uid
+      state.user.photoURL = payload.photoURL
+    }
   }
 }
 

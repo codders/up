@@ -54,7 +54,7 @@
             target="_blank"
           >Nuxt GitHub</a>
           <div class="mt-5">
-            <div v-if="!$store.state.user">
+            <div v-if="!$store.getters.activeUser">
               <login-form />
             </div>
             <div v-else class="flexWrapper align-center">
