@@ -55,3 +55,12 @@ or alternatively
   npm run fdeploy
 ```
 
+## Test Firebase on localhost
+
+To run the Firebase server locally:
+
+```
+  npm run build
+  firebase serve
+```
+
