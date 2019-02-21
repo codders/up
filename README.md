@@ -25,3 +25,33 @@ $ npm run generate
 ```
 
 For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).
+
+## Deployment Setup
+
+Login to firebase with
+
+```
+  firebase login
+```
+
+and initialise the project with
+
+```
+  firebase init
+```
+
+You will want to enable the database, storage and hosting modules. There will be a lot of questions, but the defaults are fine here, except that you should set the *public* folder to 'dist'.
+
+You can then deploy your site with
+
+```
+  npm run build
+  firebase deploy
+```
+
+or alternatively
+
+```
+  npm run fdeploy
+```
+
