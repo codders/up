@@ -61,7 +61,8 @@ module.exports = {
   ** Nuxt.js modules
   */
   modules: ['@nuxtjs/pwa',
-            ['nuxt-log', logOptions]],
+            ['nuxt-log', logOptions],
+            'nuxt-validate'],
 
   /*
   ** Login-sensitive routing
