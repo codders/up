@@ -4,39 +4,9 @@ import VeeValidate, { Validator } from 'vee-validate'
 import { mount } from '@vue/test-utils'
 import AddFriend from '@/pages/add-friend.vue'
 import flushPromises from 'flush-promises'
+import mocksdk from '@/services/__mocks__/fireinit.js'
 
-var firebasemock    = require('firebase-mock')
-
-var mockauth = new firebasemock.MockAuthentication()
-var mockfirestore = new firebasemock.MockFirestore()
-
-var mocksdk = new firebasemock.MockFirebaseSdk(
-  // use null if your code does not use RTDB
-  (path) => {
-    return null
-  },
-  // use null if your code does not use AUTHENTICATION
-  () => {
-    return mockauth
-  },
-  // use null if your code does not use FIRESTORE
-  () => {
-    return mockfirestore
-  },
-  // use null if your code does not use STORAGE
-  () => {
-    return null
-  },
-  // use null if your code does not use MESSAGING
-  () => {
-    return null
-  }
-);
-
-jest.mock('../services/fireinit.js', () => {
-  return mocksdk
-})
-
+jest.mock('../services/fireinit.js')
 
 Vue.use(Vuetify)
 Vue.use(VeeValidate, null)
@@ -66,15 +36,18 @@ describe('index.vue', () => {
     Vue.config.async = true 
     const mountedForm = mount(AddFriend)
     var exists = null
-    mocksdk.firestore().collection('users').doc('bob@example.com').collection('friends').doc('alice@example.com').get().then(function(doc) {
-      exists = doc.exists
-      console.log("Got doc: " + doc)
+    await mocksdk.firestore().collection('users').doc('bob@example.com').collection('friends').doc('alice@example.com').get().then(function (doc) {
+      exists = doc.exists 
     })
-    await flushPromises()
     expect(exists).toBe(false)
     mountedForm.find('[data-name]').setValue('Alice')
     mountedForm.find('[data-email]').setValue('alice@example.com')
     mountedForm.vm.submitAddFriend()
+    exists = null
+    await mocksdk.firestore().collection('users').doc('bob@example.com').collection('friends').doc('alice@example.com').get().then(function (doc) {
+      exists = doc.exists
+    })
+    expect(exists).toBe(true)
     Vue.config.async = false 
   })
 })
