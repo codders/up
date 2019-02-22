@@ -52,6 +52,8 @@
 </template>
 
 <script>
+import { StoreDB } from '@/services/fireinit.js'
+
 export default {
   data() {
     return {
@@ -61,17 +63,21 @@ export default {
   },
   methods: {
     submitAddFriend() {
-      this.$validator.validateAll().then(result => {
+      return this.$validator.validateAll().then(result => {
         if (result) {
-          this.addFriend()
+          return this.addFriend()
+        } else {
+          Promise.rejected()
         }
       })
     },
     addFriend() {
-      this.profileRef
+      StoreDB.collection('users')
+        .doc(this.$store.getters.activeUser.uid)
+        .collection('friends')
+        .doc(this.email)
         .set({
-          name: this.name,
-          email: this.email
+          name: this.name
         })
         .then(() => {
           this.$nuxt.$router.replace({ path: '/' })

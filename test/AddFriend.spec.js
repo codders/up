@@ -42,7 +42,7 @@ describe('index.vue', () => {
     expect(exists).toBe(false)
     mountedForm.find('[data-name]').setValue('Alice')
     mountedForm.find('[data-email]').setValue('alice@example.com')
-    mountedForm.vm.submitAddFriend()
+    await mountedForm.vm.submitAddFriend()
     exists = null
     await mocksdk.firestore().collection('users').doc('bob@example.com').collection('friends').doc('alice@example.com').get().then(function (doc) {
       exists = doc.exists
