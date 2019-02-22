@@ -57,7 +57,7 @@
             <div v-if="!$store.getters.activeUser">
               <login-form />
             </div>
-            <div v-else class="flexWrapper align-center">
+            <div v-else class="flexWrapper align-center" jest="logged-in-div">
               <h4 class="blue--text">
                 You're logged in!
               </h4>
