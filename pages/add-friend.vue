@@ -15,7 +15,7 @@
         </footer>
       </blockquote>
       <v-layout row wrap>
-        <form>
+        <form jest="add-friend-form">
           <v-flex xs12 md6>
             <p>
               Name:
@@ -25,6 +25,7 @@
                 v-validate="'required'"
                 name="name"
                 label="Enter your friend's name"
+                data-name
               />
               <span v-show="errors.has('name')" class="text-danger">{{ errors.first('name') }}</span>
             </p>
@@ -36,6 +37,7 @@
                 v-validate="'required|email'"
                 name="email"
                 label="bob@example.com"
+                data-email
               />
               <span v-show="errors.has('email')" class="text-danger">{{ errors.first('email') }}</span>
             </p>
