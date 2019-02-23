@@ -5,6 +5,13 @@ const mockAuthStore = function(uid) {
       getters: {
         activeUser: user
       }
+    },
+    $nuxt: {
+      $router: {
+        replace: () => {
+          Promise.resolve()
+        }
+      }
     }
   }
 }
