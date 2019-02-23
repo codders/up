@@ -2,21 +2,20 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import VeeValidate, { Validator } from 'vee-validate'
 import { mount } from '@vue/test-utils'
-import AddFriend from '@/pages/add-friend.vue'
 import flushPromises from 'flush-promises'
 import mocksdk from '@/services/__mocks__/fireinit.js'
 
-jest.mock('../services/fireinit.js')
+jest.mock('../services/fireinit.js', () => {
+  return mocksdk
+})
+
+import AddFriend from '@/pages/add-friend.vue'
 
 Vue.use(Vuetify)
 Vue.use(VeeValidate, null)
-// const localVue = createLocalVue()
 
 describe('index.vue', () => {
   test('Shows add friend form', () => {
-//    const mountedForm = shallowMount(AddFriend, {
-//      localVue
-//    })
     const mountedForm = mount(AddFriend, {
       mocks: {
         $store: {
@@ -34,9 +33,21 @@ describe('index.vue', () => {
   }),
   test('Adding friend increases number of friends', async () => {
     Vue.config.async = true 
-    const mountedForm = mount(AddFriend)
+    const mountedForm = mount(AddFriend, {
+      mocks: {
+        $store: {
+          getters: {
+            activeUser: {
+              uid: '123',
+              email: 'bob@example.com',
+              name: 'bob'
+            }
+          }
+        }
+      }
+    })
     var exists = null
-    await mocksdk.firestore().collection('users').doc('bob@example.com').collection('friends').doc('alice@example.com').get().then(function (doc) {
+    await mocksdk.firestore().collection('users').doc('123').collection('friends').doc('alice@example.com').get().then(function (doc) {
       exists = doc.exists 
     })
     expect(exists).toBe(false)
@@ -44,7 +55,7 @@ describe('index.vue', () => {
     mountedForm.find('[data-email]').setValue('alice@example.com')
     await mountedForm.vm.submitAddFriend()
     exists = null
-    await mocksdk.firestore().collection('users').doc('bob@example.com').collection('friends').doc('alice@example.com').get().then(function (doc) {
+    await mocksdk.firestore().collection('users').doc('123').collection('friends').doc('alice@example.com').get().then(function (doc) {
       exists = doc.exists
     })
     expect(exists).toBe(true)

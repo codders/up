@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { StoreDB } from '@/services/fireinit.js'
+import firebase from '@/services/fireinit.js'
 
 export default {
   data() {
@@ -72,16 +72,17 @@ export default {
       })
     },
     addFriend() {
-      StoreDB.collection('users')
+      return firebase.firestore().collection('users')
         .doc(this.$store.getters.activeUser.uid)
         .collection('friends')
         .doc(this.email)
         .set({
           name: this.name
         })
-        .then(() => {
+        /* .then(() => {
+          console.log("redirecting")
           this.$nuxt.$router.replace({ path: '/' })
-        })
+        }) */
     }
   }
 }

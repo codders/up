@@ -1,7 +1,7 @@
 import firebasemock from 'firebase-mock'
 
-export const auth = new firebasemock.MockAuthentication()
-export const StoreDB = new firebasemock.MockFirestore()
+const auth = new firebasemock.MockAuthentication()
+const StoreDB = new firebasemock.MockFirestore()
 
 const mocksdk = new firebasemock.MockFirebaseSdk(
   // use null if your code does not use RTDB
@@ -15,10 +15,11 @@ const mocksdk = new firebasemock.MockFirebaseSdk(
   null
 );
 
-if (global.mocksdk == null) {
-  global.mocksdk = mocksdk
+//if (global.mocksdk == null) {
+//  global.mocksdk = mocksdk
   StoreDB.autoFlush()
   mocksdk.initializeApp()
-}
+//}
 
+export { auth, StoreDB }
 export default mocksdk
