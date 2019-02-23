@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import firebase from '@/services/fireinit.js'
+import DataModel from '@/models/data.js'
 
 export default {
   data() {
@@ -36,11 +36,8 @@ export default {
   },
   asyncData({ store }) {
     return {
-      friendsRef: firebase
-        .firestore()
-        .collection('users')
-        .doc(store.getters.activeUser.uid)
-        .collection('friends')
+      friendsRef: DataModel
+        .userFriends(store.getters.activeUser.uid)
         .get()
     }
   },

@@ -3,6 +3,7 @@ import Vuetify from 'vuetify'
 import VeeValidate, { Validator } from 'vee-validate'
 import { mount } from '@vue/test-utils'
 import mocksdk from '@/services/__mocks__/fireinit.js'
+import Util from '@/test/utils.js'
 
 jest.mock('../services/fireinit.js', () => {
   return mocksdk
@@ -16,17 +17,7 @@ Vue.use(VeeValidate, null)
 describe('friends.vue', () => {
   test('Shows friends list', () => {
     const mountedForm = mount(Friends, {
-      mocks: {
-        $store: {
-          getters: {
-            activeUser: {
-              uid: '123',
-              email: 'bob@example.com',
-              name: 'bob'
-            }
-          }
-        }
-      }
+      mocks: Util.mockAuthStore('123')
     })
     expect(mountedForm.contains('[jest="friends-list"]')).toBe(true)
   }),
@@ -39,17 +30,7 @@ describe('friends.vue', () => {
       mocksdk.firestore().collection('users').doc('123').collection('friends').add(friend)
     }
     const mountedForm = mount(Friends, {
-      mocks: {
-        $store: {
-          getters: {
-            activeUser: {
-              uid: '123',
-              email: 'bob@example.com',
-              name: 'bob'
-            }
-          }
-        }
-      }
+      mocks: Util.mockAuthStore('123')
     })
     expect(mountedForm.find(".friend").size).toBe(2)
   })

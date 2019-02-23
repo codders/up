@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import firebase from '@/services/fireinit.js'
+import DataModel from '@/models/data.js'
 
 export default {
   data() {
@@ -72,12 +72,8 @@ export default {
       })
     },
     addFriend() {
-      return firebase
-        .firestore()
-        .collection('users')
-        .doc(this.$store.getters.activeUser.uid)
-        .collection('friends')
-        .doc(this.email)
+      return DataModel
+        .userFriend(this.$store.getters.activeUser.uid, this.email)
         .set({
           name: this.name
         })
