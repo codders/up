@@ -51,7 +51,6 @@ describe('friends.vue', () => {
         }
       }
     })
-    console.log(mountedForm.vm.innerHTML)
     expect(mountedForm.find(".friend").size).toBe(2)
   })
 })

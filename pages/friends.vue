@@ -46,7 +46,6 @@ export default {
   },
   created() {
     const vm = this
-    console.log("VM: ", vm)
     vm.friendsRef.then(function(snapshot) {
       snapshot.forEach(function(friend) {
         vm.friends.append(friend)

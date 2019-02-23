@@ -15,11 +15,8 @@ const mocksdk = new firebasemock.MockFirebaseSdk(
   null
 );
 
-//if (global.mocksdk == null) {
-//  global.mocksdk = mocksdk
-  StoreDB.autoFlush()
-  mocksdk.initializeApp()
-//}
+StoreDB.autoFlush()
+mocksdk.initializeApp()
 
 export { auth, StoreDB }
 export default mocksdk
