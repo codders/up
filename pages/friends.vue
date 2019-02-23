@@ -4,8 +4,8 @@
       <template v-if="friendCount > 0">
         <v-flex xs12 md4>
           <h2>Your Friends</h2>
-          <v-list>
-            <v-list-tile v-for="(friend, key) in friends" :key="key">
+          <v-list jest="friends-list">
+            <v-list-tile v-for="(friend, key) in friends" :key="key" class="friend">
               <nuxt-link :to="'/friends/' + key">
                 <v-list-tile-title>{{ friend.name }}</v-list-tile-title>
               </nuxt-link>
@@ -46,6 +46,7 @@ export default {
   },
   created() {
     const vm = this
+    console.log("VM: ", vm)
     vm.friendsRef.then(function(snapshot) {
       snapshot.forEach(function(friend) {
         vm.friends.append(friend)
