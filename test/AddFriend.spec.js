@@ -4,7 +4,7 @@ import VeeValidate, { Validator } from 'vee-validate'
 import { mount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import mocksdk from '@/services/__mocks__/fireinit.js'
-import Util from '@test/utils.js'
+import Util from '@/test/utils.js'
 
 jest.mock('../services/fireinit.js', () => {
   return mocksdk
