@@ -48,6 +48,14 @@
             color="primary"
             flat
             nuxt
+            to="/friends"
+          >
+            Show Friends
+          </v-btn>
+          <v-btn
+            color="primary"
+            flat
+            nuxt
             to="/add-friend"
           >
             Add Friend 

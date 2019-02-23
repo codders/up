@@ -72,17 +72,18 @@ export default {
       })
     },
     addFriend() {
-      return firebase.firestore().collection('users')
+      return firebase
+        .firestore()
+        .collection('users')
         .doc(this.$store.getters.activeUser.uid)
         .collection('friends')
         .doc(this.email)
         .set({
           name: this.name
         })
-        /* .then(() => {
-          console.log("redirecting")
+        .then(() => {
           this.$nuxt.$router.replace({ path: '/' })
-        }) */
+        })
     }
   }
 }
