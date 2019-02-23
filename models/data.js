@@ -8,12 +8,10 @@ const userFriends = function(uid) {
     .collection('friends')
 }
 
-
 const DataModel = {
   userFriends: userFriends,
   userFriend: function(uid, friendEmail) {
-    return userFriends(uid)
-      .doc(friendEmail)
+    return userFriends(uid).doc(friendEmail)
   }
 }
 

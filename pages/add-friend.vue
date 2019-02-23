@@ -72,8 +72,10 @@ export default {
       })
     },
     addFriend() {
-      return DataModel
-        .userFriend(this.$store.getters.activeUser.uid, this.email)
+      return DataModel.userFriend(
+        this.$store.getters.activeUser.uid,
+        this.email
+      )
         .set({
           name: this.name
         })

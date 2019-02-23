@@ -1,7 +1,7 @@
 <template>
   <section class="">
     <v-layout row wrap>
-      <template v-if="friendCount > 0">
+      <template v-if="friendsCount > 0">
         <v-flex xs12 md4>
           <h2>Your Friends</h2>
           <v-list jest="friends-list">
@@ -30,24 +30,20 @@ import DataModel from '@/models/data.js'
 export default {
   data() {
     return {
-      friends: {},
+      friends: [],
       friendsCount: 0
     }
   },
   asyncData({ store }) {
-    return {
-      friendsRef: DataModel
-        .userFriends(store.getters.activeUser.uid)
-        .get()
-    }
+    return { friendsRef: DataModel.userFriends(store.getters.activeUser.uid) }
   },
   created() {
     const vm = this
-    vm.friendsRef.then(function(snapshot) {
-      snapshot.forEach(function(friend) {
-        vm.friends.append(friend)
+    vm.friendsRef.get().then(function(querySnapshot) {
+      querySnapshot.forEach(function(friend) {
+        vm.friends.push(friend)
       })
-      vm.friendCount = vm.friends.length
+      vm.friendsCount = vm.friends.length
     })
   },
   methods: {

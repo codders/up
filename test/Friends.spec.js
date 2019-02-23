@@ -32,6 +32,7 @@ describe('friends.vue', () => {
     const mountedForm = mount(Friends, {
       mocks: Util.mockAuthStore('123')
     })
+    console.log(mountedForm.vm)
     expect(mountedForm.find(".friend").size).toBe(2)
   })
 })
