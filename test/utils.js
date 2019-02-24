@@ -1,11 +1,19 @@
-const mockAuthStore = function(uid) {
+const authStore = function(uid) {
   const user = (uid === null ? null : { uid: uid })
   return {
-    $store: {
-      getters: {
-        activeUser: user
-      }
-    },
+    getters: {
+      activeUser: user
+    }
+  }
+}
+
+const mockAuthStore = function(uid) {
+  return mockWithStore(authStore(uid))
+}
+
+const mockWithStore = function(store) {
+  return {
+    $store: store,
     $nuxt: {
       $router: {
         replace: () => {
@@ -17,7 +25,9 @@ const mockAuthStore = function(uid) {
 }
 
 const Util = {
-  mockAuthStore: mockAuthStore
+  mockAuthStore: mockAuthStore,
+  mockWithStore: mockWithStore,
+  authStore: authStore
 }
 
 export default Util 

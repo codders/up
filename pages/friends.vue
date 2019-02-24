@@ -34,17 +34,16 @@ export default {
       friendsCount: 0
     }
   },
-  asyncData({ store }) {
-    return { friendsRef: DataModel.userFriends(store.getters.activeUser.uid) }
-  },
-  created() {
-    const vm = this
-    vm.friendsRef.get().then(function(querySnapshot) {
-      querySnapshot.forEach(function(friend) {
-        vm.friends.push(friend)
+  async asyncData({ store }) {
+    const friends = []
+    await DataModel.userFriends(store.getters.activeUser.uid)
+      .get()
+      .then(function(querySnapshot) {
+        querySnapshot.forEach(function(friend) {
+          friends.push(friend)
+        })
       })
-      vm.friendsCount = vm.friends.length
-    })
+    return { friends: friends, friendsCount: friends.length }
   },
   methods: {
     deleteFriend(key) {}

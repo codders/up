@@ -15,7 +15,20 @@ Vue.use(Vuetify)
 Vue.use(VeeValidate, null)
 
 describe('friends.vue', () => {
-  test('Shows friends list', () => {
+  test('Does not show friends list if list is empty', () => {
+    const mountedForm = mount(Friends, {
+      mocks: Util.mockAuthStore('123')
+    })
+    expect(mountedForm.contains('[jest="friends-list"]')).toBe(false)
+  }),
+  test('Shows friends list if there are friends', () => {
+    const friendList = [
+      { email: 'arthur@arthur.com', name: 'Arthur' },
+      { email: 'jenny@jenny.com', name: 'Jenny' }
+    ]
+    for (var friend in friendList) {
+      mocksdk.firestore().collection('users').doc('123').collection('friends').add(friend)
+    }
     const mountedForm = mount(Friends, {
       mocks: Util.mockAuthStore('123')
     })
@@ -29,10 +42,15 @@ describe('friends.vue', () => {
     for (var friend in friendList) {
       mocksdk.firestore().collection('users').doc('123').collection('friends').add(friend)
     }
+    const authStore = Util.authStore('123')
     const mountedForm = mount(Friends, {
-      mocks: Util.mockAuthStore('123')
+      mocks: Util.mockWithStore(authStore)
     })
-    console.log(mountedForm.vm)
-    expect(mountedForm.find(".friend").size).toBe(2)
+    
+    const loadedData = mountedForm.vm.$options.asyncData({ store: authStore })
+    await loadedData
+    console.log("Loaded Data:", loadedData.friends)
+
+    expect(mountedForm.findAll(".friend").length).toBe(2)
   })
 })
