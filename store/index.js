@@ -11,6 +11,10 @@ const friends = {
 }
 const easyFriendsFirestore = createEasyFirestore(friends, { logging: true })
 export const plugins = [easyFriendsFirestore]
+
+/* Plugin appears to cause problems with strict mode
+   Disabling strict mode here */
+export const strict = false
 /* -Friends firestore */
 
 const emptyUser = {
@@ -67,5 +71,17 @@ export const actions = {
         commit('setUser', null)
       })
       .catch(err => console.log(err)) // eslint-disable-line no-console
+  },
+
+  addFriend({ dispatch }, payload) {
+    dispatch(
+      'friends/set',
+      Object.assign(
+        {
+          id: payload.email.replace('.', '_')
+        },
+        payload
+      )
+    )
   }
 }

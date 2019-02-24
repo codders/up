@@ -1,14 +1,24 @@
-const authStore = function(uid) {
+const dataStore = function({ uid, friends, dispatcher }) {
   const user = (uid === null ? null : { uid: uid })
   return {
+    state: {
+      friends: {
+        data: (friends === null ? [] : friends)
+      }
+    },
+    dispatch: (method, args) => {
+      if (dispatcher !== undefined) {
+        dispatcher.push({ method: method, payload: args })
+      }
+    }, 
     getters: {
       activeUser: user
     }
   }
 }
 
-const mockAuthStore = function(uid) {
-  return mockWithStore(authStore(uid))
+const mockDataStore = function(uid, friends) {
+  return mockWithStore(dataStore(uid, friends))
 }
 
 const mockWithStore = function(store) {
@@ -25,9 +35,7 @@ const mockWithStore = function(store) {
 }
 
 const Util = {
-  mockAuthStore: mockAuthStore,
-  mockWithStore: mockWithStore,
-  authStore: authStore
+  mockDataStore: mockDataStore,
 }
 
 export default Util 

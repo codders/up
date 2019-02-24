@@ -11,7 +11,6 @@ jest.mock('../services/fireinit.js', () => {
 })
 
 import AddFriend from '@/pages/add-friend.vue'
-import DataModel from '@/models/data.js'
 
 Vue.use(Vuetify)
 Vue.use(VeeValidate, null)
@@ -19,28 +18,21 @@ Vue.use(VeeValidate, null)
 describe('index.vue', () => {
   test('Shows add friend form', () => {
     const mountedForm = mount(AddFriend, {
-      mocks: Util.mockAuthStore('123')
+      mocks: Util.mockDataStore({ uid: '123' })
     })
     expect(mountedForm.contains('[jest="add-friend-form"]')).toBe(true)
   }),
-  test('Adding friend increases number of friends', async () => {
-    Vue.config.async = true 
+  test('Adding friend calls firestore', async () => {
+    Vue.config.async = true
+    const dispatcher = []
     const mountedForm = mount(AddFriend, {
-      mocks: Util.mockAuthStore('123')
+      mocks: Util.mockDataStore({ uid: '123', dispatcher: dispatcher })
     })
-    var exists = null
-    await DataModel.userFriend('123', 'alice@example.com').get().then(function (doc) {
-      exists = doc.exists 
-    })
-    expect(exists).toBe(false)
     mountedForm.find('[data-name]').setValue('Alice')
     mountedForm.find('[data-email]').setValue('alice@example.com')
     await mountedForm.vm.submitAddFriend()
-    exists = null
-    await DataModel.userFriend('123', 'alice@example.com').get().then(function (doc) {
-      exists = doc.exists
-    })
-    expect(exists).toBe(true)
+    expect(dispatcher.length).toBe(1)
+    expect(dispatcher[0].method).toBe('addFriend')
     Vue.config.async = false 
   })
 })

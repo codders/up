@@ -52,8 +52,6 @@
 </template>
 
 <script>
-import DataModel from '@/models/data.js'
-
 export default {
   data() {
     return {
@@ -72,16 +70,11 @@ export default {
       })
     },
     addFriend() {
-      return DataModel.userFriend(
-        this.$store.getters.activeUser.uid,
-        this.email
-      )
-        .set({
-          name: this.name
-        })
-        .then(() => {
-          this.$nuxt.$router.replace({ path: '/' })
-        })
+      this.$store.dispatch('addFriend', {
+        name: this.name,
+        email: this.email
+      })
+      return this.$nuxt.$router.replace({ path: '/' })
     }
   }
 }

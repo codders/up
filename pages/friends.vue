@@ -1,7 +1,7 @@
 <template>
   <section class="">
     <v-layout row wrap>
-      <template v-if="friendsCount > 0">
+      <template v-if="friendCount > 0">
         <v-flex xs12 md4>
           <h2>Your Friends</h2>
           <v-list jest="friends-list">
@@ -25,28 +25,25 @@
 </template>
 
 <script>
-import DataModel from '@/models/data.js'
-
 export default {
-  data() {
-    return {
-      friends: [],
-      friendsCount: 0
+  computed: {
+    friends() {
+      return this.$store.state.friends.data
+    },
+    friendCount() {
+      let count = 0
+      // eslint-disable-next-line no-unused-vars
+      for (const friend in this.$store.state.friends.data) {
+        count += 1
+      }
+      return count
     }
   },
-  async asyncData({ store }) {
-    const friends = []
-    await DataModel.userFriends(store.getters.activeUser.uid)
-      .get()
-      .then(function(querySnapshot) {
-        querySnapshot.forEach(function(friend) {
-          friends.push(friend)
-        })
-      })
-    return { friends: friends, friendsCount: friends.length }
-  },
   methods: {
-    deleteFriend(key) {}
+    deleteFriend(key) {
+      this.$log.debug('Deleting friend with key: ', key)
+      this.$store.dispatch('friends/delete', key)
+    }
   }
 }
 </script>

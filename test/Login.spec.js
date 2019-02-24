@@ -10,14 +10,14 @@ const localVue = createLocalVue()
 describe('index.vue', () => {
   test('Shows login success message when logged in', () => {
     const mountedIndex = shallowMount(Index, {
-      mocks: Util.mockAuthStore('123'),
+      mocks: Util.mockDataStore({ uid: '123' }),
       localVue
     })
     expect(mountedIndex.contains('[jest="logged-in-div"]')).toBe(true)
   }),
   test('Shows login form when not logged in', () => {
     const mountedIndex = shallowMount(Index, {
-      mocks: Util.mockAuthStore(null),
+      mocks: Util.mockDataStore({ uid: null }),
       localVue
     })
     expect(mountedIndex.contains('[jest="logged-in-div"]')).toBe(false)
