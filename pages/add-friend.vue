@@ -74,7 +74,7 @@ export default {
         name: this.name,
         email: this.email
       })
-      return this.$nuxt.$router.replace({ path: '/' })
+      return this.$nuxt.$router.replace({ path: '/friends' })
     }
   }
 }

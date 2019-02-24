@@ -17,16 +17,19 @@ const dataStore = function({ uid, friends, dispatcher }) {
   }
 }
 
-const mockDataStore = function(uid, friends) {
-  return mockWithStore(dataStore(uid, friends))
+const mockDataStore = function({ uid, friends, dispatcher, router }) {
+  return mockWithStore({ store: dataStore({ uid: uid, friends: friends, dispatcher: dispatcher }), router: router })
 }
 
-const mockWithStore = function(store) {
+const mockWithStore = function({ store, router }) {
   return {
     $store: store,
     $nuxt: {
       $router: {
-        replace: () => {
+        replace: (route) => {
+          if (router != null) {
+            router.push(route)
+          }
           Promise.resolve()
         }
       }

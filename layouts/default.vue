@@ -102,9 +102,9 @@ export default {
           to: '/'
         },
         {
-          icon: 'bubble_chart',
-          title: 'Add Friend',
-          to: '/add-friend'
+          icon: 'group',
+          title: 'Friends',
+          to: '/friends'
         }
       ],
       miniVariant: false,
