@@ -1,16 +1,14 @@
 <template>
-  <section class="">
-    <v-layout row wrap>
+  <v-layout column align-center justify-center>
+    <v-flex xs12 sm8 md6>
       <v-card>
         <v-card-title class="headline">
           {{ $route.params.activity }} {{ $route.params.time }}
         </v-card-title>
         <v-card-text>
-          <v-flex xs12 sm12>
-            <h2>
-              Show up?
-            </h2>
-          </v-flex>
+          <h2>
+            Show up?
+          </h2>
         </v-card-text>
         <v-card-actions>
           <v-btn
@@ -32,8 +30,8 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-    </v-layout>
-  </section>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>

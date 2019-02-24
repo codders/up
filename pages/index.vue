@@ -18,16 +18,6 @@
           Welcome to Up
         </v-card-title>
         <v-card-text>
-          <p>What's the worst that could happen?</p>
-          <div class="text-xs-right">
-            <em><small>&mdash; Arthur Taylor</small></em>
-          </div>
-          <hr class="my-3">
-          <a
-            href="https://github.com/codders/up"
-            target="_blank"
-          >Source Code</a>
-          <br>
           <div class="mt-5">
             <div v-if="!$store.getters.activeUser">
               <login-form />
@@ -51,6 +41,7 @@
           >
             Show Up 
           </v-btn>
+          <v-spacer />
           <v-btn
             color="primary"
             flat
@@ -58,14 +49,6 @@
             to="/friends"
           >
             Show Friends
-          </v-btn>
-          <v-btn
-            color="primary"
-            flat
-            nuxt
-            to="/add-friend"
-          >
-            Add Friend 
           </v-btn>
         </v-card-actions>
       </v-card>

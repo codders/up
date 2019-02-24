@@ -1,20 +1,18 @@
 <template>
-  <section class="">
-    <v-layout row wrap>
+  <v-layout column align-center justify-center>
+    <v-flex xs12 sm8 md6>
       <v-card>
         <v-card-title class="headline">
           When do you want to?
         </v-card-title>
         <v-card-text>
-          <v-flex xs12 sm12>
-            <v-list jest="times-list">
-              <v-list-tile v-for="(time, key) in times" :key="key" class="time" @click="selectTime(time)">
-                <v-list-tile-content>
-                  <v-list-tile-title>{{ time.title }}</v-list-tile-title>
-                </v-list-tile-content>
-              </v-list-tile>
-            </v-list>
-          </v-flex>
+          <v-list jest="times-list">
+            <v-list-tile v-for="(time, key) in times" :key="key" class="time" @click="selectTime(time)">
+              <v-list-tile-content>
+                <v-list-tile-title>{{ time.title }}</v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list>
         </v-card-text>
         <v-card-actions>
           <v-spacer />
@@ -28,9 +26,9 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-    </v-layout>
+    </v-flex>
     <nuxt-child />
-  </section>
+  </v-layout>
 </template>
 
 <script>

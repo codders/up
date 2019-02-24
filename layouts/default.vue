@@ -59,7 +59,7 @@
       :fixed="fixed"
       app
     >
-      <span>&copy; 2019</span>
+      <span>Created by Arthur Taylor &mdash; <a href="https://github.com/codders/up" target="_new">Source Code</a></span>
     </v-footer>
   </v-app>
 </template>
@@ -78,6 +78,11 @@ export default {
           to: '/'
         },
         {
+          icon: 'accessibility_new',
+          title: 'Show up',
+          to: '/up'
+        },
+        {
           icon: 'group',
           title: 'Friends',
           to: '/friends'
@@ -86,7 +91,7 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Vuetify.js'
+      title: 'Up'
     }
   }
 }

@@ -17,11 +17,11 @@ const dataStore = function({ uid, friends, dispatcher }) {
   }
 }
 
-const mockDataStore = function({ uid, friends, dispatcher, router }) {
-  return mockWithStore({ store: dataStore({ uid: uid, friends: friends, dispatcher: dispatcher }), router: router })
+const mockDataStore = function({ uid, friends, dispatcher, router, routeParams }) {
+  return mockWithStore({ store: dataStore({ uid: uid, friends: friends, dispatcher: dispatcher }), router: router, routeParams: routeParams })
 }
 
-const mockWithStore = function({ store, router }) {
+const mockWithStore = function({ store, router, routeParams }) {
   return {
     $store: store,
     $nuxt: {
@@ -33,6 +33,9 @@ const mockWithStore = function({ store, router }) {
           Promise.resolve()
         }
       }
+    },
+    $route: {
+      params: (routeParams || {})
     }
   }
 }
