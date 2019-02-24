@@ -6,6 +6,16 @@
           {{ $route.params.activity }} {{ $route.params.time }}
         </v-card-title>
         <v-card-text>
+          <h3>with these friends</h3>
+          <v-list jest="friends-list">
+            <v-list-tile v-for="(friend, key) in friends" :key="key" class="friend">
+              <v-list-tile-action>
+                <v-checkbox v-model="selected" :value="friend.id" multiple />
+              </v-list-tile-action>
+              <v-list-tile-title>{{ friend.name }}</v-list-tile-title>
+              <v-spacer />
+            </v-list-tile>
+          </v-list>
           <h2>
             Show up?
           </h2>
@@ -24,7 +34,7 @@
             color="primary"
             flat
             nuxt
-            to="/"
+            @click="showUp()"
           >
             Yes!
           </v-btn>
@@ -36,41 +46,33 @@
 
 <script>
 export default {
+  data: () => ({
+    selected: []
+  }),
   computed: {
-    times() {
-      return [
-        {
-          title: 'Now'
-        },
-        {
-          title: '1h'
-        },
-        {
-          title: '2h'
-        },
-        {
-          title: '4h'
-        },
-        {
-          title: 'Tonight'
-        }
-      ]
+    friends() {
+      return this.$store.state.friends.data
     }
   },
+  asyncData({ app, store }) {
+    const selected = []
+    for (const friend in store.state.friends.data) {
+      selected.push(friend)
+    }
+    return { selected: selected }
+  },
   methods: {
-    selectTime(time) {
-      this.$log.debug('Selected: ' + time.title)
-      this.$nuxt.$router.replace({ path: '/up/' + time.title })
+    showUp() {
+      this.$log.debug(
+        'Showing Up for ' +
+          this.$route.params.activity +
+          ' in ' +
+          this.$route.params.time +
+          ' with',
+        this.$data.selected
+      )
+      this.$nuxt.$router.replace({ path: '/' })
     }
   }
 }
 </script>
-
-<style>
-.avatar {
-  max-width: 100px;
-}
-.avatar img {
-  max-width: 100%;
-}
-</style>
