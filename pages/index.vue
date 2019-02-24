@@ -17,40 +17,27 @@
         <v-card-title class="headline">
           Welcome to Up
         </v-card-title>
-        <v-card-text>
-          <div class="mt-5">
-            <div v-if="!$store.getters.activeUser">
-              <login-form />
-            </div>
-            <div v-else class="flexWrapper align-center" jest="logged-in-div">
-              <h4 class="blue--text">
-                You're logged in!
-              </h4>
-              <v-btn icon class="blue white--text">
-                <v-icon>thumb_up</v-icon>
-              </v-btn>
-            </div>
+        <v-card-text v-if="!$store.getters.activeUser">
+          <login-form />
+        </v-card-text>
+        <v-card-text v-else>
+          <v-list two-line jest="activities-list">
+            <v-list-tile nuxt to="/up">
+              <v-list-tile-title>Show Up</v-list-tile-title>
+            </v-list-tile>
+            <v-list-tile nuxt to="/friends">
+              <v-list-tile-title>Show Friends</v-list-tile-title>
+            </v-list-tile>
+          </v-list>
+          <div class="flexWrapper align-center" jest="logged-in-div">
+            <h4 class="blue--text">
+              You're logged in!
+            </h4>
+            <v-btn icon class="blue white--text">
+              <v-icon>thumb_up</v-icon>
+            </v-btn>
           </div>
         </v-card-text>
-        <v-card-actions>
-          <v-btn
-            color="primary"
-            flat
-            nuxt
-            to="/up"
-          >
-            Show Up 
-          </v-btn>
-          <v-spacer />
-          <v-btn
-            color="primary"
-            flat
-            nuxt
-            to="/friends"
-          >
-            Show Friends
-          </v-btn>
-        </v-card-actions>
       </v-card>
     </v-flex>
   </v-layout>

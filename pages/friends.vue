@@ -28,6 +28,14 @@
         </template>
       </v-card-text>
       <v-card-actions>
+        <v-btn
+          color="primary"
+          flat
+          nuxt
+          to="/"
+        >
+          Go Back 
+        </v-btn>
         <v-spacer />
         <v-btn
           color="primary"
