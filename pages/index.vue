@@ -18,7 +18,7 @@
           Welcome to Up
         </v-card-title>
         <v-card-text>
-          <p>Respond to the present moment, and find those who are in sync with you</p>
+          <p>What's the worst that could happen?</p>
           <div class="text-xs-right">
             <em><small>&mdash; Arthur Taylor</small></em>
           </div>
