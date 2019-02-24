@@ -3,7 +3,7 @@
     <v-flex xs12 sm8 md6>
       <v-card>
         <v-card-title class="headline">
-          {{ $route.params.activity }} {{ $route.params.time }}
+          {{ activityName() }} {{ timeDescription() }}
         </v-card-title>
         <v-card-text>
           <h3>with these friends</h3>
@@ -45,6 +45,9 @@
 </template>
 
 <script>
+import { getActivityName } from '@/model/activity.js'
+import { getRelativeTimeDescription } from '@/model/time.js'
+
 export default {
   data: () => ({
     selected: []
@@ -62,6 +65,12 @@ export default {
     return { selected: selected }
   },
   methods: {
+    activityName() {
+      return getActivityName(this.$route.params.activity)
+    },
+    timeDescription() {
+      return getRelativeTimeDescription(this.$route.params.time)
+    },
     showUp() {
       this.$log.debug(
         'Showing Up for ' +

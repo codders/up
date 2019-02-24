@@ -34,37 +34,18 @@
 </template>
 
 <script>
+import activitiesList from '@/model/activity.js'
+
 export default {
   computed: {
     activities() {
-      return [
-        {
-          icon: 'directions_run',
-          title: 'Move',
-          description: 'Dance, run, do sport'
-        },
-        {
-          icon: 'airline_seat_individual_suite',
-          title: 'Relax',
-          description: 'Hang out, cuddle, massage, sleep'
-        },
-        {
-          icon: 'local_dining',
-          title: 'Eat',
-          description: 'Go have dinner somewhere'
-        },
-        {
-          icon: 'whatshot',
-          title: 'Play',
-          description: 'Seduce, arouse, be intimate'
-        }
-      ]
+      return activitiesList
     }
   },
   methods: {
     selectActivity(activity) {
       this.$log.debug('Selected: ' + activity.title)
-      this.$nuxt.$router.replace({ path: '/up/' + activity.title })
+      this.$nuxt.$router.replace({ path: '/up/' + activity.id })
     }
   }
 }

@@ -32,33 +32,19 @@
 </template>
 
 <script>
+import timesList from '@/model/time.js'
+
 export default {
   computed: {
     times() {
-      return [
-        {
-          title: 'Now'
-        },
-        {
-          title: '1h'
-        },
-        {
-          title: '2h'
-        },
-        {
-          title: '4h'
-        },
-        {
-          title: 'Tonight'
-        }
-      ]
+      return timesList
     }
   },
   methods: {
     selectTime(time) {
       this.$log.debug('Selected: ' + time.title)
       this.$nuxt.$router.replace({
-        path: '/up/' + this.$route.params.activity + '/' + time.title
+        path: '/up/' + this.$route.params.activity + '/' + time.id
       })
     }
   }
