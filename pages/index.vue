@@ -43,7 +43,14 @@
           </div>
         </v-card-text>
         <v-card-actions>
-          <v-spacer />
+          <v-btn
+            color="primary"
+            flat
+            nuxt
+            to="/up"
+          >
+            Show Up 
+          </v-btn>
           <v-btn
             color="primary"
             flat
