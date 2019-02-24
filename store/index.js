@@ -1,5 +1,18 @@
 import { auth, GoogleProvider } from '@/services/fireinit.js'
 
+/* Friends firestore */
+import createEasyFirestore from 'vuex-easy-firestore'
+const friends = {
+  firestorePath: 'users/{userId}/friends',
+  firestoreRefType: 'collection',
+  moduleName: 'friends',
+  statePropName: 'data',
+  namespaced: true
+}
+const easyFriendsFirestore = createEasyFirestore(friends, { logging: true })
+export const plugins = [easyFriendsFirestore]
+/* -Friends firestore */
+
 const emptyUser = {
   email: null,
   displayName: null,
@@ -30,6 +43,7 @@ export const mutations = {
       state.user.displayName = payload.displayName
       state.user.uid = payload.uid
       state.user.photoURL = payload.photoURL
+      this.dispatch('friends/openDBChannel', { clearModule: true })
     }
   }
 }
