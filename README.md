@@ -68,3 +68,6 @@ To run the Firebase server locally:
 
 As described here: https://www.davidroyer.me/blog/nuxtjs-firebase-auth/ (plus some linting)
 
+## Firestore synchronisation
+
+`vuex-easy-firestore` is used to sync the store with `firestore`. The plugin itself is not directly intended for use with Nuxt, and therefore may break
