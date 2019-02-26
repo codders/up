@@ -80,7 +80,16 @@ export default {
           ' with',
         this.$data.selected
       )
-      this.$nuxt.$router.replace({ path: '/' })
+      this.$axios
+        .post(
+          'https://europe-west1-up-now-a6da8.cloudfunctions.net/saveRecord',
+          {
+            activity: this.$route.params.activity,
+            time: this.$route.params.time,
+            friends: this.$data.selected
+          }
+        )
+        .then(this.$nuxt.$router.replace({ path: '/' }))
     }
   }
 }
