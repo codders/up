@@ -32,6 +32,12 @@ export const helloWorld = functions.region('europe-west1').https.onRequest((requ
 export const saveRecord = functions.region('europe-west1').https.onRequest((request, response) => {
   if (withCors('post', request, response)) {
     console.log('Saving data: ', request.body);
-    response.status(201).send('Write more code');
+    admin.firestore().collection('up').add(request.body).then(writeResult => {
+      console.log('Got write result', writeResult);
+      response.status(201).send('You are up!');
+    })
+    .catch(err => {
+      console.log('Error writing record', err);
+    })
   }
 });
