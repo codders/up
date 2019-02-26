@@ -61,6 +61,7 @@ module.exports = {
   ** Nuxt.js modules
   */
   modules: ['@nuxtjs/pwa',
+            '@nuxtjs/axios',
             ['nuxt-log', logOptions],
             'nuxt-validate'],
 
@@ -76,6 +77,10 @@ module.exports = {
       productionTip: false,
       devtools: true
     }
+  },
+
+  axios: {
+    // proxyHeaders: false
   },
 
   /*

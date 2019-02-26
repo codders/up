@@ -21,6 +21,7 @@
           <login-form />
         </v-card-text>
         <v-card-text v-else>
+          <p>Greetings: {{ $data.hello }}</p>
           <v-list two-line jest="activities-list">
             <v-list-tile nuxt to="/up">
               <v-list-tile-title>Show Up</v-list-tile-title>
@@ -53,6 +54,12 @@ export default {
     Logo,
     VuetifyLogo,
     LoginForm
+  },
+  async asyncData({ $axios }) {
+    const hello = await $axios.$get(
+      'https://europe-west1-up-now-a6da8.cloudfunctions.net/helloWorld'
+    )
+    return { hello: hello }
   }
 }
 </script>
