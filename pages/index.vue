@@ -55,10 +55,22 @@ export default {
     VuetifyLogo,
     LoginForm
   },
-  async asyncData({ $axios }) {
-    const hello = await $axios.$get(
-      'https://europe-west1-up-now-a6da8.cloudfunctions.net/helloWorld'
-    )
+  async asyncData({ $axios, store }) {
+    const hello = await $axios
+      .$get(
+        'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/helloWorld',
+        {
+          headers: {
+            Authorization: 'Bearer ' + store.state.idToken
+          }
+        }
+      )
+      .then(response => {
+        return { hello: response }
+      })
+      .catch(error => {
+        return { hello: error }
+      })
     return { hello: hello }
   }
 }

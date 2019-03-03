@@ -49,19 +49,15 @@ export const mutations = {
       state.user.photoURL = payload.photoURL
       this.dispatch('friends/openDBChannel', { clearModule: true })
     }
+  },
+  setIdToken(state, payload) {
+    state.idToken = payload
   }
 }
 
 export const actions = {
-  autoSignIn({ commit }, payload) {
-    commit('setUser', payload)
-  },
-
   signInWithGoogle({ commit }) {
-    return new Promise((resolve, reject) => {
-      auth.signInWithRedirect(GoogleProvider)
-      resolve()
-    })
+    return auth.signInWithRedirect(GoogleProvider)
   },
 
   signOut({ commit }) {

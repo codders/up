@@ -39,8 +39,9 @@ export default {
       const log = this.$log
       this.$store
         .dispatch('signInWithGoogle')
-        .then(() => {
+        .then(result => {
           log.debug('inside then statement on login')
+          log.debug('result: ', result)
         })
         .catch(e => {
           log.error(e.message)
