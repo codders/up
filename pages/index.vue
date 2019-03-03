@@ -21,7 +21,7 @@
           <login-form />
         </v-card-text>
         <v-card-text v-else>
-          <p>Greetings: {{ $data.hello }}</p>
+          <p>{{ $data.hello }}</p>
           <v-list two-line jest="activities-list">
             <v-list-tile nuxt to="/up">
               <v-list-tile-title>Show Up</v-list-tile-title>
@@ -71,7 +71,7 @@ export default {
       .catch(error => {
         return { hello: error }
       })
-    return { hello: hello }
+    return hello
   }
 }
 </script>
