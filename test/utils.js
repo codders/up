@@ -17,12 +17,16 @@ const dataStore = function({ uid, friends, dispatcher }) {
   }
 }
 
-const mockDataStore = function({ uid, friends, dispatcher, router, routeParams }) {
-  return mockWithStore({ store: dataStore({ uid: uid, friends: friends, dispatcher: dispatcher }), router: router, routeParams: routeParams })
+const mockDataStore = function({ uid, friends, dispatcher, router, routeParams, axios }) {
+  return mockWithStore({ store: dataStore({ uid: uid, friends: friends, dispatcher: dispatcher }), router: router, routeParams: routeParams, axios: axios })
 }
 
-const mockWithStore = function({ store, router, routeParams }) {
+const mockWithStore = function({ store, router, routeParams, axios }) {
   return {
+    $log: {
+      debug: (...args) => {} 
+    },
+    $axios: axios,
     $store: store,
     $nuxt: {
       $router: {

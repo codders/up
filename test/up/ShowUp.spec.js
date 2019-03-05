@@ -21,5 +21,26 @@ describe('up/activity/time/index.vue', () => {
     })
     expect(mountedCard.contains('[jest="friends-list"]')).toBe(true)
     expect(mountedCard.findAll(".friend").length).toBe(2)
+  }),
+  test('Submits data to server', () => {
+    const friendList = [
+      { id: 'arthur@arthur_com', email: 'arthur@arthur.com', name: 'Arthur' },
+      { id: 'jenny@jenny_com', email: 'jenny@jenny.com', name: 'Jenny' }
+    ]
+    let postedData = null
+    const mountedCard = mount(Index, {
+      mocks: Util.mockDataStore({ uid: '123', friends: friendList, routeParams: { time: 'h1', activity: 'play' }, axios: (request) => {
+        postedData = request.data
+        return new Promise(function(rs,rj) {
+          rs('Success!')
+        })
+      }})
+    })
+    mountedCard.vm.showUp()
+    expect(postedData).toEqual({
+      activity: 'play',
+      friends: [],
+      time: 'h1'
+    })
   })
 })
