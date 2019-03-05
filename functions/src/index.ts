@@ -2,7 +2,10 @@ import './express-types';
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
-admin.initializeApp();
+admin.initializeApp({
+  credential: admin.credential.applicationDefault(),
+  databaseURL: "https://up-now-a6da8.firebaseio.com"
+});
 
 const express = require('express')
 const cookieParser = require('cookie-parser')();
