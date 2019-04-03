@@ -72,6 +72,7 @@ export const saveUp = (record: up.UpRecord) => {
 
 export const loadUp = (email: String) => {
   return admin.firestore().collection('up')
+    .where("inviteemail", "==", email)
     .get()
     .then(function(querySnapshot) {
       const result: up.UpRecord[] = []
