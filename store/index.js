@@ -74,7 +74,7 @@ export const actions = {
       'friends/set',
       Object.assign(
         {
-          id: payload.email.replace('.', '_')
+          id: payload.email.replace(/\./g, '\ufe52')
         },
         payload
       )

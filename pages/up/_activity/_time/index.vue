@@ -80,6 +80,10 @@ export default {
           ' with',
         this.$data.selected
       )
+      const friendList = []
+      for (const i in this.$data.selected) {
+        friendList.push(this.$data.selected[i].replace(/\ufe52/g, '.'))
+      }
       this.$axios({
         method: 'POST',
         headers: {
@@ -88,7 +92,7 @@ export default {
         data: {
           activity: this.$route.params.activity,
           time: this.$route.params.time,
-          friends: this.$data.selected
+          friends: friendList
         },
         url:
           'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/saveRecord'
