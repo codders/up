@@ -21,7 +21,7 @@ app.get('/helloWorld', (req: express.Request, res: express.Response) => {
 });
 app.get('/whatsUp', (request: express.Request, response: express.Response) => {
   console.log('Checking what\'s up for ' + request.user.email);
-  loadUp().then(whatsUp => {
+  loadUp(request.user.email).then(whatsUp => {
     response.status(200).send(upLogic.findMatches(whatsUp));
   })
   .catch(err => {
@@ -30,14 +30,21 @@ app.get('/whatsUp', (request: express.Request, response: express.Response) => {
 });
 app.post('/saveRecord', (request: express.Request, response: express.Response) => {
   const record = Object.assign({}, request.body);
-  const recordWithAuth = Object.assign(record, {
+  const upRecords = upLogic.getUpRecordsForRequest({
+    activity: record.activity,
+    email: request.user.email,
     uid: request.user.uid,
-    email: request.user.email
-  })
-  console.log('Saving data: ', recordWithAuth);
+    time: record.time,
+    friends: record.friends
+  });
 
-  saveUp(recordWithAuth).then(writeResult => {
-    console.log('Got write result', writeResult);
+  console.log('Saving data: ', upRecords);
+  const promises: PromiseLike<String>[] = [];
+  upRecords.forEach(function(upRecord: up.UpRecord) {
+    promises.push(saveUp(upRecord))
+  });
+  Promise.all(promises).then(writeResults => {
+    console.log('Got write results', writeResults);
     response.status(201).send({
       success: true,
       message: 'You are up!'

@@ -57,16 +57,27 @@ export const validateFirebaseIdToken = (req: express.Request, res: express.Respo
 };
 
 export const saveUp = (record: up.UpRecord) => {
-  return admin.firestore().collection('up').add(record);
+  const savedRecord = Object.assign(record, {
+    timestamp: admin.firestore.FieldValue.serverTimestamp()
+  });
+  return admin.firestore().collection('up').add(savedRecord)
+    .then(function(doc) {
+      return doc.id;
+    })
+    .catch(function(error) {
+      console.error('Unable to save record', record);
+      return "error";
+    });
 };
 
-export const loadUp = () => {
+export const loadUp = (email: String) => {
   return admin.firestore().collection('up')
     .get()
     .then(function(querySnapshot) {
       const result: up.UpRecord[] = []
       querySnapshot.forEach(function(doc) {
-        result.push(doc.data());
+        const record = doc.data() as up.UpRecord;
+        result.push(record);
       });
       return result;
     })
