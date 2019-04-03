@@ -4,7 +4,7 @@ import upLogic from '../src/up-logic';
 
 describe("matching logic", () => {
   it("should not return empty", done => {
-    expect(upLogic.findMatches([]).length).not.toBe(0);
+    expect(upLogic.findMatches([{ fish: 'cat' }]).length).not.toBe(0);
     done();
   })
 })

@@ -61,11 +61,17 @@ export const saveUp = (record: up.UpRecord) => {
 };
 
 export const loadUp = () => {
-  return new Promise<up.UpRecord[]>(function(resolve, reject) {
-    resolve([
-      {
-        fish: 'cat'
-      }
-    ]);
-  });
-}
+  return admin.firestore().collection('up')
+    .get()
+    .then(function(querySnapshot) {
+      const result: up.UpRecord[] = []
+      querySnapshot.forEach(function(doc) {
+        result.push(doc.data());
+      });
+      return result;
+    })
+    .catch(function(error) {
+      console.log("Error fetching whats up: ", error);
+      return [];
+    });
+};
