@@ -39,6 +39,7 @@
           <div class="flexWrapper align-center" jest="logged-in-div">
             <h4 class="blue--text">
               You're logged in!
+              <a @click="signOut">Logout</a>
             </h4>
             <v-btn icon class="blue white--text">
               <v-icon>thumb_up</v-icon>
@@ -103,6 +104,11 @@ export default {
       (merged, singleResponse) => Object.assign(merged, singleResponse),
       {}
     )
+  },
+  methods: {
+    signOut() {
+      this.$store.dispatch('signOut')
+    }
   }
 }
 </script>
