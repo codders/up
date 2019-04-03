@@ -1,6 +1,7 @@
 import './express-types';
 import * as functions from 'firebase-functions';
-import { validateFirebaseIdToken, firestore } from './firebase-wrapper';
+import { validateFirebaseIdToken, saveUp, loadUp } from './firebase-wrapper';
+import upLogic from './up-logic';
 
 const express = require('express')
 const cookieParser = require('cookie-parser')();
@@ -12,11 +13,20 @@ app.use(cors);
 app.use(cookieParser);
 app.get('/helloWorld', (req: express.Request, res: express.Response) => {
   console.log('About to send response', req);
-  if (req.user != null) {
+  if (req.user !== null) {
     res.status(200).send(`Hello ${req.user.name}`);
   } else {
     res.status(403).send('You need to log in');
   }
+});
+app.get('/whatsUp', (request: express.Request, response: express.Response) => {
+  console.log('Checking what\'s up for ' + request.user.email);
+  loadUp().then(whatsUp => {
+    response.status(200).send(upLogic.findMatches(whatsUp));
+  })
+  .catch(err => {
+    console.log('Unable to work out what\'s up', err);
+  });
 });
 app.post('/saveRecord', (request: express.Request, response: express.Response) => {
   const record = Object.assign({}, request.body);
@@ -26,7 +36,7 @@ app.post('/saveRecord', (request: express.Request, response: express.Response) =
   })
   console.log('Saving data: ', recordWithAuth);
 
-  firestore().collection('up').add(recordWithAuth).then(writeResult => {
+  saveUp(recordWithAuth).then(writeResult => {
     console.log('Got write result', writeResult);
     response.status(201).send({
       success: true,

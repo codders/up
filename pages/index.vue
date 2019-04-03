@@ -22,6 +22,12 @@
         </v-card-text>
         <v-card-text v-else>
           <p>{{ $data.hello }}</p>
+          <p v-if="$data.whatsUp.length === 0">
+            Nothing's happening right now... Be the first to show up!
+          </p>
+          <p v-else>
+            Something's up!
+          </p>
           <v-list two-line jest="activities-list">
             <v-list-tile nuxt to="/up">
               <v-list-tile-title>Show Up</v-list-tile-title>
@@ -55,8 +61,14 @@ export default {
     VuetifyLogo,
     LoginForm
   },
+  data() {
+    return {
+      hello: '',
+      whatsUp: []
+    }
+  },
   async asyncData({ $axios, store }) {
-    const hello = await $axios
+    const helloPromise = $axios
       .$get(
         'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/helloWorld',
         {
@@ -71,7 +83,26 @@ export default {
       .catch(error => {
         return { hello: error }
       })
-    return hello
+    const whatsUpPromise = $axios
+      .$get(
+        'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/whatsUp',
+        {
+          headers: {
+            Authorization: 'Bearer ' + store.state.idToken
+          }
+        }
+      )
+      .then(response => {
+        return { whatsUp: response }
+      })
+      .catch(error => {
+        return { whatsUp: error }
+      })
+    const result = await Promise.all([helloPromise, whatsUpPromise])
+    return result.reduce(
+      (merged, singleResponse) => Object.assign(merged, singleResponse),
+      {}
+    )
   }
 }
 </script>

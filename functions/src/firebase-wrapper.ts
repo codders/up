@@ -1,3 +1,4 @@
+import './up-types';
 import * as admin from 'firebase-admin';
 
 admin.initializeApp({
@@ -11,7 +12,7 @@ admin.initializeApp({
 // when decoded successfully, the ID Token content will be added as `req.user`.
 export const validateFirebaseIdToken = (req: express.Request, res: express.Response, next: () => void) => {
   console.log('Check if request is authorized with Firebase ID token', req.method);
-  if (req.method == 'OPTIONS') {
+  if (req.method === 'OPTIONS') {
     next();
     return;
   }
@@ -55,4 +56,16 @@ export const validateFirebaseIdToken = (req: express.Request, res: express.Respo
     });
 };
 
-export { firestore } from 'firebase-admin';
+export const saveUp = (record: up.UpRecord) => {
+  return admin.firestore().collection('up').add(record);
+};
+
+export const loadUp = () => {
+  return new Promise<up.UpRecord[]>(function(resolve, reject) {
+    resolve([
+      {
+        fish: 'cat'
+      }
+    ]);
+  });
+}
