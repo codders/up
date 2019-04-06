@@ -11,14 +11,6 @@ const app = express();
 app.use(validateFirebaseIdToken);
 app.use(cors);
 app.use(cookieParser);
-app.get('/helloWorld', (req: express.Request, res: express.Response) => {
-  console.log('About to send response', req);
-  if (req.user !== null) {
-    res.status(200).send(`${req.user.name}`);
-  } else {
-    res.status(403).send('You need to log in');
-  }
-});
 app.get('/whatsUp', (request: express.Request, response: express.Response) => {
   console.log('Checking what\'s up for ' + request.user.email);
   loadUp(request.user.email).then(whatsUp => {

@@ -86,6 +86,11 @@ export default {
           icon: 'group',
           title: 'Friends',
           to: '/friends'
+        },
+        {
+          icon: 'face',
+          title: 'Profile',
+          to: '/profile'
         }
       ],
       miniVariant: false,

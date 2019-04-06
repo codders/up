@@ -1,9 +1,12 @@
-const dataStore = function({ uid, friends, dispatcher }) {
+const dataStore = function({ uid, friends, profile, dispatcher }) {
   const user = (uid === null ? null : { uid: uid })
   return {
     state: {
       friends: {
-        data: (friends === null ? [] : friends)
+        data: (friends == null ? [] : friends)
+      },
+      profile: {
+        data: (profile == null ? {} : profile)
       }
     },
     dispatch: (method, args) => {
@@ -18,8 +21,8 @@ const dataStore = function({ uid, friends, dispatcher }) {
   }
 }
 
-const mockDataStore = function({ uid, friends, dispatcher, router, routeParams, axios }) {
-  return mockWithStore({ store: dataStore({ uid: uid, friends: friends, dispatcher: dispatcher }), router: router, routeParams: routeParams, axios: axios })
+const mockDataStore = function({ uid, friends, profile, dispatcher, router, routeParams, axios }) {
+  return mockWithStore({ store: dataStore({ uid: uid, profile: profile, friends: friends, dispatcher: dispatcher }), router: router, routeParams: routeParams, axios: axios })
 }
 
 const mockWithStore = function({ store, router, routeParams, axios }) {

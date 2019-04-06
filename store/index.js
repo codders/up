@@ -1,7 +1,9 @@
 import { auth, GoogleProvider } from '@/services/fireinit.js'
 
-/* Friends firestore */
+/** Vuex-Easy-Firestore config **/
 import createEasyFirestore from 'vuex-easy-firestore'
+
+/* Friends firestore */
 const friends = {
   firestorePath: 'users/{userId}/friends',
   firestoreRefType: 'collection',
@@ -10,7 +12,25 @@ const friends = {
   namespaced: true
 }
 const easyFriendsFirestore = createEasyFirestore(friends, { logging: true })
-export const plugins = [easyFriendsFirestore]
+
+/* Profile firestore */
+const profile = {
+  firestorePath: 'users/{userId}',
+  firestoreRefType: 'document',
+  moduleName: 'profile',
+  statePropName: 'data',
+  namespaced: true,
+  serverChange: {
+    modifiedHook: function(updateStore, doc, id, store, source, change) {
+      store.dispatch('setInitialProfileIfBlank', doc)
+      updateStore(doc)
+    }
+  }
+}
+const easyProfileFirestore = createEasyFirestore(profile, { logging: true })
+
+export const plugins = [easyFriendsFirestore, easyProfileFirestore]
+/** Vuex-Easy-Firestore config **/
 
 /* Plugin appears to cause problems with strict mode
    Disabling strict mode here */
@@ -51,6 +71,7 @@ export const mutations = {
       state.user.uid = payload.uid
       state.user.photoURL = payload.photoURL
       this.dispatch('friends/openDBChannel', { clearModule: true })
+      this.dispatch('profile/openDBChannel', { clearModule: true })
     }
   },
   setIdToken(state, payload) {
@@ -82,5 +103,25 @@ export const actions = {
         payload
       )
     )
+  },
+
+  setInitialProfileIfBlank({ dispatch, state }, doc) {
+    const profileUpdate = {}
+    let changed = false
+    if (state.user == null) {
+      // Nobody is logged in, just return
+      return
+    }
+    if (doc.name == null) {
+      profileUpdate.name = state.user.displayName
+      changed = true
+    }
+    if (doc.email == null) {
+      profileUpdate.email = state.user.email
+      changed = true
+    }
+    if (changed) {
+      dispatch('profile/set', profileUpdate)
+    }
   }
 }

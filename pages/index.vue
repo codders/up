@@ -15,7 +15,8 @@
       </div>
       <v-card>
         <v-card-title class="headline">
-          Welcome to Up, {{ $data.hello }}
+          <span>Welcome to Up</span>
+          <span v-if="displayName != null">, {{ displayName }}</span>
         </v-card-title>
         <v-card-text v-if="!$store.getters.activeUser">
           <login-form />
@@ -76,22 +77,16 @@ export default {
       whatsUp: []
     }
   },
+  computed: {
+    displayName() {
+      if (this.$store.state.profile != null) {
+        return this.$store.state.profile.data.name
+      } else {
+        return null
+      }
+    }
+  },
   async asyncData({ $axios, store }) {
-    const helloPromise = $axios
-      .$get(
-        'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/helloWorld',
-        {
-          headers: {
-            Authorization: 'Bearer ' + store.state.idToken
-          }
-        }
-      )
-      .then(response => {
-        return { hello: response }
-      })
-      .catch(error => {
-        return { hello: error }
-      })
     const whatsUpPromise = $axios
       .$get(
         'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/whatsUp',
@@ -107,11 +102,8 @@ export default {
       .catch(error => {
         return { whatsUp: error }
       })
-    const result = await Promise.all([helloPromise, whatsUpPromise])
-    return result.reduce(
-      (merged, singleResponse) => Object.assign(merged, singleResponse),
-      {}
-    )
+    const result = await whatsUpPromise
+    return result
   },
   methods: {
     signOut() {
