@@ -3,7 +3,7 @@ import Vuetify from 'vuetify'
 import { mount, config } from '@vue/test-utils'
 import Util from '@/test/utils.js'
 
-import Index from '@/pages/up/_activity/_time/index.vue'
+import Index from '@/pages/up/_activity/index.vue'
 
 Vue.use(Vuetify)
 
@@ -17,7 +17,7 @@ describe('up/activity/time/index.vue', () => {
       { id: 'jenny@jenny_com', email: 'jenny@jenny.com', name: 'Jenny' }
     ]
     const mountedCard = mount(Index, {
-      mocks: Util.mockDataStore({ uid: '123', friends: friendList, routeParams: { time: 'h1', activity: 'play' }})
+      mocks: Util.mockDataStore({ uid: '123', friends: friendList, routeParams: { activity: 'play' }})
     })
     expect(mountedCard.contains('[jest="friends-list"]')).toBe(true)
     expect(mountedCard.findAll(".friend").length).toBe(2)
@@ -29,18 +29,21 @@ describe('up/activity/time/index.vue', () => {
     ]
     let postedData = null
     const mountedCard = mount(Index, {
-      mocks: Util.mockDataStore({ uid: '123', friends: friendList, routeParams: { time: 'h1', activity: 'play' }, axios: (request) => {
+      mocks: Util.mockDataStore({ uid: '123', friends: friendList, routeParams: { activity: 'play' }, axios: (request) => {
         postedData = request.data
         return new Promise(function(rs,rj) {
           rs('Success!')
         })
       }})
     })
+    mountedCard.setData({
+      description: 'Let\'s play!'
+    })
     mountedCard.vm.showUp()
     expect(postedData).toEqual({
       activity: 'play',
       friends: [],
-      time: 'h1'
+      description: 'Let\'s play!'
     })
   })
 })

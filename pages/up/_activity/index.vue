@@ -3,59 +3,96 @@
     <v-flex xs12 sm8 md6>
       <v-card>
         <v-card-title class="headline">
-          When do you want to?
+          {{ activityName() }}
         </v-card-title>
         <v-card-text>
-          <v-list jest="times-list">
-            <v-list-tile v-for="(time, key) in times" :key="key" class="time" @click="selectTime(time)">
-              <v-list-tile-content>
-                <v-list-tile-title>{{ time.title }}</v-list-tile-title>
-              </v-list-tile-content>
+          <h3>with these friends</h3>
+          <v-list jest="friends-list">
+            <v-list-tile v-for="(friend, key) in friends" :key="key" class="friend">
+              <v-list-tile-action>
+                <v-checkbox v-model="selected" :value="friend.id" multiple />
+              </v-list-tile-action>
+              <v-list-tile-title>{{ friend.name }}</v-list-tile-title>
+              <v-spacer />
             </v-list-tile>
           </v-list>
+          <h3>Provide some details (optional)</h3>
+          <textarea v-model="description" style="color: black; background-color: white" />
+          <h2>
+            Show up?
+          </h2>
         </v-card-text>
         <v-card-actions>
+          <v-btn
+            color="primary"
+            flat
+            nuxt
+            to="/"
+          >
+            No...
+          </v-btn>
           <v-spacer />
           <v-btn
             color="primary"
             flat
             nuxt
-            to="/up"
+            @click="showUp()"
           >
-            Go Back
+            Yes!
           </v-btn>
         </v-card-actions>
       </v-card>
     </v-flex>
-    <nuxt-child />
   </v-layout>
 </template>
 
 <script>
-import timesList from '@/model/time.js'
+import { getActivityName } from '@/model/activity.js'
 
 export default {
+  data: () => ({
+    selected: [],
+    description: ''
+  }),
   computed: {
-    times() {
-      return timesList
+    friends() {
+      return this.$store.getters.friends
     }
   },
+  asyncData({ app, store }) {
+    const selected = []
+    for (const friend in store.getters.friends) {
+      selected.push(friend)
+    }
+    return { selected: selected }
+  },
   methods: {
-    selectTime(time) {
-      this.$log.debug('Selected: ' + time.title)
-      this.$nuxt.$router.replace({
-        path: '/up/' + this.$route.params.activity + '/' + time.id
-      })
+    activityName() {
+      return getActivityName(this.$route.params.activity)
+    },
+    showUp() {
+      this.$log.debug(
+        'Showing Up for ' + this.$route.params.activity + ' with',
+        this.$data.selected
+      )
+      const friendList = []
+      for (const i in this.$data.selected) {
+        friendList.push(this.$data.selected[i].replace(/\ufe52/g, '.'))
+      }
+      this.$axios({
+        method: 'POST',
+        headers: {
+          Authorization: 'Bearer ' + this.$store.state.idToken
+        },
+        data: {
+          activity: this.$route.params.activity,
+          description: this.$data.description,
+          friends: friendList
+        },
+        url:
+          'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/saveRecord'
+      }).then(this.$nuxt.$router.replace({ path: '/' }))
     }
   }
 }
 </script>
-
-<style>
-.avatar {
-  max-width: 100px;
-}
-.avatar img {
-  max-width: 100%;
-}
-</style>

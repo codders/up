@@ -2,7 +2,7 @@ declare namespace up {
   interface UpRecord {
     activity: string
     email: string
-    time: string
+    description: string
     uid: string
     timestamp: {
       _seconds: number
@@ -14,7 +14,7 @@ declare namespace up {
   interface UpRequest {
     activity: string
     email: string
-    time: string
+    description: string
     uid: string
     friends: string[]
   }

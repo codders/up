@@ -34,7 +34,7 @@ app.post('/saveRecord', (request: express.Request, response: express.Response) =
     activity: record.activity,
     email: request.user.email,
     uid: request.user.uid,
-    time: record.time,
+    description: record.description,
     friends: record.friends
   });
 
