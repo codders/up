@@ -71,8 +71,11 @@ export const saveUp = (record: up.UpRecord) => {
 };
 
 export const loadUp = (email: String) => {
+  const midnight = new Date();
+  midnight.setHours(0,0,0,0);
   return admin.firestore().collection('up')
     .where("inviteemail", "==", email)
+    .where("timestamp", ">", midnight)
     .get()
     .then(function(querySnapshot) {
       const result: up.UpRecord[] = []
