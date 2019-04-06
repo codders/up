@@ -22,11 +22,16 @@
         </v-card-text>
         <v-card-text v-else>
           <p>{{ $data.hello }}</p>
-          <p v-if="$data.whatsUp.length === 0">
+          <p v-if="$data.whatsUp.length === 0" jest="nothing-up">
             Nothing's happening right now... Be the first to show up!
           </p>
-          <p v-else>
-            Something's up!
+          <p v-else jest="something-up">
+            <whats-up
+              v-for="invitation in $data.whatsUp"
+              :key="invitation.uid"
+              :email="invitation.email"
+              :activity="invitation.activity"
+            />
           </p>
           <v-list two-line jest="activities-list">
             <v-list-tile nuxt to="/up">
@@ -55,12 +60,14 @@
 import Logo from '~/components/Logo.vue'
 import VuetifyLogo from '~/components/VuetifyLogo.vue'
 import LoginForm from '~/components/LoginForm.vue'
+import WhatsUp from '~/components/WhatsUp.vue'
 
 export default {
   components: {
     Logo,
     VuetifyLogo,
-    LoginForm
+    LoginForm,
+    WhatsUp
   },
   data() {
     return {
