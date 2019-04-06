@@ -1,10 +1,12 @@
 <template>
   <div class="up">
-    <p>{{ email }} wants to {{ activity }}</p>  
+    <p>{{ getNameForEmail(email) }} wants to {{ activity }}</p>  
   </div>
 </template>
 
 <script>
+import { friendNameByEmail } from '@/model/friends'
+
 export default {
   props: {
     activity: {
@@ -14,6 +16,11 @@ export default {
     email: {
       type: String,
       default: 'bob@example.com'
+    }
+  },
+  methods: {
+    getNameForEmail(email) {
+      return friendNameByEmail(this.$store.getters.friends, email)
     }
   }
 }

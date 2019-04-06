@@ -54,12 +54,12 @@
 export default {
   computed: {
     friends() {
-      return this.$store.state.friends.data
+      return this.$store.getters.friends
     },
     friendCount() {
       let count = 0
       // eslint-disable-next-line no-unused-vars
-      for (const friend in this.$store.state.friends.data) {
+      for (const friend in this.$store.getters.friends) {
         count += 1
       }
       return count

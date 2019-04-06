@@ -12,7 +12,8 @@ const dataStore = function({ uid, friends, dispatcher }) {
       }
     }, 
     getters: {
-      activeUser: user
+      activeUser: user,
+      friends: friends
     }
   }
 }

@@ -54,12 +54,12 @@ export default {
   }),
   computed: {
     friends() {
-      return this.$store.state.friends.data
+      return this.$store.getters.friends
     }
   },
   asyncData({ app, store }) {
     const selected = []
-    for (const friend in store.state.friends.data) {
+    for (const friend in store.getters.friends) {
       selected.push(friend)
     }
     return { selected: selected }

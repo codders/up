@@ -35,6 +35,9 @@ export const getters = {
     } else {
       return null
     }
+  },
+  friends: state => {
+    return state.friends.data
   }
 }
 
