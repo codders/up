@@ -23,6 +23,6 @@ describe('WhatsUp.vue', () => {
       email: 'arthur@email.com'
     })
     const activityText = mounted.find('.up').find('p')
-    expect(activityText.text()).toBe('Arthur wants to eat')
+    expect(activityText.text()).toBe('Arthur wants to eat: ""')
   })
 })

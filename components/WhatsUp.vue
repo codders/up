@@ -1,6 +1,6 @@
 <template>
   <div class="up">
-    <p>{{ getNameForEmail(email) }} wants to {{ activity }}</p>  
+    <p>{{ getNameForEmail(email) }} wants to {{ activity }}: "{{ description }}"</p>  
   </div>
 </template>
 
@@ -16,6 +16,10 @@ export default {
     email: {
       type: String,
       default: 'bob@example.com'
+    },
+    description: {
+      type: String,
+      default: ''
     }
   },
   methods: {

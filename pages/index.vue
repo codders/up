@@ -15,24 +15,25 @@
       </div>
       <v-card>
         <v-card-title class="headline">
-          Welcome to Up
+          Welcome to Up, {{ $data.hello }}
         </v-card-title>
         <v-card-text v-if="!$store.getters.activeUser">
           <login-form />
         </v-card-text>
         <v-card-text v-else>
-          <p>{{ $data.hello }}</p>
-          <p v-if="$data.whatsUp.length === 0" jest="nothing-up">
-            Nothing's happening right now... Be the first to show up!
-          </p>
-          <p v-else jest="something-up">
+          <div v-if="$data.whatsUp.length === 0" jest="nothing-up">
+            <p>Nothing's happening right now... Be the first to show up!</p>
+          </div>
+          <div v-else jest="something-up">
+            <h2>Here's what's up right now...</h2>
             <whats-up
               v-for="invitation in $data.whatsUp"
               :key="invitation.uid"
               :email="invitation.email"
               :activity="invitation.activity"
+              :description="invitation.description"
             />
-          </p>
+          </div>
           <v-list two-line jest="activities-list">
             <v-list-tile nuxt to="/up">
               <v-list-tile-title>Show Up</v-list-tile-title>

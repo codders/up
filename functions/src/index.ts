@@ -14,7 +14,7 @@ app.use(cookieParser);
 app.get('/helloWorld', (req: express.Request, res: express.Response) => {
   console.log('About to send response', req);
   if (req.user !== null) {
-    res.status(200).send(`Hello ${req.user.name}`);
+    res.status(200).send(`${req.user.name}`);
   } else {
     res.status(403).send('You need to log in');
   }
