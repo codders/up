@@ -9,7 +9,7 @@ const localVue = createLocalVue()
 
 describe('index.vue', () => {
   test('Shows something is up when there are things up', () => {
-     const mountedIndex = shallowMount(Index, {
+    const mountedIndex = shallowMount(Index, {
       mocks: Util.mockDataStore({ uid: '123' }),
       localVue
     })
