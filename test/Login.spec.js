@@ -45,7 +45,6 @@ describe('index.vue', () => {
   }),
   test('Shows login form when not logged in', () => {
     const store = Util.mockDataStore({ uid: null })
-    console.log("Store: ", store)
     const mountedIndex = shallowMount(Index, {
       mocks: store,
       localVue
