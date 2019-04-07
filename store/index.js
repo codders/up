@@ -65,13 +65,15 @@ export const mutations = {
   setUser(state, payload) {
     if (payload === null) {
       state.user = Object.assign({}, emptyUser)
+      this.dispatch('friends/closeDBChannel', { clearModule: true })
+      this.dispatch('profile/closeDBChannel', { clearModule: true })
     } else {
       state.user.email = payload.email
       state.user.displayName = payload.displayName
       state.user.uid = payload.uid
       state.user.photoURL = payload.photoURL
-      this.dispatch('friends/openDBChannel', { clearModule: true })
-      this.dispatch('profile/openDBChannel', { clearModule: true })
+      this.dispatch('friends/openDBChannel')
+      this.dispatch('profile/openDBChannel')
     }
   },
   setIdToken(state, payload) {
@@ -121,7 +123,7 @@ export const actions = {
       changed = true
     }
     if (changed) {
-      dispatch('profile/set', profileUpdate)
+      dispatch('profile/patch', profileUpdate)
     }
   }
 }

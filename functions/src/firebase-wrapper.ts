@@ -59,7 +59,7 @@ export const validateFirebaseIdToken = (req: express.Request, res: express.Respo
 export const saveSubscription = (subscription: any, uid: string) => {
   console.log('Saving subscription for user', uid)
   return admin.firestore().collection('users').doc(uid)
-    .set({
+    .update({
       subscription: subscription
     })
     .catch(function(error) {

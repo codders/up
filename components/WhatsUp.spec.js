@@ -19,10 +19,44 @@ describe('WhatsUp.vue', () => {
       localVue
     })
     mounted.setProps({
-      activity: 'eat',
+      activity: 'out',
       uid: 'abc'
     })
     const activityText = mounted.find('.up').find('p')
-    expect(activityText.text()).toBe('Arthur wants to eat: ""')
+    expect(activityText.text()).toBe('Arthur wants to Go out')
+  }),
+  test('Renders activity details with description', () => {
+    const mounted = shallowMount(WhatsUp, {
+      mocks: Util.mockDataStore({
+        friends: [
+          { uid: 'abc', name: 'Arthur' }
+        ]
+      }),
+      localVue
+    })
+    mounted.setProps({
+      activity: 'play',
+      description: 'Play with me!',
+      uid: 'abc'
+    })
+    const activityText = mounted.find('.up').find('p')
+    expect(activityText.text()).toBe('Arthur wants to Play: "Play with me!"')
+  }),
+  test('Does not render empty description', () => {
+    const mounted = shallowMount(WhatsUp, {
+      mocks: Util.mockDataStore({
+        friends: [
+          { uid: 'abc', name: 'Arthur' }
+        ]
+      }),
+      localVue
+    })
+    mounted.setProps({
+      activity: 'play',
+      description: '',
+      uid: 'abc'
+    })
+    const activityText = mounted.find('.up').find('p')
+    expect(activityText.text()).toBe('Arthur wants to Play')
   })
 })

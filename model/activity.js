@@ -6,29 +6,33 @@ const activities = [
     description: 'Dance, run, do sport'
   },
   {
-    icon: 'airline_seat_individual_suite',
+    icon: 'home',
     title: 'Relax',
     id: 'relax',
     description: 'Hang out, cuddle, massage, sleep'
   },
   {
-    icon: 'local_dining',
-    title: 'Eat',
-    id: 'eat',
-    description: 'Go have dinner somewhere'
+    icon: 'local_bar',
+    title: 'Go out',
+    id: 'out',
+    description: 'Eating out, cinema, theatre, events'
   },
   {
     icon: 'whatshot',
     title: 'Play',
     id: 'play',
-    description: 'Seduce, arouse, be intimate'
+    description: 'Enjoy each other'
   }
 ]
 
 export const getActivityName = function(id) {
-  return activities.find(function(activity) {
+  const foundActivity = activities.find(function(activity) {
     return activity.id === id
-  }).title
+  })
+  if (foundActivity != null) {
+    return foundActivity.title
+  }
+  return undefined
 }
 
 export default activities

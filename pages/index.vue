@@ -9,10 +9,6 @@
       sm8
       md6
     >
-      <div class="text-xs-center">
-        <logo />
-        <vuetify-logo />
-      </div>
       <v-card>
         <v-card-title class="headline">
           <span>Welcome to Up</span>
@@ -65,8 +61,6 @@
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
 import LoginForm from '~/components/LoginForm.vue'
 import WhatsUp from '~/components/WhatsUp.vue'
 import { vapidKey } from '@/model/vapid-key'
@@ -80,8 +74,6 @@ function urlBase64ToUint8Array(base64String) {
 
 export default {
   components: {
-    Logo,
-    VuetifyLogo,
     LoginForm,
     WhatsUp
   },
@@ -135,22 +127,24 @@ export default {
           throw new Error('Notifications are blocked')
         }
         if ('serviceWorker' in navigator) {
-          return navigator.serviceWorker.getRegistrations().then(registrations => {
-            this.$log.debug(
-              'service worker registrations: ' + registrations.length
-            )
-            for (const worker of registrations) {
-              this.$log.debug('Service Worker:', worker)
-              const subscribeOptions = {
-                userVisibleOnly: true,
-                applicationServerKey: urlBase64ToUint8Array(vapidKey.pub)
+          return navigator.serviceWorker
+            .getRegistrations()
+            .then(registrations => {
+              this.$log.debug(
+                'service worker registrations: ' + registrations.length
+              )
+              for (const worker of registrations) {
+                this.$log.debug('Service Worker:', worker)
+                const subscribeOptions = {
+                  userVisibleOnly: true,
+                  applicationServerKey: urlBase64ToUint8Array(vapidKey.pub)
+                }
+                return worker.pushManager.subscribe(subscribeOptions)
               }
-              return worker.pushManager.subscribe(subscribeOptions)
-            }
-            throw new Error(
-              'No Service worker found - unable to register subscription'
-            )
-          })
+              throw new Error(
+                'No Service worker found - unable to register subscription'
+              )
+            })
         }
       })
       .then(function(pushSubscription) {
@@ -166,7 +160,8 @@ export default {
             'Content-Type': 'application/json'
           },
           data: JSON.stringify(pushSubscription),
-          url: 'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/saveSubscription'
+          url:
+            'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/saveSubscription'
         })
       })
       .catch(error => {
