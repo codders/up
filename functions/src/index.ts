@@ -4,22 +4,14 @@ import { validateFirebaseIdToken,
          saveUp,
          loadUp,
          loadDirectory,
-         saveSubscription,
-         loadSubscription } from './firebase-wrapper';
+         saveSubscription } from './firebase-wrapper';
 import upLogic from './up-logic';
-import { setVapidDetails, sendNotification } from 'web-push';
-import { vapidKey } from './vapid-key';
+import { notifyUser } from './notification';
 
 const express = require('express')
 const cookieParser = require('cookie-parser')();
 const cors = require('cors')({origin: true});
 const app = express();
-
-setVapidDetails(
-  'mailto: arthur.taylor@gmail.com',
-  vapidKey.pub,
-  vapidKey.secret
-);
 
 app.use(validateFirebaseIdToken);
 app.use(cors);
@@ -53,7 +45,9 @@ app.post('/saveRecord', (request: express.Request, response: express.Response) =
   console.log('Saving data: ', upRecords);
   const promises: PromiseLike<String>[] = [];
   upRecords.forEach(function(upRecord: up.UpRecord) {
-    promises.push(saveUp(upRecord))
+    promises.push(saveUp(upRecord).then(writeResult => {
+      return notifyUser(upRecord);
+    }));
   });
   Promise.all(promises).then(writeResults => {
     console.log('Got write results', writeResults);
@@ -78,49 +72,6 @@ app.post('/saveSubscription', (request: express.Request, response: express.Respo
   })
   .catch(err => {
     console.log('Error saving subscription', err);
-  })
-});
-app.post('/notify', (request: express.Request, response: express.Response) => {
-  const details = Object.assign({}, request.body);
-  console.log('Sending notification: ', details);
-  loadSubscription(details.uid).then(subscription => {
-    console.log('Loaded subscription: ', subscription);
-    return sendNotification(subscription, JSON.stringify({
-        notification: {
-          title: 'Something is up',
-          body: 'These people are happy to have fun right now'
-        }
-      })
-    )
-    .then(result => {
-      console.log('Succeeded in sending notification: ', result)
-      response.status(201).send({
-        success: true,
-        message: 'Notification sent: ' + result
-      });
-    })
-    .catch(err => {
-      if (err.statusCode === 410) {
-        console.log('Need to delete subscription');
-        response.status(403).send({
-          success: false,
-          message: 'Subscription expired (410)'
-        });
-      } else {
-        console.log('Subscription is no longer valid: ', err);
-        response.status(403).send({
-          success: false,
-          message: 'Subscription is no longer valid: ' + err
-        });
-      }
-    });
-  })
-  .catch(err => {
-    console.log('Error loading subscription', err);
-    response.status(404).send({
-      success: false,
-      message: 'Error loading subscription ' + err
-    })
   })
 });
 
