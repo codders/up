@@ -13,14 +13,14 @@ describe('WhatsUp.vue', () => {
     const mounted = shallowMount(WhatsUp, {
       mocks: Util.mockDataStore({
         friends: [
-          { id: 'arthur@arthur:com', email: 'arthur@email.com', name: 'Arthur' }
+          { uid: 'abc', name: 'Arthur' }
         ]
       }),
       localVue
     })
     mounted.setProps({
       activity: 'eat',
-      email: 'arthur@email.com'
+      uid: 'abc'
     })
     const activityText = mounted.find('.up').find('p')
     expect(activityText.text()).toBe('Arthur wants to eat: ""')

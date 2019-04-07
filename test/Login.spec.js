@@ -17,9 +17,8 @@ describe('index.vue', () => {
       whatsUp: [ 
         {"inviteemail":"arthur.taylor@gmail.com",
          "activity":"play",
-         "email":"arthur.taylor@gmail.com",
-         "time":"tonight",
          "uid":"fK0fHCRYb1QZ7NdMoqdYwgENejA2",
+         "description": "Let's do something",
          "timestamp": {
             "_seconds":1554534507,
             "_nanoseconds":0
@@ -28,6 +27,7 @@ describe('index.vue', () => {
       ]
     })
     expect(mountedIndex.contains('[jest="something-up"]')).toBe(true)
+    expect(mountedIndex.find('[jest="something-up"]').findAll('whats-up-stub').length).toBe(1)
   }),
   test('Shows nothing is up when there are not things up', () => {
      const mountedIndex = shallowMount(Index, {

@@ -4,17 +4,16 @@ import './up-types';
 const upLogic = {
   getUpRecordsForRequest: function(request: up.UpRequest) {
     const result: up.UpRecord[] = [];
-    request.friends.forEach(function(inviteemail) {
+    request.friends.forEach(function(inviteduid) {
       const record: up.UpRecord = {
         activity: request.activity,
-        email: request.email,
         description: request.description,
         uid: request.uid,
         timestamp: {
           _seconds: 0,
           _nanoseconds: 0
         },
-        inviteemail: inviteemail
+        inviteduid: inviteduid
       };
       result.push(record)
     });

@@ -75,10 +75,6 @@ export default {
         'Showing Up for ' + this.$route.params.activity + ' with',
         this.$data.selected
       )
-      const friendList = []
-      for (const i in this.$data.selected) {
-        friendList.push(this.$data.selected[i].replace(/\ufe52/g, '.'))
-      }
       this.$axios({
         method: 'POST',
         headers: {
@@ -87,7 +83,7 @@ export default {
         data: {
           activity: this.$route.params.activity,
           description: this.$data.description,
-          friends: friendList
+          friends: this.$data.selected
         },
         url:
           'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/saveRecord'

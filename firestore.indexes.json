@@ -5,7 +5,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "inviteemail",
+          "fieldPath": "inviteduid",
           "order": "ASCENDING"
         },
         {

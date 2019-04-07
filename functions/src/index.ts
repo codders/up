@@ -1,6 +1,6 @@
 import './express-types';
 import * as functions from 'firebase-functions';
-import { validateFirebaseIdToken, saveUp, loadUp } from './firebase-wrapper';
+import { validateFirebaseIdToken, saveUp, loadUp, loadDirectory } from './firebase-wrapper';
 import upLogic from './up-logic';
 
 const express = require('express')
@@ -12,19 +12,26 @@ app.use(validateFirebaseIdToken);
 app.use(cors);
 app.use(cookieParser);
 app.get('/whatsUp', (request: express.Request, response: express.Response) => {
-  console.log('Checking what\'s up for ' + request.user.email);
-  loadUp(request.user.email).then(whatsUp => {
+  console.log('Checking what\'s up for ' + request.user.email + ':' + request.user.uid);
+  loadUp(request.user.uid).then(whatsUp => {
     response.status(200).send(upLogic.findMatches(whatsUp));
   })
   .catch(err => {
     console.log('Unable to work out what\'s up', err);
   });
 });
+app.get('/directory', (request: express.Request, response: express.Response) => {
+  loadDirectory().then(directory => {
+    response.status(200).send(directory);
+  })
+  .catch(err => {
+    console.log('Unable to fetch the directory');
+  });
+});
 app.post('/saveRecord', (request: express.Request, response: express.Response) => {
   const record = Object.assign({}, request.body);
   const upRecords = upLogic.getUpRecordsForRequest({
     activity: record.activity,
-    email: request.user.email,
     uid: request.user.uid,
     description: record.description,
     friends: record.friends

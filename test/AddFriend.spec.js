@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import VeeValidate, { Validator } from 'vee-validate'
-import { mount } from '@vue/test-utils'
+import { mount, config } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import mocksdk from '@/services/__mocks__/fireinit.js'
 import Util from '@/test/utils.js'
@@ -15,39 +15,25 @@ import AddFriend from '@/pages/add-friend.vue'
 Vue.use(Vuetify)
 Vue.use(VeeValidate, null)
 
+config.stubs['nuxt-link'] = '<a><slot /></a>'
+
 describe('add-friend.vue', () => {
-  test('Shows add friend form', () => {
+  test('Shows directory listing', () => {
     const mountedForm = mount(AddFriend, {
       mocks: Util.mockDataStore({ uid: '123' })
     })
-    expect(mountedForm.contains('[jest="add-friend-form"]')).toBe(true)
+    expect(mountedForm.contains('[jest="directory-listing"]')).toBe(true)
   }),
-  test('Adding friend calls firestore', async () => {
-    Vue.config.async = true
-    const dispatcher = []
+  test('Entries shown matches directory size', () => {
     const mountedForm = mount(AddFriend, {
-      mocks: Util.mockDataStore({ uid: '123', dispatcher: dispatcher })
+      mocks: Util.mockDataStore({ uid: '123' })
     })
-    mountedForm.find('[data-name]').setValue('Alice')
-    mountedForm.find('[data-email]').setValue('alice@example.com')
-    await mountedForm.vm.submitAddFriend()
-    expect(dispatcher.length).toBe(1)
-    expect(dispatcher[0].method).toBe('addFriend')
-    Vue.config.async = false 
-  }),
-  test('Redirects to /friends', async () => {
-    Vue.config.async = true
-    const dispatcher = []
-    const router = []
-    const mountedForm = mount(AddFriend, {
-      mocks: Util.mockDataStore({ uid: '123', dispatcher: dispatcher, router: router })
+    mountedForm.setData({
+      directoryEntries: [
+        { uid: 'abc', name: 'Arthur' },
+        { uid: 'def', name: 'Jenny' }
+      ]
     })
-    mountedForm.find('[data-name]').setValue('Alice')
-    mountedForm.find('[data-email]').setValue('alice@example.com')
-    await mountedForm.vm.submitAddFriend()
-    expect(router.length).toBe(1)
-    expect(router[0].path).toBe('/friends')
-    Vue.config.async = false 
+    expect(mountedForm.findAll('.entry').length).toBe(2)
   })
-
 })

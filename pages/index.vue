@@ -30,7 +30,7 @@
             <whats-up
               v-for="invitation in $data.whatsUp"
               :key="invitation.uid"
-              :email="invitation.email"
+              :uid="invitation.uid"
               :activity="invitation.activity"
               :description="invitation.description"
             />

@@ -1,11 +1,11 @@
 <template>
   <div class="up">
-    <p>{{ getNameForEmail(email) }} wants to {{ activity }}: "{{ description }}"</p>  
+    <p>{{ getNameForUid(uid) }} wants to {{ activity }}: "{{ description }}"</p>  
   </div>
 </template>
 
 <script>
-import { friendNameByEmail } from '@/model/friends'
+import { friendNameByUid } from '@/model/friends'
 
 export default {
   props: {
@@ -13,9 +13,9 @@ export default {
       type: String,
       default: 'activity'
     },
-    email: {
+    uid: {
       type: String,
-      default: 'bob@example.com'
+      default: ''
     },
     description: {
       type: String,
@@ -23,8 +23,8 @@ export default {
     }
   },
   methods: {
-    getNameForEmail(email) {
-      return friendNameByEmail(this.$store.getters.friends, email)
+    getNameForUid(uid) {
+      return friendNameByUid(this.$store.getters.friends, uid)
     }
   }
 }

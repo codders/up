@@ -70,11 +70,11 @@ export const saveUp = (record: up.UpRecord) => {
     });
 };
 
-export const loadUp = (email: String) => {
+export const loadUp = (uid: String) => {
   const midnight = new Date();
   midnight.setHours(0,0,0,0);
   return admin.firestore().collection('up')
-    .where("inviteemail", "==", email)
+    .where("inviteduid", "==", uid)
     .where("timestamp", ">", midnight)
     .get()
     .then(function(querySnapshot) {
@@ -87,6 +87,26 @@ export const loadUp = (email: String) => {
     })
     .catch(function(error) {
       console.log("Error fetching whats up: ", error);
+      return [];
+    });
+};
+
+export const loadDirectory = () => {
+  return admin.firestore().collection('users')
+    .get()
+    .then(function(querySnapshot) {
+      const result: up.DirectoryEntry[] = [];
+      querySnapshot.forEach(function(doc) {
+        const record = doc.data();
+        result.push({
+          uid: record.id,
+          name: record.name
+        });
+      });
+      return result;
+    })
+    .catch(function(error) {
+      console.log("Error fetching directory: ", error);
       return [];
     });
 };
