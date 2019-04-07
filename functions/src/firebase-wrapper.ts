@@ -134,17 +134,19 @@ export const loadUp = (uid: String) => {
     });
 };
 
-export const loadDirectory = () => {
+export const loadDirectory = (uid: String) => {
   return admin.firestore().collection('users')
     .get()
     .then(function(querySnapshot) {
       const result: up.DirectoryEntry[] = [];
       querySnapshot.forEach(function(doc) {
         const record = doc.data();
-        result.push({
-          uid: record.id,
-          name: record.name
-        });
+        if (record.id != uid) {
+          result.push({
+            uid: record.id,
+            name: record.name
+          });
+        }
       });
       return result;
     })

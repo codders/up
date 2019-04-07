@@ -26,7 +26,7 @@ app.get('/whatsUp', (request: express.Request, response: express.Response) => {
   });
 });
 app.get('/directory', (request: express.Request, response: express.Response) => {
-  loadDirectory().then(directory => {
+  loadDirectory(request.user.uid).then(directory => {
     response.status(200).send(directory);
   })
   .catch(err => {
