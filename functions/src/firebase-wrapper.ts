@@ -56,6 +56,49 @@ export const validateFirebaseIdToken = (req: express.Request, res: express.Respo
     });
 };
 
+export const saveSubscription = (subscription: any, uid: string) => {
+  console.log('Saving subscription for user', uid)
+  return admin.firestore().collection('users').doc(uid)
+    .set({
+      subscription: subscription
+    })
+    .catch(function(error) {
+      console.error('Unable to save subscription record for user ' + uid, subscription);
+      return "error";
+    });
+};
+
+interface PushSubscription {
+    endpoint: string;
+    keys: {
+        p256dh: string;
+        auth: string;
+    };
+}
+
+export const loadSubscription: (arg0: string) => Promise<PushSubscription> = (uid: string) => {
+  console.log('Loading subscription for user', uid)
+  return admin.firestore().collection('users').doc(uid)
+    .get().then(function(doc) {
+      if (doc.exists) {
+        const data = doc.data();
+        if (data !== undefined && 'subscription' in data) {
+          return data.subscription as PushSubscription;
+        } else {
+          console.log('No subscription recorded for user ' + uid, data);
+          throw new Error('No subscription information for user ' + uid);
+        }
+      } else {
+        console.log('User ' + uid + ' does not exist');
+        throw new Error('User ' + uid + ' does not exist');
+      }
+    })
+    .catch(function(error) {
+      console.error('Unable to get subscription record for user ' + uid);
+      throw new Error('Unable to load subscription data');
+    });
+};
+
 export const saveUp = (record: up.UpRecord) => {
   const savedRecord = Object.assign(record, {
     timestamp: admin.firestore.FieldValue.serverTimestamp()

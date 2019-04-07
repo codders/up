@@ -84,6 +84,15 @@ module.exports = {
   },
 
   /*
+   * Service Worker config
+   */
+  workbox: {
+    importScripts: [
+      'notifications-sw.js'
+    ]
+  },
+
+  /*
   ** Build configuration
   */
   build: {

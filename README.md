@@ -71,3 +71,8 @@ As described here: https://www.davidroyer.me/blog/nuxtjs-firebase-auth/ (plus so
 ## Firestore synchronisation
 
 `vuex-easy-firestore` is used to sync the store with `firestore`. The plugin itself is not directly intended for use with Nuxt, and therefore may break
+
+## Push notifications
+
+There is support for push notifications in the application. You will need to generate the Application Server Keys, as described here: https://developers.google.com/web/fundamentals/push-notifications/subscribing-a-user
+

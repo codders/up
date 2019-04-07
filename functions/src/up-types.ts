@@ -1,3 +1,10 @@
+declare namespace vapid {
+  interface Key {
+    pub: string
+    secret: string
+  }
+}
+
 declare namespace up {
   interface UpRecord {
     activity: string

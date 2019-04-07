@@ -90,3 +90,6 @@ services/fireinit.js
 
 # Vim
 .*.swp
+
+# Vapid key data
+**/vapid-key*
