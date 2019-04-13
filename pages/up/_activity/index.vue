@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { getActivityName } from '@/model/activity.js'
+import { activityArrayToString } from '@/model/activity.js'
 
 export default {
   data: () => ({
@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     activityName() {
-      return getActivityName(this.$route.params.activity)
+      return activityArrayToString(this.$route.params.activity.split('-'))
     },
     showUp() {
       this.$log.debug(
@@ -81,7 +81,7 @@ export default {
           Authorization: 'Bearer ' + this.$store.state.idToken
         },
         data: {
-          activity: this.$route.params.activity,
+          activity: this.$route.params.activity.split('-'),
           description: this.$data.description,
           friends: this.$data.selected
         },

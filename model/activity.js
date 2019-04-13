@@ -25,6 +25,19 @@ const activities = [
   }
 ]
 
+export const activityArrayToString = function(activities) {
+  let description = ''
+  const activityTexts = []
+  activities.map(function(key) {
+    activityTexts.push(getActivityName(key))
+  })
+  while (activityTexts.length > 2) {
+    const next = activityTexts.shift()
+    description = description + next + ', '
+  }
+  return description + activityTexts.join(' or ')
+}
+
 export const getActivityName = function(id) {
   const foundActivity = activities.find(function(activity) {
     return activity.id === id

@@ -13,6 +13,9 @@
                 <v-list-tile-title>{{ activity.title }}</v-list-tile-title>
                 <v-list-tile-sub-title>{{ activity.description }}</v-list-tile-sub-title>
               </v-list-tile-content>
+              <v-list-tile-action>
+                <v-checkbox v-model="selected[activity.id]" @click.prevent="" />
+              </v-list-tile-action>
             </v-list-tile>
           </v-list>
         </v-card-text>
@@ -26,6 +29,14 @@
           >
             Go Back
           </v-btn>
+          <v-btn
+            color="primary"
+            flat
+            nuxt
+            :to="'/up/' + activityArray()"
+          >
+            Next
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-flex>
@@ -37,6 +48,13 @@
 import activitiesList from '@/model/activity.js'
 
 export default {
+  data: () => {
+    const selected = {}
+    for (const id in activitiesList) {
+      selected[activitiesList[id].id] = true
+    }
+    return { selected: selected }
+  },
   computed: {
     activities() {
       return activitiesList
@@ -45,7 +63,18 @@ export default {
   methods: {
     selectActivity(activity) {
       this.$log.debug('Selected: ' + activity.title)
-      this.$nuxt.$router.replace({ path: '/up/' + activity.id })
+      this.selected[activity.id] = !this.selected[activity.id]
+      // this.$nuxt.$router.replace({ path: '/up/' + activity.id })
+    },
+    activityArray() {
+      const selectedActivities = []
+      const vm = this
+      Object.keys(this.selected).map(function(key, index) {
+        if (vm.selected[key]) {
+          selectedActivities.push(key)
+        }
+      })
+      return selectedActivities.join('-')
     }
   }
 }

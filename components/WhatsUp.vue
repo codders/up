@@ -6,13 +6,15 @@
 
 <script>
 import { friendNameByUid } from '@/model/friends'
-import { getActivityName } from '@/model/activity'
+import { activityArrayToString } from '@/model/activity'
 
 export default {
   props: {
     activity: {
-      type: String,
-      default: undefined
+      type: Array,
+      default: () => {
+        return []
+      }
     },
     uid: {
       type: String,
@@ -30,8 +32,8 @@ export default {
     getNameForUid(uid) {
       return friendNameByUid(this.$store.getters.friends, uid)
     },
-    getTitleForActivity(id) {
-      return getActivityName(id)
+    getTitleForActivity(ids) {
+      return activityArrayToString(ids)
     }
   }
 }

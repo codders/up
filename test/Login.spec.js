@@ -16,7 +16,7 @@ describe('index.vue', () => {
     mountedIndex.setData({
       whatsUp: [ 
         {"inviteemail":"arthur.taylor@gmail.com",
-         "activity":"play",
+         "activity":["play","out"],
          "uid":"fK0fHCRYb1QZ7NdMoqdYwgENejA2",
          "description": "Let's do something",
          "timestamp": {
