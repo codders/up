@@ -11,8 +11,7 @@
     >
       <v-card>
         <v-card-title class="headline">
-          <span>Welcome to Up</span>
-          <span v-if="displayName != null">, {{ displayName }}</span>
+          {{ greetingString }}
         </v-card-title>
         <v-card-text v-if="!$store.getters.activeUser">
           <login-form />
@@ -93,6 +92,13 @@ export default {
     },
     pushSupport() {
       return 'serviceWorker' in navigator && 'PushManager' in window
+    },
+    greetingString() {
+      let greeting = 'Welcome to Up'
+      if (this.displayName != null) {
+        greeting = greeting + ', ' + this.displayName
+      }
+      return greeting
     }
   },
   async asyncData({ $axios, store }) {
@@ -174,6 +180,13 @@ export default {
       })
   },
   methods: {
+    greetingText() {
+      let greetingString = 'Welcome to Up'
+      if (this.displayName != null) {
+        greetingString = greetingString + ', ' + this.displayName
+      }
+      return greetingString
+    },
     signOut() {
       this.$store.dispatch('signOut')
     },
