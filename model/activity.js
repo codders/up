@@ -15,7 +15,7 @@ const activities = [
     icon: 'local_bar',
     title: 'Go out',
     id: 'out',
-    description: 'Eating out, cinema, theatre, events'
+    description: 'Eating out, cinema, events'
   },
   {
     icon: 'whatshot',

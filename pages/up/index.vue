@@ -8,8 +8,8 @@
         <v-card-text>
           <v-list two-line jest="activities-list">
             <v-list-tile v-for="(activity, key) in activities" :key="key" class="activity" @click="selectActivity(activity)">
+              <v-list-tile-avatar><v-icon>{{ activity.icon }}</v-icon></v-list-tile-avatar>
               <v-list-tile-content>
-                <v-list-tile-avatar><v-icon>{{ activity.icon }}</v-icon></v-list-tile-avatar>
                 <v-list-tile-title>{{ activity.title }}</v-list-tile-title>
                 <v-list-tile-sub-title>{{ activity.description }}</v-list-tile-sub-title>
               </v-list-tile-content>

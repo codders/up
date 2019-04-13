@@ -28,7 +28,8 @@ const mockDataStore = function({ uid, friends, profile, dispatcher, router, rout
 const mockWithStore = function({ store, router, routeParams, axios }) {
   return {
     $log: {
-      debug: (...args) => {} 
+      debug: (...args) => {},
+      error: (...args) => {} 
     },
     $axios: axios,
     $store: store,
