@@ -6,7 +6,23 @@ self.addEventListener('push', function(event) {
   } else {
     console.log('Got Push event with no data.')
   }
-  const promiseChain = self.registration.showNotification('Hello, Notifications')
+  const promiseChain = self.registration.showNotification(
+    'New activity on Up!',
+    {
+      body: 'A friend has just invited you to join them...',
+      badge: '/nuxt_logo_badge.png',
+      icon: '/nuxt_logo_icon.png',
+      vibrate: ['250', '50', '50', '50', '50', '50', '500']
+    }
+  )
+  event.waitUntil(promiseChain)
+})
+
+self.addEventListener('notificationclick', function(event) {
+  const clickedNotification = event.notification
+  clickedNotification.close()
+
+  const promiseChain = clients.openWindow('/')
   event.waitUntil(promiseChain)
 })
 

@@ -13,10 +13,7 @@ export const notifyUser: (arg0: up.UpRecord) => Promise<any> = function(record: 
   return loadSubscription(record.inviteduid).then(subscription => {
     console.log('Loaded subscription: ', subscription);
     return sendNotification(subscription, JSON.stringify({
-        notification: {
-          title: 'Something is up',
-          body: 'These people are happy to have fun right now'
-        }
+        activity: record.activity
       })
     )
     .catch(err => {
