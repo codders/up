@@ -64,7 +64,6 @@ export default {
     selectActivity(activity) {
       this.$log.debug('Selected: ' + activity.title)
       this.selected[activity.id] = !this.selected[activity.id]
-      // this.$nuxt.$router.replace({ path: '/up/' + activity.id })
     },
     activityArray() {
       const selectedActivities = []

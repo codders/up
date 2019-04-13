@@ -8,11 +8,11 @@
         <v-card-text>
           <h3>with these friends</h3>
           <v-list jest="friends-list">
-            <v-list-tile v-for="(friend, key) in friends" :key="key" class="friend">
-              <v-list-tile-action>
-                <v-checkbox v-model="selected" :value="friend.id" multiple />
-              </v-list-tile-action>
+            <v-list-tile v-for="(friend, key) in friends" :key="key" class="friend" @click="selectFriend(friend)">
               <v-list-tile-title>{{ friend.name }}</v-list-tile-title>
+              <v-list-tile-action>
+                <v-checkbox v-model="selected[friend.id]" @click.prevent="" />
+              </v-list-tile-action>
               <v-spacer />
             </v-list-tile>
           </v-list>
@@ -60,9 +60,9 @@ export default {
     }
   },
   asyncData({ app, store }) {
-    const selected = []
+    const selected = {}
     for (const friend in store.getters.friends) {
-      selected.push(friend)
+      selected[store.getters.friends[friend].id] = true
     }
     return { selected: selected }
   },
@@ -70,7 +70,17 @@ export default {
     activityName() {
       return activityArrayToString(this.$route.params.activity.split('-'))
     },
+    selectFriend(friend) {
+      this.selected[friend.id] = !this.selected[friend.id]
+    },
     showUp() {
+      const selectedFriends = []
+      const vm = this
+      Object.keys(this.$data.selected).map(function(friendId) {
+        if (vm.$data.selected[friendId]) {
+          selectedFriends.push(friendId)
+        }
+      })
       this.$log.debug(
         'Showing Up for ' + this.$route.params.activity + ' with',
         this.$data.selected
@@ -83,7 +93,7 @@ export default {
         data: {
           activity: this.$route.params.activity.split('-'),
           description: this.$data.description,
-          friends: this.$data.selected
+          friends: selectedFriends
         },
         url:
           'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/saveRecord'
