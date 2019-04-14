@@ -4,6 +4,7 @@ import { validateFirebaseIdToken,
          saveUp,
          loadUp,
          loadMyUp,
+         deleteUpRecord,
          loadDirectory,
          loadFriends,
          nameForUser,
@@ -19,6 +20,16 @@ const app = express();
 app.use(validateFirebaseIdToken);
 app.use(cors);
 app.use(cookieParser);
+app.delete('/up/:id', (request: express.Request, response: express.Response) => {
+  console.log('Deleting up record ' + request.params.id + ' at ' + request.user.email + '\'s request');
+  deleteUpRecord(request.params.id, request.user.uid).then(writeResult => {
+    response.status(200).send({ id: request.params.id })
+  })
+  .catch(err => {
+    console.log('Unable to delete record:', err)
+    response.status(500).send({ error: err })
+  })
+});
 app.get('/myUp', (request: express.Request, response: express.Response) => {
   console.log('Checking what ' + request.user.email + ':' + request.user.uid + ' is up for');
   loadMyUp(request.user.uid).then(whatsUp => {

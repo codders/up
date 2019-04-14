@@ -13,7 +13,8 @@ declare namespace express {
     body: {
       [key: string]: any
     },
-    method: string;
+    method: string,
+    params: any
   }
   interface Response {
     status: (code: number) => Response

@@ -113,6 +113,21 @@ export const saveUp = (record: up.UpRecord) => {
     });
 };
 
+export const deleteUpRecord = (recordId: string, requesterId: string) => {
+  return admin.firestore().collection('up').doc(recordId).get().then(function(docSnapshot) {
+    if (docSnapshot.exists) {
+      const docData = docSnapshot.data()
+      if (docData !== undefined && docData.uid === requesterId) {
+        return docSnapshot.ref.delete()
+      } else {
+        throw new Error('Document for ' + recordId + ' had no data')
+      }
+    } else {
+      throw new Error('Document ' + recordId + ' does not exist')
+    }
+  })
+}
+
 const loadUpByField = (field: string, uid: string) => { 
   const midnight = new Date();
   midnight.setHours(0,0,0,0);
@@ -121,10 +136,11 @@ const loadUpByField = (field: string, uid: string) => {
     .where("timestamp", ">", midnight)
     .get()
     .then(function(querySnapshot) {
-      const result: up.UpRecord[] = []
+      const result: up.SavedUpRecord[] = []
       querySnapshot.forEach(function(doc) {
         const record = doc.data() as up.UpRecord;
-        result.push(record);
+        const savedRecord: up.SavedUpRecord = Object.assign({ id: doc.id }, record);
+        result.push(savedRecord);
       });
       return result;
     })

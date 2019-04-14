@@ -18,6 +18,10 @@ declare namespace up {
     }
   }
 
+  interface SavedUpRecord extends UpRecord {
+    id: string
+  }
+
   interface UpRequest {
     activity: string
     description: string

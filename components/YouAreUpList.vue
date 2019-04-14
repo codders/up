@@ -4,12 +4,18 @@
   </div>
   <div v-else jest="something-up">
     <h2>Here are your current requests...</h2>
-    <you-are-up
-      v-for="invitation in $data.youreUp"
-      :key="invitation.id"
-      :activity="invitation.activity"
-      :description="invitation.description"
-    />
+    <v-flex xs12 md4>
+      <v-list jest="you-are-up-list">
+        <you-are-up
+          v-for="invitation in $data.youreUp"
+          :id="invitation.id"
+          :key="invitation.id"
+          :activity="invitation.activity"
+          :description="invitation.description"
+          @delete="deleteUp(invitation.id)"
+        />
+      </v-list>
+    </v-flex>
   </div>
 </template>
 
@@ -39,6 +45,11 @@ export default {
       .catch(error => {
         vm.$log.error('Unable to load my up data', error)
       })
+  },
+  methods: {
+    deleteUp(id) {
+      this.youreUp = this.youreUp.filter(upRecord => upRecord.id !== id)
+    }
   }
 }
 </script>
