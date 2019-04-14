@@ -4,6 +4,8 @@ import { validateFirebaseIdToken,
          saveUp,
          loadUp,
          loadDirectory,
+         loadFriends,
+         nameForUser,
          saveSubscription } from './firebase-wrapper';
 import upLogic from './up-logic';
 import { notifyUser } from './notification';
@@ -33,33 +35,56 @@ app.get('/directory', (request: express.Request, response: express.Response) => 
     console.log('Unable to fetch the directory');
   });
 });
-app.post('/saveRecord', (request: express.Request, response: express.Response) => {
-  const record = Object.assign({}, request.body);
-  const upRecords = upLogic.getUpRecordsForRequest({
-    activity: record.activity,
-    uid: request.user.uid,
-    description: record.description,
-    friends: record.friends
-  });
-
-  console.log('Saving data: ', upRecords);
-  const promises: PromiseLike<String>[] = [];
-  upRecords.forEach(function(upRecord: up.UpRecord) {
-    promises.push(saveUp(upRecord).then(writeResult => {
-      return notifyUser(upRecord);
-    }));
-  });
-  Promise.all(promises).then(writeResults => {
-    console.log('Got write results', writeResults);
-    response.status(201).send({
-      success: true,
-      message: 'You are up!'
-    });
+app.get('/friends', (request: express.Request, response: express.Response) => {
+  loadFriends(request.user.uid).then(friends => {
+    response.status(200).send(friends);
   })
   .catch(err => {
-    console.log('Error writing record', err);
+    console.log('Unable to fetch the list of friends');
+  });
+});
+app.post('/saveRecord', (request: express.Request, response: express.Response) => {
+  const record = Object.assign({}, request.body);
+  nameForUser(request.user.uid).then(function(userName) {
+    const upRecords = upLogic.getUpRecordsForRequest({
+      activity: record.activity,
+      name: userName,
+      uid: request.user.uid,
+      description: record.description,
+      friends: record.friends
+    });
+
+    console.log('Saving data: ', upRecords);
+    const promises: PromiseLike<String>[] = [];
+    upRecords.forEach(function(upRecord: up.UpRecord) {
+      promises.push(saveUp(upRecord).then(writeResult => {
+        return notifyUser(upRecord);
+      }));
+    });
+    Promise.all(promises).then(writeResults => {
+      console.log('Got write results', writeResults);
+      response.status(201).send({
+        success: true,
+        message: 'You are up!'
+      });
+    })
+    .catch(err => {
+      console.log('Error writing record', err);
+      response.status(500).send({
+        success: false,
+        message: err
+      })
+    })
+  })
+  .catch(err => {
+    console.log('Unable to load name for user: ', err)
+    response.status(500).send({
+      success: false,
+      message: err
+    })
   })
 });
+
 app.post('/saveSubscription', (request: express.Request, response: express.Response) => {
   const subscription = Object.assign({}, request.body);
   console.log('Saving subscription: ', subscription);

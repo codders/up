@@ -1,11 +1,10 @@
 <template>
   <div class="up">
-    <p>{{ getNameForUid(uid) }} wants to {{ getTitleForActivity(activity) }}<span v-if="!isEmpty(description)">: "{{ description }}"</span></p>  
+    <p>{{ name }} wants to {{ getTitleForActivity(activity) }}<span v-if="!isEmpty(description)">: "{{ description }}"</span></p>  
   </div>
 </template>
 
 <script>
-import { friendNameByUid } from '@/model/friends'
 import { activityArrayToString } from '@/model/activity'
 
 export default {
@@ -15,6 +14,10 @@ export default {
       default: () => {
         return []
       }
+    },
+    name: {
+      type: String,
+      default: undefined
     },
     uid: {
       type: String,
@@ -28,9 +31,6 @@ export default {
   methods: {
     isEmpty(str) {
       return !str || str.length === 0
-    },
-    getNameForUid(uid) {
-      return friendNameByUid(this.$store.getters.friends, uid)
     },
     getTitleForActivity(ids) {
       return activityArrayToString(ids)

@@ -8,9 +8,11 @@
         <template v-if="friendCount > 0">
           <v-flex xs12 md4>
             <v-list jest="friends-list">
-              <v-list-tile v-for="(friend, key) in friends" :key="key" class="friend">
+              <v-list-tile v-for="(friend, key) in knownFriends" :key="key" class="friend">
                 <nuxt-link :to="'/friends/' + key">
-                  <v-list-tile-title>{{ friend.name }}</v-list-tile-title>
+                  <v-list-tile-title class="name">
+                    {{ friend.name }}
+                  </v-list-tile-title>
                 </nuxt-link>
                 <v-spacer />
                 <v-list-tile-action @click="deleteFriend(key)">
@@ -51,8 +53,18 @@
 </template>
 
 <script>
+import { loadDirectoryFriends, filterKnownFriends } from '@/model/friends'
+
 export default {
+  data() {
+    return {
+      directoryFriends: []
+    }
+  },
   computed: {
+    knownFriends() {
+      return filterKnownFriends(this.friends, this.directoryFriends)
+    },
     friends() {
       return this.$store.getters.friends
     },
@@ -64,6 +76,9 @@ export default {
       }
       return count
     }
+  },
+  asyncData({ $axios, store }) {
+    return loadDirectoryFriends($axios, store)
   },
   methods: {
     deleteFriend(key) {

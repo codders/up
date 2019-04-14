@@ -26,6 +26,7 @@
               v-for="invitation in $data.whatsUp"
               :key="invitation.uid"
               :uid="invitation.uid"
+              :name="invitation.name"
               :activity="invitation.activity"
               :description="invitation.description"
             />

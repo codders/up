@@ -11,15 +11,11 @@ const localVue = createLocalVue()
 describe('WhatsUp.vue', () => {
   test('Renders activity details', () => {
     const mounted = shallowMount(WhatsUp, {
-      mocks: Util.mockDataStore({
-        friends: [
-          { uid: 'abc', name: 'Arthur' }
-        ]
-      }),
       localVue
     })
     mounted.setProps({
       activity: ['out', 'move'],
+      name: 'Arthur',
       uid: 'abc'
     })
     const activityText = mounted.find('.up').find('p')
@@ -27,16 +23,12 @@ describe('WhatsUp.vue', () => {
   }),
   test('Renders activity details with description', () => {
     const mounted = shallowMount(WhatsUp, {
-      mocks: Util.mockDataStore({
-        friends: [
-          { uid: 'abc', name: 'Arthur' }
-        ]
-      }),
       localVue
     })
     mounted.setProps({
       activity: ['play', 'move'],
       description: 'Play with me!',
+      name: 'Arthur',
       uid: 'abc'
     })
     const activityText = mounted.find('.up').find('p')
@@ -44,15 +36,11 @@ describe('WhatsUp.vue', () => {
   }),
   test('Renders activity details with description and triple select', () => {
     const mounted = shallowMount(WhatsUp, {
-      mocks: Util.mockDataStore({
-        friends: [
-          { uid: 'abc', name: 'Arthur' }
-        ]
-      }),
       localVue
     })
     mounted.setProps({
       activity: ['play', 'relax', 'move'],
+      name: 'Arthur',
       description: 'Play with me!',
       uid: 'abc'
     })
@@ -61,15 +49,11 @@ describe('WhatsUp.vue', () => {
   }),
   test('Does not render empty description', () => {
     const mounted = shallowMount(WhatsUp, {
-      mocks: Util.mockDataStore({
-        friends: [
-          { uid: 'abc', name: 'Arthur' }
-        ]
-      }),
       localVue
     })
     mounted.setProps({
       activity: ['play'],
+      name: 'Arthur',
       description: '',
       uid: 'abc'
     })

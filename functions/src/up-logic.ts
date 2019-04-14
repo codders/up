@@ -8,6 +8,7 @@ const upLogic = {
       const record: up.UpRecord = {
         activity: request.activity,
         description: request.description,
+        name: request.name,
         uid: request.uid,
         timestamp: {
           _seconds: 0,

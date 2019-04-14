@@ -1,3 +1,39 @@
+const makeUid = function(length) {
+  var text = ""
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+
+  for (var i = 0; i < length; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length))
+
+  return text
+}
+
+const makeName = function() {
+  const names = [ "bob", "sam", "julia" ]
+  return names[Math.floor(Math.random() * names.length)]
+}
+
+export const directoryFriends = function(friendList) {
+  const result = []
+  for (const id in friendList) {
+    result.push({
+      uid: friendList[id].uid,
+      name: makeName()
+    })
+  }
+  return result
+}
+
+export const friendList = function(friendCount) {
+  const result = []
+  for (var i=0; i<friendCount; i++) {
+    result.push({
+      uid: makeUid(15)
+    })
+  }
+  return result
+}
+
 const dataStore = function({ uid, friends, profile, dispatcher }) {
   const user = (uid === null ? null : { uid: uid })
   return {
@@ -51,6 +87,8 @@ const mockWithStore = function({ store, router, routeParams, axios }) {
 
 const Util = {
   mockDataStore: mockDataStore,
+  friendList: friendList,
+  directoryFriends: directoryFriends
 }
 
 export default Util 

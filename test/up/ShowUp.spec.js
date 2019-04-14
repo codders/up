@@ -10,51 +10,47 @@ Vue.use(Vuetify)
 config.stubs['nuxt-link'] = '<a><slot /></a>'
 config.stubs['nuxt-child'] = '<br />'
 
-describe('up/activity/time/index.vue', () => {
+describe('up/_activity/index.vue', () => {
   test('Shows the friend list', () => {
-    const friendList = [
-      { id: 'arthur@arthur_com', email: 'arthur@arthur.com', name: 'Arthur' },
-      { id: 'jenny@jenny_com', email: 'jenny@jenny.com', name: 'Jenny' }
-    ]
+    const friends = Util.friendList(2)
+    const directoryFriends = Util.directoryFriends(friends)
     const mountedCard = mount(Index, {
-      mocks: Util.mockDataStore({ uid: '123', friends: friendList, routeParams: { activity: 'play' }})
+      mocks: Util.mockDataStore({ uid: '123', friends: friends, routeParams: { activity: 'play' }})
     })
+    mountedCard.setData({ directoryFriends: directoryFriends })
     expect(mountedCard.contains('[jest="friends-list"]')).toBe(true)
     expect(mountedCard.findAll(".friend").length).toBe(2)
     expect(mountedCard.find(".headline").text()).toBe('Play')
+    expect(mountedCard.find(".friend .name").text()).not.toBe('')
   }),
   test('Shows the friend list with multiple activities', () => {
-    const friendList = [
-      { id: 'arthur@arthur_com', email: 'arthur@arthur.com', name: 'Arthur' },
-      { id: 'jenny@jenny_com', email: 'jenny@jenny.com', name: 'Jenny' }
-    ]
+    const friends = Util.friendList(2)
+    const directoryFriends = Util.directoryFriends(friends)
     const mountedCard = mount(Index, {
-      mocks: Util.mockDataStore({ uid: '123', friends: friendList, routeParams: { activity: 'move-relax' }})
+      mocks: Util.mockDataStore({ uid: '123', friends: friends, routeParams: { activity: 'move-relax' }})
     })
+    mountedCard.setData({ directoryFriends: directoryFriends })
     expect(mountedCard.contains('[jest="friends-list"]')).toBe(true)
     expect(mountedCard.findAll(".friend").length).toBe(2)
+    expect(mountedCard.find(".friend .name").text()).not.toBe('')
     expect(mountedCard.find(".headline").text()).toBe('Move or Relax')
   }),
   test('Shows the friend list with three activities', () => {
-    const friendList = [
-      { id: 'arthur@arthur_com', email: 'arthur@arthur.com', name: 'Arthur' },
-      { id: 'jenny@jenny_com', email: 'jenny@jenny.com', name: 'Jenny' }
-    ]
+    const friends = Util.friendList(2)
+    const directoryFriends = Util.directoryFriends(friends)
     const mountedCard = mount(Index, {
-      mocks: Util.mockDataStore({ uid: '123', friends: friendList, routeParams: { activity: 'move-relax-out' }})
+      mocks: Util.mockDataStore({ uid: '123', friends: friends, routeParams: { activity: 'move-relax-out' }})
     })
+    mountedCard.setData({ directoryFriends: directoryFriends })
     expect(mountedCard.contains('[jest="friends-list"]')).toBe(true)
     expect(mountedCard.findAll(".friend").length).toBe(2)
+    expect(mountedCard.find(".friend .name").text()).not.toBe('')
     expect(mountedCard.find(".headline").text()).toBe('Move, Relax or Go out')
   }),
   test('Submits data to server', () => {
-    const friendList = [
-      { id: 'arthur@arthur_com', email: 'arthur@arthur.com', name: 'Arthur' },
-      { id: 'jenny@jenny_com', email: 'jenny@jenny.com', name: 'Jenny' }
-    ]
     let postedData = null
     const mountedCard = mount(Index, {
-      mocks: Util.mockDataStore({ uid: '123', friends: friendList, routeParams: { activity: 'play' }, axios: (request) => {
+      mocks: Util.mockDataStore({ uid: '123', friends: Util.friendList(2), routeParams: { activity: 'play' }, axios: (request) => {
         postedData = request.data
         return new Promise(function(rs,rj) {
           rs('Success!')
@@ -72,13 +68,9 @@ describe('up/activity/time/index.vue', () => {
     })
   }),
   test('Handles multiple activities', () => {
-    const friendList = [
-      { id: 'arthur@arthur_com', email: 'arthur@arthur.com', name: 'Arthur' },
-      { id: 'jenny@jenny_com', email: 'jenny@jenny.com', name: 'Jenny' }
-    ]
     let postedData = null
     const mountedCard = mount(Index, {
-      mocks: Util.mockDataStore({ uid: '123', friends: friendList, routeParams: { activity: 'play-out' }, axios: (request) => {
+      mocks: Util.mockDataStore({ uid: '123', friends: Util.friendList(2), routeParams: { activity: 'play-out' }, axios: (request) => {
         postedData = request.data
         return new Promise(function(rs,rj) {
           rs('Success!')

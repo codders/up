@@ -10,6 +10,7 @@ declare namespace up {
     activity: string
     inviteduid: string
     description: string
+    name: string
     uid: string
     timestamp: {
       _seconds: number
@@ -21,6 +22,7 @@ declare namespace up {
     activity: string
     description: string
     uid: string
+    name: string
     friends: string[]
   }
 

@@ -9,7 +9,7 @@
         <v-icon>delete</v-icon>
       </v-btn>
     </v-list-tile-action>
-    <v-list-tile-action v-else class="add_action" @click="addFriend(uid, name)">
+    <v-list-tile-action v-else class="add_action" @click="addFriend(uid)">
       <v-btn icon>
         <v-icon>add</v-icon>
       </v-btn>
@@ -38,9 +38,8 @@ export default {
     }
   },
   methods: {
-    addFriend(uid, name) {
+    addFriend(uid) {
       this.$store.dispatch('addFriend', {
-        name: name,
         uid: uid
       })
     },

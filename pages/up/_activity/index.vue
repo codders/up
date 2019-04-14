@@ -8,10 +8,12 @@
         <v-card-text>
           <h3>with these friends</h3>
           <v-list jest="friends-list">
-            <v-list-tile v-for="(friend, key) in friends" :key="key" class="friend" @click="selectFriend(friend)">
-              <v-list-tile-title>{{ friend.name }}</v-list-tile-title>
+            <v-list-tile v-for="(friend, key) in knownFriends" :key="key" class="friend" @click="selectFriend(friend)">
+              <v-list-tile-title class="name">
+                {{ friend.name }}
+              </v-list-tile-title>
               <v-list-tile-action>
-                <v-checkbox v-model="selected[friend.id]" @click.prevent="" />
+                <v-checkbox v-model="selected[friend.uid]" @click.prevent="" />
               </v-list-tile-action>
               <v-spacer />
             </v-list-tile>
@@ -47,31 +49,46 @@
 </template>
 
 <script>
-import { activityArrayToString } from '@/model/activity.js'
+import { activityArrayToString } from '@/model/activity'
+import { loadDirectoryFriends, filterKnownFriends } from '@/model/friends'
 
 export default {
   data: () => ({
-    selected: [],
+    selected: {},
+    directoryFriends: [],
     description: ''
   }),
   computed: {
     friends() {
       return this.$store.getters.friends
+    },
+    knownFriends() {
+      return filterKnownFriends(this.friends, this.directoryFriends)
     }
   },
-  asyncData({ app, store }) {
-    const selected = {}
-    for (const friend in store.getters.friends) {
-      selected[store.getters.friends[friend].id] = true
-    }
-    return { selected: selected }
+  asyncData({ $axios, store }) {
+    return loadDirectoryFriends($axios, store)
+      .then(function(data) {
+        const selected = {}
+        for (const friend in data.directoryFriends) {
+          selected[data.directoryFriends[friend].uid] = true
+        }
+        return Object.assign(data, { selected: selected })
+      })
+      .catch(function(error) {
+        return {
+          selected: {},
+          directoryFriends: [],
+          error: error
+        }
+      })
   },
   methods: {
     activityName() {
       return activityArrayToString(this.$route.params.activity.split('-'))
     },
     selectFriend(friend) {
-      this.selected[friend.id] = !this.selected[friend.id]
+      this.selected[friend.uid] = !this.selected[friend.uid]
     },
     showUp() {
       const selectedFriends = []

@@ -134,6 +134,55 @@ export const loadUp = (uid: String) => {
     });
 };
 
+export const nameForUser = (uid: string) => {
+  return admin.firestore().collection('users')
+    .doc(uid)
+    .get().then(function(userDoc) {
+      if (userDoc.exists) {
+        const userDocData = userDoc.data()
+        if (userDocData !== undefined) {
+          return userDocData.name
+        } else {
+          throw new Error('User data doc undefined for user: ' + uid)
+        }
+      } else {
+        throw new Error('Unable to load user doc for user: ' + uid)
+      }
+    })
+    .catch(function(error) {
+      console.log('Unable to load name record for user: ', error)
+    })
+}
+
+export const loadFriends = (uid: string) => {
+  console.log('Loading friends for user', uid)
+  return admin.firestore().collection('users').doc(uid).collection('friends')
+    .get().then(function(querySnapshot) {
+      const promises: PromiseLike<void>[] = []
+      const friends: up.DirectoryEntry[] = [];
+      querySnapshot.forEach(function(friendDoc) {
+        const record = friendDoc.data();
+        promises.push(
+          nameForUser(record.uid).then(function(name) {
+            if (name !== undefined) {
+              friends.push({
+                uid: record.uid,
+                name: name
+              })
+            }
+          })
+        )
+      })
+      return Promise.all(promises).then(function(results) {
+        return friends
+      })
+    })
+    .catch(function(error) {
+      console.log("Error fetching list of friends: ", error);
+      return [];
+    });
+};
+
 export const loadDirectory = (uid: String) => {
   return admin.firestore().collection('users')
     .get()
