@@ -13,7 +13,9 @@ export const notifyUser: (arg0: up.UpRecord) => Promise<any> = function(record: 
   return loadSubscription(record.inviteduid).then(subscription => {
     console.log('Loaded subscription: ', subscription);
     return sendNotification(subscription, JSON.stringify({
-        activity: record.activity
+        activity: record.activity,
+        name: record.name,
+        description: record.description
       })
     )
     .catch(err => {
