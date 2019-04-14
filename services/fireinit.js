@@ -3,12 +3,12 @@ import 'firebase/auth'
 import 'firebase/firestore'
 
 const config = {
-  apiKey: '',
-  authDomain: '',
-  databaseURL: '',
-  projectId: '',
-  storageBucket: '',
-  messagingSenderId: ''
+  apiKey: 'AIzaSyAKjfV-PFotzvI9a3UHTLfnkITGpb-3G4Q',
+  authDomain: 'up-now-a6da8.firebaseapp.com',
+  databaseURL: 'https://up-now-a6da8.firebaseio.com',
+  projectId: 'up-now-a6da8',
+  storageBucket: 'up-now-a6da8.appspot.com',
+  messagingSenderId: '884424894711'
 }
 
 if (!firebase.apps.length) {

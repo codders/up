@@ -17,20 +17,7 @@
           <login-form />
         </v-card-text>
         <v-card-text v-else>
-          <div v-if="$data.whatsUp.length === 0" jest="nothing-up">
-            <p>Nothing's happening right now... Be the first to show up!</p>
-          </div>
-          <div v-else jest="something-up">
-            <h2>Here's what's up right now...</h2>
-            <whats-up
-              v-for="invitation in $data.whatsUp"
-              :key="invitation.uid"
-              :uid="invitation.uid"
-              :name="invitation.name"
-              :activity="invitation.activity"
-              :description="invitation.description"
-            />
-          </div>
+          <whats-up-list />
           <v-list two-line jest="activities-list">
             <v-list-tile nuxt to="/up">
               <v-list-tile-title>Show Up</v-list-tile-title>
@@ -62,7 +49,7 @@
 
 <script>
 import LoginForm from '~/components/LoginForm.vue'
-import WhatsUp from '~/components/WhatsUp.vue'
+import WhatsUpList from '~/components/WhatsUpList.vue'
 import { vapidKey } from '@/model/vapid-key'
 
 function urlBase64ToUint8Array(base64String) {
@@ -75,12 +62,11 @@ function urlBase64ToUint8Array(base64String) {
 export default {
   components: {
     LoginForm,
-    WhatsUp
+    WhatsUpList
   },
   data() {
     return {
-      hello: '',
-      whatsUp: []
+      hello: ''
     }
   },
   computed: {
@@ -101,25 +87,6 @@ export default {
       }
       return greeting
     }
-  },
-  async asyncData({ $axios, store }) {
-    const whatsUpPromise = $axios
-      .$get(
-        'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/whatsUp',
-        {
-          headers: {
-            Authorization: 'Bearer ' + store.state.idToken
-          }
-        }
-      )
-      .then(response => {
-        return { whatsUp: response }
-      })
-      .catch(error => {
-        return { whatsUp: error }
-      })
-    const result = await whatsUpPromise
-    return result
   },
   created: function() {
     const vm = this
