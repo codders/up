@@ -18,6 +18,7 @@
         </v-card-text>
         <v-card-text v-else>
           <whats-up-list />
+          <you-are-up-list />
           <v-list two-line jest="activities-list">
             <v-list-tile nuxt to="/up">
               <v-list-tile-title>Show Up</v-list-tile-title>
@@ -50,6 +51,7 @@
 <script>
 import LoginForm from '~/components/LoginForm.vue'
 import WhatsUpList from '~/components/WhatsUpList.vue'
+import YouAreUpList from '~/components/YouAreUpList.vue'
 import { vapidKey } from '@/model/vapid-key'
 
 function urlBase64ToUint8Array(base64String) {
@@ -62,6 +64,7 @@ function urlBase64ToUint8Array(base64String) {
 export default {
   components: {
     LoginForm,
+    YouAreUpList,
     WhatsUpList
   },
   data() {

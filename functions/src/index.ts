@@ -3,6 +3,7 @@ import * as functions from 'firebase-functions';
 import { validateFirebaseIdToken,
          saveUp,
          loadUp,
+         loadMyUp,
          loadDirectory,
          loadFriends,
          nameForUser,
@@ -18,6 +19,15 @@ const app = express();
 app.use(validateFirebaseIdToken);
 app.use(cors);
 app.use(cookieParser);
+app.get('/myUp', (request: express.Request, response: express.Response) => {
+  console.log('Checking what ' + request.user.email + ':' + request.user.uid + ' is up for');
+  loadMyUp(request.user.uid).then(whatsUp => {
+    response.status(200).send(whatsUp);
+  })
+  .catch(err => {
+    console.log('Unable to work out what\'s up', err);
+  });
+});
 app.get('/whatsUp', (request: express.Request, response: express.Response) => {
   console.log('Checking what\'s up for ' + request.user.email + ':' + request.user.uid);
   loadUp(request.user.uid).then(whatsUp => {

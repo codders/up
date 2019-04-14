@@ -113,11 +113,11 @@ export const saveUp = (record: up.UpRecord) => {
     });
 };
 
-export const loadUp = (uid: String) => {
+const loadUpByField = (field: string, uid: string) => { 
   const midnight = new Date();
   midnight.setHours(0,0,0,0);
   return admin.firestore().collection('up')
-    .where("inviteduid", "==", uid)
+    .where(field, "==", uid)
     .where("timestamp", ">", midnight)
     .get()
     .then(function(querySnapshot) {
@@ -132,6 +132,14 @@ export const loadUp = (uid: String) => {
       console.log("Error fetching whats up: ", error);
       return [];
     });
+}
+
+export const loadMyUp = (uid: string) => {
+  return loadUpByField("uid", uid)
+};
+
+export const loadUp = (uid: string) => {
+  return loadUpByField("inviteduid", uid)
 };
 
 export const nameForUser = (uid: string) => {
