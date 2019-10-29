@@ -8,6 +8,7 @@ import { validateFirebaseIdToken,
          loadDirectory,
          loadFriends,
          nameForUser,
+         respondToUp,
          saveSubscription } from './firebase-wrapper';
 import upLogic from './up-logic';
 import { notifyUser } from './notification';
@@ -29,6 +30,23 @@ app.delete('/up/:id', (request: express.Request, response: express.Response) => 
     console.log('Unable to delete record:', err)
     response.status(500).send({ error: err })
   })
+});
+app.post('/up/:id', (request: express.Request, response: express.Response) => {
+  console.log('Got post body', request.body);
+  console.log('Responding to what\'s up ' + request.params.id + ' for ' + request.user.email + ':' + request.user.uid);
+  respondToUp(request.user.uid, request.params.id, request.body.isUp).then(result =>
+    loadUp(request.user.uid).then(whatsUp => {
+      response.status(200).send(upLogic.findMatches(whatsUp));
+    })
+    .catch(err => {
+      console.log('Unable to load up records after response', err)
+    })
+  )
+  .catch(err => {
+    console.log('Unable to record response', err);
+    response.status(500).send({ error: err })
+  })
+  });
 });
 app.get('/myUp', (request: express.Request, response: express.Response) => {
   console.log('Checking what ' + request.user.email + ':' + request.user.uid + ' is up for');

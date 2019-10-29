@@ -150,6 +150,22 @@ const loadUpByField = (field: string, uid: string) => {
     });
 }
 
+export const respondToUp = (thisUserUid: string, upRecordId: string, isUp: boolean) => {
+  return admin.firestore().collection('up').doc(upRecordId).get().then(docSnapshot => {
+    if (docSnapshot.exists) {
+      const docData = docSnapshot.data()
+      if (docData !== undefined && docData.inviteduid === thisUserUid) {
+         
+        return docSnapshot.ref.update({ isUp: isUp })
+      } else {
+        throw new Error('Document for ' + upRecordId + ' had no data')
+      }
+    } else {
+      throw new Error('Document ' + upRecordId + ' does not exist')
+    }
+  })
+};
+
 export const loadMyUp = (uid: string) => {
   return loadUpByField("uid", uid)
 };

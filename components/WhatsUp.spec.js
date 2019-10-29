@@ -18,8 +18,10 @@ describe('WhatsUp.vue', () => {
       name: 'Arthur',
       uid: 'abc'
     })
-    const activityText = mounted.find('.up').find('p')
+    const activityText = mounted.find('.up v-list-tile-content-stub v-list-tile-title-stub')
+    const descriptionText = mounted.find('.up v-list-tile-content-stub v-list-tile-sub-title-stub')
     expect(activityText.text()).toBe('Arthur wants to Go out or Move')
+    expect(descriptionText.exists()).toBe(false)
   }),
   test('Renders activity details with description', () => {
     const mounted = shallowMount(WhatsUp, {
@@ -31,8 +33,10 @@ describe('WhatsUp.vue', () => {
       name: 'Arthur',
       uid: 'abc'
     })
-    const activityText = mounted.find('.up').find('p')
-    expect(activityText.text()).toBe('Arthur wants to Play or Move: "Play with me!"')
+    const activityText = mounted.find('.up v-list-tile-content-stub v-list-tile-title-stub')
+    const descriptionText = mounted.find('.up v-list-tile-content-stub v-list-tile-sub-title-stub')
+    expect(activityText.text()).toBe('Arthur wants to Play or Move')
+    expect(descriptionText.text()).toBe('Play with me!')
   }),
   test('Renders activity details with description and triple select', () => {
     const mounted = shallowMount(WhatsUp, {
@@ -44,8 +48,10 @@ describe('WhatsUp.vue', () => {
       description: 'Play with me!',
       uid: 'abc'
     })
-    const activityText = mounted.find('.up').find('p')
-    expect(activityText.text()).toBe('Arthur wants to Play, Relax or Move: "Play with me!"')
+    const activityText = mounted.find('.up v-list-tile-content-stub v-list-tile-title-stub')
+    const descriptionText = mounted.find('.up v-list-tile-content-stub v-list-tile-sub-title-stub')
+    expect(activityText.text()).toBe('Arthur wants to Play, Relax or Move')
+    expect(descriptionText.text()).toBe('Play with me!')
   }),
   test('Does not render empty description', () => {
     const mounted = shallowMount(WhatsUp, {
@@ -57,7 +63,9 @@ describe('WhatsUp.vue', () => {
       description: '',
       uid: 'abc'
     })
-    const activityText = mounted.find('.up').find('p')
+    const activityText = mounted.find('.up v-list-tile-content-stub v-list-tile-title-stub')
+    const descriptionText = mounted.find('.up v-list-tile-content-stub v-list-tile-sub-title-stub')
     expect(activityText.text()).toBe('Arthur wants to Play')
+    expect(descriptionText.exists()).toBe(false)
   })
 })
