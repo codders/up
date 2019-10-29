@@ -46,7 +46,6 @@ app.post('/up/:id', (request: express.Request, response: express.Response) => {
     console.log('Unable to record response', err);
     response.status(500).send({ error: err })
   })
-  });
 });
 app.get('/myUp', (request: express.Request, response: express.Response) => {
   console.log('Checking what ' + request.user.email + ':' + request.user.uid + ' is up for');
