@@ -11,7 +11,8 @@ import { validateFirebaseIdToken,
          respondToUp,
          saveSubscription } from './firebase-wrapper';
 import upLogic from './up-logic';
-import { notifyUser } from './notification';
+import { sendShowUpNotification,
+         sendUpMatchNotification } from './notification';
 
 const express = require('express')
 const cookieParser = require('cookie-parser')();
@@ -34,7 +35,24 @@ app.delete('/up/:id', (request: express.Request, response: express.Response) => 
 app.post('/up/:id', (request: express.Request, response: express.Response) => {
   console.log('Got post body', request.body);
   console.log('Responding to what\'s up ' + request.params.id + ' for ' + request.user.email + ':' + request.user.uid);
-  respondToUp(request.user.uid, request.params.id, request.body.isUp).then(result =>
+  respondToUp(request.user.uid, request.params.id, request.body.isUp).then(result => {
+    if (request.body.isUp) {
+      return nameForUser(request.user.uid).then(name => {
+        return sendUpMatchNotification(name, result);
+      })
+      .catch(err => {
+        console.log('Unable to load name for user: ', err)
+        return err;
+      })
+    } else {
+      return Promise.resolve(result);
+    }
+  })
+  .catch(err => {
+    console.log('Unable to send up match notification', err);
+    response.status(500).send({ error: err })
+  })
+  .then(result =>
     loadUp(request.user.uid).then(whatsUp => {
       response.status(200).send(upLogic.findMatches(whatsUp));
     })
@@ -96,7 +114,7 @@ app.post('/saveRecord', (request: express.Request, response: express.Response) =
     const promises: PromiseLike<String>[] = [];
     upRecords.forEach(function(upRecord: up.UpRecord) {
       promises.push(saveUp(upRecord).then(writeResult => {
-        return notifyUser(upRecord);
+        return sendShowUpNotification(upRecord);
       }));
     });
     Promise.all(promises).then(writeResults => {

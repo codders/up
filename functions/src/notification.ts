@@ -8,29 +8,24 @@ setVapidDetails(
   vapidKey.secret
 );
 
-export const notifyUser: (arg0: up.UpRecord) => Promise<any> = function(record: up.UpRecord) {
-  console.log('Sending notification to user ' + record.inviteduid + ': ', record);
-  return loadSubscription(record.inviteduid).then(subscription => {
+const notifyUser: (arg0: string, arg1: any) => Promise<any> = function(target: string, message: any) {
+  console.log('Sending notification to user ' + target + ' of type ' + message.messageType + ': ', message);
+  return loadSubscription(target).then(subscription => {
     console.log('Loaded subscription: ', subscription);
-    return sendNotification(subscription, JSON.stringify({
-        activity: record.activity,
-        name: record.name,
-        description: record.description
-      })
-    )
+    return sendNotification(subscription, JSON.stringify(message))
     .catch(err => {
       if (err.statusCode === 410) {
         console.log('Need to delete subscription');
         return {
           success: false,
-          uid: record.inviteduid,
+          uid: target,
           message: 'Subscription expired (410)'
         };
       } else {
         console.log('Subscription is no longer valid: ', err);
         return {
           success: false,
-          uid: record.inviteduid,
+          uid: target,
           message: 'Subscription is no longer valid: ' + err
         }
       }
@@ -40,8 +35,30 @@ export const notifyUser: (arg0: up.UpRecord) => Promise<any> = function(record: 
     console.log('Error loading subscription', err);
     return {
       success: false,
-      uid: record.inviteduid,
+      uid: target,
       message: 'Error loading subscription ' + err
     }
+  })
+};
+
+export const sendShowUpNotification: (arg0: up.UpRecord) => Promise<any> = function(record: up.UpRecord) {
+  console.log('Sending show up notification to user ' + record.inviteduid + ': ', record);
+  return notifyUser(record.inviteduid, {
+    messageType: "SHOW_UP",
+    inviteduid: record.inviteduid,
+    activity: record.activity,
+    name: record.name,
+    description: record.description
+  })
+};
+
+export const sendUpMatchNotification: (arg0: string, arg1: up.UpRecord) => Promise<any> = function(senderName: string, record: up.UpRecord) {
+  console.log('Sending match notification to user ' + record.uid + ': ', record);
+  return notifyUser(record.uid, {
+    messageType: "MATCH",
+    inviteduid: record.inviteduid,
+    activity: record.activity,
+    name: senderName,
+    description: record.description
   })
 };

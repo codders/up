@@ -128,7 +128,7 @@ export const deleteUpRecord = (recordId: string, requesterId: string) => {
   })
 }
 
-const loadUpByField = (field: string, uid: string) => { 
+const loadUpByField = (field: string, uid: string) => {
   const midnight = new Date();
   midnight.setHours(0,0,0,0);
   return admin.firestore().collection('up')
@@ -155,8 +155,10 @@ export const respondToUp = (thisUserUid: string, upRecordId: string, isUp: boole
     if (docSnapshot.exists) {
       const docData = docSnapshot.data()
       if (docData !== undefined && docData.inviteduid === thisUserUid) {
-         
-        return docSnapshot.ref.update({ isUp: isUp })
+
+        return docSnapshot.ref.update({ isUp: isUp }).then(writeResult => {
+          return docData as up.SavedUpRecord;
+        })
       } else {
         throw new Error('Document for ' + upRecordId + ' had no data')
       }
