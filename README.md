@@ -76,3 +76,10 @@ As described here: https://www.davidroyer.me/blog/nuxtjs-firebase-auth/ (plus so
 
 There is support for push notifications in the application. You will need to generate the Application Server Keys, as described here: https://developers.google.com/web/fundamentals/push-notifications/subscribing-a-user
 
+## Startup errors in dev
+
+If you have trouble running the development server, it might be that there are not enough kernel watches available. You might see an 'ENOSPC' error from Node when you run `npm run dev`. In this case:
+
+```
+sudo sysctl fs.inotify.max_user_watches=524288
+```

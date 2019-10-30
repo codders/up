@@ -1,12 +1,12 @@
 <template>
-  <div v-if="$data.whatsUp.length === 0" jest="nothing-up">
+  <div v-if="whatsUp.length === 0" jest="nothing-up">
     <p>Nothing's happening right now... Be the first to show up!</p>
   </div>
   <div v-else jest="something-up">
     <h2>Here's what's up right now...</h2>
     <v-list two-line>
       <whats-up
-        v-for="invitation in $data.whatsUp"
+        v-for="invitation in whatsUp"
         :key="invitation.id"
         :uid="invitation.uid"
         :name="invitation.name"
@@ -27,9 +27,15 @@ export default {
   components: {
     WhatsUp
   },
-  data() {
-    return {
-      whatsUp: []
+  computed: {
+    whatsUp() {
+      const whatsUpData = this.$store.getters.whatsUp
+      if (this.$store.getters.activeUser == null) {
+        return []
+      }
+      return whatsUpData.filter(
+        item => item.uid !== this.$store.getters.activeUser.uid
+      )
     }
   },
   mounted: function() {
@@ -44,7 +50,7 @@ export default {
         }
       )
       .then(response => {
-        vm.whatsUp = response
+        vm.$store.commit('mergeWhatsUpRecords', response)
       })
       .catch(error => {
         vm.$log.error('Unable to load whatsapp data', error)
@@ -65,16 +71,7 @@ export default {
         }
       })
         .then(response => {
-          const newUps = response.data
-          newUps.forEach(function(newUpItem, index) {
-            let upIndex = null
-            vm.whatsUp.forEach(function(whatsUpItem, index) {
-              if (whatsUpItem.id === newUpItem.id) {
-                upIndex = index
-              }
-            })
-            vm.whatsUp.splice(upIndex, 1, newUpItem)
-          })
+          vm.$store.commit('mergeWhatsUpRecords', response.data)
         })
         .catch(error => {
           vm.$log.error('Unable to respond to up id ' + id, error)
