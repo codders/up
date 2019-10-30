@@ -45,8 +45,6 @@ export const sendShowUpNotification: (arg0: up.UpRecord) => Promise<any> = funct
   console.log('Sending show up notification to user ' + record.inviteduid + ': ', record);
   return notifyUser(record.inviteduid, {
     messageType: "SHOW_UP",
-    inviteduid: record.inviteduid,
-    activity: record.activity,
     name: record.name,
     description: record.description
   })
@@ -56,9 +54,8 @@ export const sendUpMatchNotification: (arg0: string, arg1: up.UpRecord) => Promi
   console.log('Sending match notification to user ' + record.uid + ': ', record);
   return notifyUser(record.uid, {
     messageType: "MATCH",
-    inviteduid: record.inviteduid,
-    activity: record.activity,
     name: senderName,
+    activity: record.activity,
     description: record.description
   })
 };
