@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$data.youreUp.length === 0" jest="nothing-up">
+  <div v-if="youreUp.length === 0" jest="nothing-up">
     <p>You are not up right now</p>
   </div>
   <div v-else jest="something-up">
@@ -7,12 +7,11 @@
     <v-flex xs12 md4>
       <v-list jest="you-are-up-list">
         <you-are-up
-          v-for="invitation in $data.youreUp"
+          v-for="invitation in youreUp"
           :id="invitation.id"
           :key="invitation.id"
           :activity="invitation.activity"
           :description="invitation.description"
-          @delete="deleteUp(invitation.id)"
         />
       </v-list>
     </v-flex>
@@ -26,9 +25,15 @@ export default {
   components: {
     YouAreUp
   },
-  data() {
-    return {
-      youreUp: []
+  computed: {
+    youreUp() {
+      const whatsUp = this.$store.getters.whatsUp
+      if (this.$store.getters.activeUser == null) {
+        return []
+      }
+      return whatsUp.filter(
+        item => item.uid === this.$store.getters.activeUser.uid
+      )
     }
   },
   mounted: function() {
@@ -40,16 +45,11 @@ export default {
         }
       })
       .then(response => {
-        vm.youreUp = response
+        vm.$store.commit('mergeWhatsUpRecords', response)
       })
       .catch(error => {
         vm.$log.error('Unable to load my up data', error)
       })
-  },
-  methods: {
-    deleteUp(id) {
-      this.youreUp = this.youreUp.filter(upRecord => upRecord.id !== id)
-    }
   }
 }
 </script>

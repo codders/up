@@ -51,7 +51,7 @@ export default {
       })
         .then(response => {
           this.$log.debug('Delete completed, removing element')
-          this.$emit('delete')
+          this.$store.commit('deleteWhatsUp', id)
         })
         .catch(error => {
           this.$log.error('Delete failed, not removing element', error)

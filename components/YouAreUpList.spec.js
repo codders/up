@@ -11,6 +11,32 @@ const localVue = createLocalVue()
 describe('YouAreUpList.vue', () => {
   test('Shows something is up when I am up', () => {
     const mountedIndex = shallowMount(YouAreUpList, {
+      mocks: Util.mockDataStore({ uid: '123',
+      whatsUp: [
+        {"activity":["play","out"],
+         "description": "Let's do something",
+         "timestamp": {
+            "_seconds":1554534507,
+            "_nanoseconds":0
+          },
+          "uid": '123'
+        }
+      ],
+       axios: {
+        '$get': function(request) {
+           return new Promise(function(rs,rj) {
+             rs([])
+           })
+         }
+        }
+      }),
+      localVue
+    })
+    expect(mountedIndex.contains('[jest="something-up"]')).toBe(true)
+    expect(mountedIndex.find('[jest="something-up"]').findAll('you-are-up-stub').length).toBe(1)
+  }),
+  test('Shows nothing is up when there are not things up', () => {
+    const mountedIndex = shallowMount(YouAreUpList, {
       mocks: Util.mockDataStore({ uid: '123', axios: {
         '$get': function(request) {
            return new Promise(function(rs,rj) {
@@ -21,23 +47,22 @@ describe('YouAreUpList.vue', () => {
       }),
       localVue
     })
-    mountedIndex.setData({
-      youreUp: [ 
+    expect(mountedIndex.contains('[jest="nothing-up"]')).toBe(true)
+  }),
+  test('Shows nothing when only someone else is up', () => {
+    const mountedIndex = shallowMount(YouAreUpList, {
+      mocks: Util.mockDataStore({ uid: '123',
+      whatsUp: [
         {"activity":["play","out"],
          "description": "Let's do something",
          "timestamp": {
             "_seconds":1554534507,
             "_nanoseconds":0
-          }
-        } 
-      ]
-    })
-    expect(mountedIndex.contains('[jest="something-up"]')).toBe(true)
-    expect(mountedIndex.find('[jest="something-up"]').findAll('you-are-up-stub').length).toBe(1)
-  }),
-  test('Shows nothing is up when there are not things up', () => {
-    const mountedIndex = shallowMount(YouAreUpList, {
-      mocks: Util.mockDataStore({ uid: '123', axios: {
+          },
+          "uid": '234'
+        }
+      ],
+       axios: {
         '$get': function(request) {
            return new Promise(function(rs,rj) {
              rs([])

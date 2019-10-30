@@ -45,7 +45,8 @@ const emptyUser = {
 }
 
 export const state = () => ({
-  user: Object.assign({}, emptyUser)
+  user: Object.assign({}, emptyUser),
+  whatsUp: []
 })
 
 export const getters = {
@@ -58,6 +59,9 @@ export const getters = {
   },
   friends: state => {
     return state.friends.data
+  },
+  whatsUp: state => {
+    return state.whatsUp
   }
 }
 
@@ -78,6 +82,24 @@ export const mutations = {
   },
   setIdToken(state, payload) {
     state.idToken = payload
+  },
+  mergeWhatsUpRecords(state, records) {
+    records.forEach(function(whatsUpRecord) {
+      const index = state.whatsUp.findIndex(
+        item => item.id === whatsUpRecord.id
+      )
+      if (index !== -1) {
+        state.whatsUp.splice(index, 1, whatsUpRecord)
+      } else {
+        state.whatsUp.push(whatsUpRecord)
+      }
+    })
+  },
+  deleteWhatsUp(state, id) {
+    const index = state.whatsUp.findIndex(item => item.id === id)
+    if (index !== -1) {
+      state.whatsUp.splice(index, 1)
+    }
   }
 }
 
