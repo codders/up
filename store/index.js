@@ -1,7 +1,7 @@
-import { auth, GoogleProvider } from '@/services/fireinit.js'
-
 /** Vuex-Easy-Firestore config **/
 import createEasyFirestore from 'vuex-easy-firestore'
+
+import { auth, GoogleProvider } from '@/services/fireinit.js'
 
 /* Friends firestore */
 const friends = {
