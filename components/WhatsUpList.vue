@@ -38,7 +38,7 @@ export default {
       )
     }
   },
-  mounted: function() {
+  mounted() {
     const vm = this
     this.$axios
       .$get(
@@ -63,9 +63,7 @@ export default {
         method: 'post',
         url:
           'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/up/' + id,
-        data: {
-          isUp: isUp
-        },
+        data: { isUp },
         headers: {
           Authorization: 'Bearer ' + this.$store.state.idToken
         }

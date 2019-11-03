@@ -37,7 +37,7 @@ export default {
       )
     }
   },
-  mounted: function() {
+  mounted() {
     const vm = this
     this.$axios
       .$get('https://europe-west1-up-now-a6da8.cloudfunctions.net/app/myUp', {

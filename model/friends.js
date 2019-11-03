@@ -29,7 +29,7 @@ export const loadDirectoryFriends = function($axios, store) {
     .catch(error => {
       return {
         directoryFriends: [],
-        error: error
+        error
       }
     })
 }
@@ -50,7 +50,7 @@ export const filterKnownFriends = function(friends, directoryFriends) {
     if (name !== undefined) {
       result.push({
         uid: friends[id].uid,
-        name: name
+        name
       })
     }
   }

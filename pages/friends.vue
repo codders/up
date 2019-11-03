@@ -2,25 +2,29 @@
   <v-layout column align-center justify-center>
     <v-card>
       <v-card-title class="headline">
-        Your Friends 
+        Your Friends
       </v-card-title>
       <v-card-text>
         <template v-if="friendCount > 0">
           <v-flex xs12 md4>
             <v-list jest="friends-list">
-              <v-list-tile v-for="(friend, key) in knownFriends" :key="key" class="friend">
+              <v-list-item
+                v-for="(friend, key) in knownFriends"
+                :key="key"
+                class="friend"
+              >
                 <nuxt-link :to="'/friends/' + key">
-                  <v-list-tile-title class="name">
+                  <v-list-item-title class="name">
                     {{ friend.name }}
-                  </v-list-tile-title>
+                  </v-list-item-title>
                 </nuxt-link>
                 <v-spacer />
-                <v-list-tile-action @click="deleteFriend(key)">
+                <v-list-item-action @click="deleteFriend(key)">
                   <v-btn icon>
                     <v-icon>delete</v-icon>
                   </v-btn>
-                </v-list-tile-action>
-              </v-list-tile>
+                </v-list-item-action>
+              </v-list-item>
             </v-list>
           </v-flex>
           <v-spacer />
@@ -30,22 +34,12 @@
         </template>
       </v-card-text>
       <v-card-actions>
-        <v-btn
-          color="primary"
-          flat
-          nuxt
-          to="/"
-        >
-          Go Back 
+        <v-btn color="primary" text nuxt to="/">
+          Go Back
         </v-btn>
         <v-spacer />
-        <v-btn
-          color="primary"
-          flat
-          nuxt
-          to="/add-friend"
-        >
-          Add Friend 
+        <v-btn color="primary" text nuxt to="/add-friend">
+          Add Friend
         </v-btn>
       </v-card-actions>
     </v-card>

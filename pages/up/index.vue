@@ -7,34 +7,33 @@
         </v-card-title>
         <v-card-text>
           <v-list two-line jest="activities-list">
-            <v-list-tile v-for="(activity, key) in activities" :key="key" class="activity" @click="selectActivity(activity)">
-              <v-list-tile-avatar><v-icon>{{ activity.icon }}</v-icon></v-list-tile-avatar>
-              <v-list-tile-content>
-                <v-list-tile-title>{{ activity.title }}</v-list-tile-title>
-                <v-list-tile-sub-title>{{ activity.description }}</v-list-tile-sub-title>
-              </v-list-tile-content>
-              <v-list-tile-action>
+            <v-list-item
+              v-for="(activity, key) in activities"
+              :key="key"
+              class="activity"
+              @click="selectActivity(activity)"
+            >
+              <v-list-item-avatar>
+                <v-icon>{{ activity.icon }}</v-icon>
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title>{{ activity.title }}</v-list-item-title>
+                <v-list-item-subtitle>
+                  {{ activity.description }}
+                </v-list-item-subtitle>
+              </v-list-item-content>
+              <v-list-item-action>
                 <v-checkbox v-model="selected[activity.id]" @click.prevent="" />
-              </v-list-tile-action>
-            </v-list-tile>
+              </v-list-item-action>
+            </v-list-item>
           </v-list>
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn
-            color="primary"
-            flat
-            nuxt
-            to="/"
-          >
+          <v-btn color="primary" text nuxt to="/">
             Go Back
           </v-btn>
-          <v-btn
-            color="primary"
-            flat
-            nuxt
-            :to="'/up/' + activityArray()"
-          >
+          <v-btn color="primary" text nuxt :to="'/up/' + activityArray()">
             Next
           </v-btn>
         </v-card-actions>
@@ -53,7 +52,7 @@ export default {
     for (const id in activitiesList) {
       selected[activitiesList[id].id] = true
     }
-    return { selected: selected }
+    return { selected }
   },
   computed: {
     activities() {

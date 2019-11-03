@@ -1,20 +1,24 @@
 <template>
-  <v-list-tile class="entry">
+  <v-list-item class="entry">
     <nuxt-link :to="'/friends/' + uid">
-      <v-list-tile-title>{{ name }}</v-list-tile-title>
+      <v-list-item-title>{{ name }}</v-list-item-title>
     </nuxt-link>
     <v-spacer />
-    <v-list-tile-action v-if="isFriend" class="delete_action" @click="deleteFriend(uid)">
+    <v-list-item-action
+      v-if="isFriend"
+      class="delete_action"
+      @click="deleteFriend(uid)"
+    >
       <v-btn icon>
         <v-icon>delete</v-icon>
       </v-btn>
-    </v-list-tile-action>
-    <v-list-tile-action v-else class="add_action" @click="addFriend(uid)">
+    </v-list-item-action>
+    <v-list-item-action v-else class="add_action" @click="addFriend(uid)">
       <v-btn icon>
         <v-icon>add</v-icon>
       </v-btn>
-    </v-list-tile-action>
-  </v-list-tile>
+    </v-list-item-action>
+  </v-list-item>
 </template>
 
 <script>
@@ -39,9 +43,7 @@ export default {
   },
   methods: {
     addFriend(uid) {
-      this.$store.dispatch('addFriend', {
-        uid: uid
-      })
+      this.$store.dispatch('addFriend', { uid })
     },
     deleteFriend(uid) {
       this.$store.dispatch('friends/delete', uid)

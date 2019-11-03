@@ -20,8 +20,8 @@ describe('DirectoryEntry.vue', () => {
       uid: 'abc',
       name: 'Arthur'
     })
-    const tile = mounted.find('v-list-tile-stub')
-    expect(tile.find('v-list-tile-title-stub').text()).toBe('Arthur')
+    const tile = mounted.find('v-list-item-stub')
+    expect(tile.find('v-list-item-title-stub').text()).toBe('Arthur')
   })
   test('Adding friend calls firestore', async () => {
     Vue.config.async = true
@@ -60,7 +60,7 @@ describe('DirectoryEntry.vue', () => {
       uid: 'abc',
       name: 'Arthur'
     })
-    const tile = mounted.find('v-list-tile-stub')
+    const tile = mounted.find('v-list-item-stub')
     expect(tile.findAll('.delete_action').length).toBe(1)
     expect(tile.findAll('.add_action').length).toBe(0)
   }),
@@ -79,7 +79,7 @@ describe('DirectoryEntry.vue', () => {
       uid: 'abc',
       name: 'Arthur'
     })
-    const tile = mounted.find('v-list-tile-stub')
+    const tile = mounted.find('v-list-item-stub')
     expect(tile.findAll('.delete_action').length).toBe(0)
     expect(tile.findAll('.add_action').length).toBe(1)
   })

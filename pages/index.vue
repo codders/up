@@ -1,14 +1,6 @@
 <template>
-  <v-layout
-    column
-    justify-center
-    align-center
-  >
-    <v-flex
-      xs12
-      sm8
-      md6
-    >
+  <v-layout column justify-center align-center>
+    <v-flex xs12 sm8 md6>
       <v-card>
         <v-card-title class="headline">
           {{ greetingString }}
@@ -20,12 +12,12 @@
           <whats-up-list />
           <you-are-up-list />
           <v-list two-line jest="activities-list">
-            <v-list-tile nuxt to="/up">
-              <v-list-tile-title>Show Up</v-list-tile-title>
-            </v-list-tile>
-            <v-list-tile nuxt to="/friends">
-              <v-list-tile-title>Show Friends</v-list-tile-title>
-            </v-list-tile>
+            <v-list-item nuxt to="/up">
+              <v-list-item-title>Show Up</v-list-item-title>
+            </v-list-item>
+            <v-list-item nuxt to="/friends">
+              <v-list-item-title>Show Friends</v-list-item-title>
+            </v-list-item>
           </v-list>
           <div class="flexWrapper align-center" jest="logged-in-div">
             <h4 class="blue--text">
@@ -91,7 +83,7 @@ export default {
       return greeting
     }
   },
-  created: function() {
+  created() {
     const vm = this
     this.$log.debug('Page is loaded')
     this.askPermission()

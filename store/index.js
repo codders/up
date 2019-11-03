@@ -21,7 +21,7 @@ const profile = {
   statePropName: 'data',
   namespaced: true,
   serverChange: {
-    modifiedHook: function(updateStore, doc, id, store, source, change) {
+    modifiedHook(updateStore, doc, id, store, source, change) {
       store.dispatch('setInitialProfileIfBlank', doc)
       updateStore(doc)
     }

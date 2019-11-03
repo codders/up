@@ -8,38 +8,36 @@
         <v-card-text>
           <h3>with these friends</h3>
           <v-list jest="friends-list">
-            <v-list-tile v-for="(friend, key) in knownFriends" :key="key" class="friend" @click="selectFriend(friend)">
-              <v-list-tile-title class="name">
+            <v-list-item
+              v-for="(friend, key) in knownFriends"
+              :key="key"
+              class="friend"
+              @click="selectFriend(friend)"
+            >
+              <v-list-item-title class="name">
                 {{ friend.name }}
-              </v-list-tile-title>
-              <v-list-tile-action>
+              </v-list-item-title>
+              <v-list-item-action>
                 <v-checkbox v-model="selected[friend.uid]" @click.prevent="" />
-              </v-list-tile-action>
+              </v-list-item-action>
               <v-spacer />
-            </v-list-tile>
+            </v-list-item>
           </v-list>
           <h3>Provide some details (optional)</h3>
-          <textarea v-model="description" style="color: black; background-color: white" />
+          <textarea
+            v-model="description"
+            style="color: black; background-color: white"
+          />
           <h2>
             Show up?
           </h2>
         </v-card-text>
         <v-card-actions>
-          <v-btn
-            color="primary"
-            flat
-            nuxt
-            to="/"
-          >
+          <v-btn color="primary" text nuxt to="/">
             No...
           </v-btn>
           <v-spacer />
-          <v-btn
-            color="primary"
-            flat
-            nuxt
-            @click="showUp()"
-          >
+          <v-btn color="primary" text nuxt @click="showUp()">
             Yes!
           </v-btn>
         </v-card-actions>
@@ -73,13 +71,13 @@ export default {
         for (const friend in data.directoryFriends) {
           selected[data.directoryFriends[friend].uid] = true
         }
-        return Object.assign(data, { selected: selected })
+        return Object.assign(data, { selected })
       })
       .catch(function(error) {
         return {
           selected: {},
           directoryFriends: [],
-          error: error
+          error
         }
       })
   },

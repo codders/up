@@ -1,4 +1,4 @@
-const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
+const colors = require('vuetify/es5/util/colors').default
 const pkg = require('./package')
 
 const logOptions = {
@@ -49,13 +49,21 @@ module.exports = {
   /*
   ** Global CSS
   */
-  css: ['~/assets/style/app.styl'],
+  css: ['~/assets/variables.scss'],
 
   /*
   ** Plugins to load before mounting the App
   */
-  plugins: ['@/plugins/vuetify',
-            '~/plugins/fireauth.js'],
+  plugins: ['~/plugins/fireauth.js'],
+
+  /*
+  ** Nuxt.js dev-modules
+  */
+  buildModules: [
+    // Doc: https://github.com/nuxt-community/eslint-module
+    '@nuxtjs/eslint-module',
+    '@nuxtjs/vuetify',
+  ],
 
   /*
   ** Nuxt.js modules
@@ -64,6 +72,28 @@ module.exports = {
             '@nuxtjs/axios',
             ['nuxt-log', logOptions],
             'nuxt-validate'],
+
+  /*
+  ** vuetify module configuration
+  ** https://github.com/nuxt-community/vuetify-module
+  */
+  vuetify: {
+    customVariables: ['~/assets/variables.scss'],
+    theme: {
+      dark: true,
+      themes: {
+        dark: {
+          primary: colors.blue.darken2,
+          accent: colors.blue.base,
+          secondary: colors.amber.darken3,
+          info: colors.teal.lighten1,
+          warning: colors.amber.base,
+          error: colors.deepOrange.accent4,
+          success: colors.green.accent3
+        }
+      }
+    }
+  },
 
   /*
   ** Login-sensitive routing
@@ -96,27 +126,10 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    transpile: ['vuetify/lib'],
-    plugins: [new VuetifyLoaderPlugin()],
-    loaders: {
-      stylus: {
-        import: ['~assets/style/variables.styl']
-      }
-    },
-
     /*
     ** You can extend webpack config here
     */
     extend(config, ctx) {
-      // Run ESLint on save
-      if (ctx.isDev && ctx.isClient) {
-        config.module.rules.push({
-          enforce: 'pre',
-          test: /\.(js|vue)$/,
-          loader: 'eslint-loader',
-          exclude: /(node_modules)/
-        })
-      }
     }
   }
 }
