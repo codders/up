@@ -65,5 +65,17 @@ describe('YouAreUp.vue', () => {
     })
     mounted.vm.cancelUpRequest('abc')
     expect(deleteUrl).toEqual('https://europe-west1-up-now-a6da8.cloudfunctions.net/app/up/abc')
+  }),
+  test('Renders details of who is up', () => {
+    const mounted = shallowMount(YouAreUp, {
+      localVue
+    })
+    mounted.setProps({
+      activity: ['play', 'relax', 'move'],
+      description: 'Play with me!',
+      acceptedFriends: [ 'Arthur' ]
+    })
+    const acceptedList = mounted.find('.youre-up').find('.accepted')
+    expect(acceptedList.text()).toBe('Arthur')
   })
 })

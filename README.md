@@ -83,3 +83,13 @@ If you have trouble running the development server, it might be that there are n
 ```
 sudo sysctl fs.inotify.max_user_watches=524288
 ```
+
+## Troubleshooting
+
+### Login errors
+
+If you are unable to login to up, check in the browser console what errors you see.
+
+If you see `xsrfmanager undefined reference`, try disabling extensions like Ad Block or HTTPS Everywhere.
+
+If login is failing silently and just returning you to the landing page, check that you have third-party cookies enabled in your browser security / privacy settings.

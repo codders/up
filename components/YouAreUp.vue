@@ -3,6 +3,9 @@
     <v-list-tile-title class="activity">
       Showing up to {{ getTitleForActivity(activity) }}<span v-if="!isEmpty(description)">: "{{ description }}"</span>
     </v-list-tile-title>
+    <v-list-tile-content v-if="acceptedFriends.length > 0" class="accepted">
+      {{ getFriendsListAsText(acceptedFriends) }}
+    </v-list-tile-content>
     <v-spacer />
     <v-list-tile-action @click="cancelUpRequest(id)">
       <v-btn icon>
@@ -23,6 +26,12 @@ export default {
         return []
       }
     },
+    acceptedFriends: {
+      type: Array,
+      default: () => {
+        return []
+      }
+    },
     description: {
       type: String,
       default: undefined
@@ -38,6 +47,9 @@ export default {
     },
     getTitleForActivity(ids) {
       return activityArrayToString(ids)
+    },
+    getFriendsListAsText(friends) {
+      return friends.join(',')
     },
     cancelUpRequest(id) {
       this.$log.debug('Cancelling up request: ' + id)

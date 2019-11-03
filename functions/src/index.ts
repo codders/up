@@ -3,12 +3,13 @@ import * as functions from 'firebase-functions';
 import { validateFirebaseIdToken,
          saveUp,
          loadUp,
-         loadMyUp,
-         deleteUpRecord,
+         loadInvites,
+         deleteUpRecordsByInvite,
          loadDirectory,
          loadFriends,
          nameForUser,
          respondToUp,
+         saveInviteRecordForUser,
          saveSubscription } from './firebase-wrapper';
 import upLogic from './up-logic';
 import { sendShowUpNotification,
@@ -24,7 +25,7 @@ app.use(cors);
 app.use(cookieParser);
 app.delete('/up/:id', (request: express.Request, response: express.Response) => {
   console.log('Deleting up record ' + request.params.id + ' at ' + request.user.email + '\'s request');
-  deleteUpRecord(request.params.id, request.user.uid).then(writeResult => {
+  deleteUpRecordsByInvite(request.params.id, request.user.uid).then(writeResult => {
     response.status(200).send({ id: request.params.id })
   })
   .catch(err => {
@@ -67,7 +68,7 @@ app.post('/up/:id', (request: express.Request, response: express.Response) => {
 });
 app.get('/myUp', (request: express.Request, response: express.Response) => {
   console.log('Checking what ' + request.user.email + ':' + request.user.uid + ' is up for');
-  loadMyUp(request.user.uid).then(whatsUp => {
+  loadInvites(request.user.uid).then(whatsUp => {
     response.status(200).send(whatsUp);
   })
   .catch(err => {
@@ -102,33 +103,39 @@ app.get('/friends', (request: express.Request, response: express.Response) => {
 app.post('/saveRecord', (request: express.Request, response: express.Response) => {
   const record = Object.assign({}, request.body);
   nameForUser(request.user.uid).then(function(userName) {
-    const upRecords = upLogic.getUpRecordsForRequest({
+    const parentUpRecord = {
       activity: record.activity,
       name: userName,
-      uid: request.user.uid,
       description: record.description,
       friends: record.friends
-    });
-
-    console.log('Saving data: ', upRecords);
-    const promises: PromiseLike<String>[] = [];
-    upRecords.forEach(function(upRecord: up.UpRecord) {
-      promises.push(saveUp(upRecord).then(writeResult => {
-        return sendShowUpNotification(upRecord);
-      }));
-    });
-    Promise.all(promises).then(writeResults => {
-      console.log('Got write results', writeResults);
-      response.status(201).send({
-        success: true,
-        message: 'You are up!'
+    }
+    return saveInviteRecordForUser(request.user.uid, parentUpRecord).then(function(parentRecordId) {
+      const upRecords = upLogic.getUpRecordsForRequest(
+        Object.assign(parentUpRecord, {
+          parentId: parentRecordId,
+          uid: request.user.uid
+        })
+      );
+      console.log('Saving data: ', upRecords);
+      const promises: PromiseLike<String>[] = [];
+      upRecords.forEach(function(upRecord: up.UpRecord) {
+        promises.push(saveUp(upRecord).then(writeResult => {
+          return sendShowUpNotification(upRecord);
+        }));
       });
-    })
-    .catch(err => {
-      console.log('Error writing record', err);
-      response.status(500).send({
-        success: false,
-        message: err
+      Promise.all(promises).then(writeResults => {
+        console.log('Got write results', writeResults);
+        response.status(201).send({
+          success: true,
+          message: 'You are up!'
+        });
+      })
+      .catch(err => {
+        console.log('Error writing record', err);
+        response.status(500).send({
+          success: false,
+          message: err
+        })
       })
     })
   })

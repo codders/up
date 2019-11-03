@@ -12,6 +12,7 @@
           :key="invitation.id"
           :activity="invitation.activity"
           :description="invitation.description"
+          :accepted-friends="invitation.acceptedFriends"
         />
       </v-list>
     </v-flex>

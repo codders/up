@@ -2,7 +2,7 @@ import './up-types';
 
 
 const upLogic = {
-  getUpRecordsForRequest: function(request: up.UpRequest) {
+  getUpRecordsForRequest: function(request: up.UpRequestWithParent) {
     const result: up.UpRecord[] = [];
     request.friends.forEach(function(inviteduid) {
       const record: up.UpRecord = {
@@ -10,6 +10,8 @@ const upLogic = {
         description: request.description,
         name: request.name,
         uid: request.uid,
+        parentId: request.parentId,
+        isUp: false,
         timestamp: {
           _seconds: 0,
           _nanoseconds: 0

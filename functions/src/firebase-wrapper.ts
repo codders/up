@@ -108,32 +108,152 @@ export const saveUp = (record: up.UpRecord) => {
       return doc.id;
     })
     .catch(function(error) {
-      console.error('Unable to save record', record);
+      console.error('Unable to save up record', record);
       return "error";
     });
 };
 
-export const deleteUpRecord = (recordId: string, requesterId: string) => {
-  return admin.firestore().collection('up').doc(recordId).get().then(function(docSnapshot) {
-    if (docSnapshot.exists) {
-      const docData = docSnapshot.data()
-      if (docData !== undefined && docData.uid === requesterId) {
-        return docSnapshot.ref.delete()
-      } else {
-        throw new Error('Document for ' + recordId + ' had no data')
-      }
-    } else {
-      throw new Error('Document ' + recordId + ' does not exist')
-    }
-  })
+export const saveInviteRecordForUser = (userId: string, record: up.UpRequest) => {
+  const savedRecord = Object.assign(record, {
+    timestamp: admin.firestore.FieldValue.serverTimestamp()
+  });
+  return admin.firestore().collection('users').doc(userId).collection('invites').add(savedRecord)
+    .then(function(doc) {
+      return doc.id;
+    })
+    .catch(function(error) {
+      console.error('Unable to save invite record', record);
+      return "error";
+    });
+};
+
+export const deleteUpRecordsByInvite = (recordId: string, requesterId: string) => {
+  /* TODO: There is no reason here to wait for the first query to complete
+   * before executing the second. This should be two Promise.alls
+   */
+  return admin.firestore().collection('up')
+    .where("parentId", "==", recordId)
+    .get()
+    .then(function(querySnapshot) {
+      const upPromises: PromiseLike<admin.firestore.WriteResult>[] = []
+      querySnapshot.forEach(function(doc) {
+        upPromises.push(doc.ref.delete())
+      })
+      return upPromises
+    })
+    .then(function (upPromises) {
+      return admin.firestore().collection('users').doc(requesterId)
+        .collection('invites').doc(recordId).get()
+        .then(function(docSnapshot) {
+          if (docSnapshot.exists) {
+            return upPromises.concat([docSnapshot.ref.delete()])
+          } else {
+            throw new Error('Document ' + recordId + ' does not exist')
+          }
+        })
+      })
+    .then(function (allPromises) {
+      return Promise.all(allPromises)
+    })
 }
 
-const loadUpByField = (field: string, uid: string) => {
+const restrictToCurrentRecords = (query: admin.firestore.CollectionReference) => {
   const midnight = new Date();
   midnight.setHours(0,0,0,0);
-  return admin.firestore().collection('up')
+  return query.where("timestamp", ">", midnight)
+}
+
+export const nameForUser = (uid: string): Promise<string> => {
+  return admin.firestore().collection('users')
+    .doc(uid)
+    .get().then(function(userDoc) {
+      if (userDoc.exists) {
+        const userDocData = userDoc.data()
+        if (userDocData !== undefined) {
+          return userDocData.name
+        } else {
+          throw new Error('User data doc undefined for user: ' + uid)
+        }
+      } else {
+        throw new Error('Unable to load user doc for user: ' + uid)
+      }
+    })
+    .catch(function(error) {
+      console.log('Unable to load name record for user: ', error)
+    })
+}
+
+export const loadInvites = (uid: string) => {
+  return restrictToCurrentRecords(admin.firestore().collection('users').doc(uid).collection('invites'))
+    .get()
+    .then(function(querySnapshot) {
+      const result: up.SavedUpRequest[] = []
+      querySnapshot.forEach(function(doc) {
+        const record = doc.data() as up.UpRequest;
+        const savedRecord: up.SavedUpRequest = Object.assign({ id: doc.id, uid: uid }, record);
+        result.push(savedRecord);
+      });
+      return result;
+    })
+    .catch(function(error) {
+      console.log("Error fetching whats up: ", error);
+      return [];
+    })
+    .then(function (invites) {
+      const resolvedInvites: PromiseLike<up.SavedUpRequestWithAcceptedFriends[]>[] = []
+      invites.forEach(function (invite) {
+        resolvedInvites.push(
+          admin.firestore().collection('up')
+          .where("parentId", "==", invite.id)
+          .get()
+          .then(function(querySnapshot) {
+            const upRecords: up.UpRecord[] = []
+            querySnapshot.forEach(function(doc) {
+              const record = doc.data() as up.UpRecord;
+              upRecords.push(record)
+            })
+            return upRecords
+          })
+          .then(function(upRecords) {
+            const upRecordPromisesWithFriend: PromiseLike<up.SavedUpRequestWithAcceptedFriends>[] = []
+            upRecords.forEach(function(upRecord) {
+               upRecordPromisesWithFriend.push(nameForUser(upRecord.inviteduid)
+                 .then(function(username) {
+                   if (upRecord.isUp) {
+                     return Object.assign({acceptedFriends: [ username ], pendingFriends: []}, invite)
+                   } else {
+                     return Object.assign({acceptedFriends: [], pendingFriends: [ username ]}, invite)
+                   }
+                 })
+               )
+            })
+            return Promise.all(upRecordPromisesWithFriend)
+          })
+        )
+      })
+      return Promise.all(resolvedInvites)
+    })
+    .then(function(inviteArrays) {
+      const resultingInvites: { [id: string]: up.SavedUpRequestWithAcceptedFriends }= {}
+      inviteArrays.forEach(function(inviteArray) {
+        inviteArray.forEach(function(invite) {
+          if (resultingInvites[invite.id] === undefined) {
+            resultingInvites[invite.id] = invite
+          } else {
+            resultingInvites[invite.id].acceptedFriends = resultingInvites[invite.id].acceptedFriends.concat(invite.acceptedFriends)
+            resultingInvites[invite.id].pendingFriends = resultingInvites[invite.id].pendingFriends.concat(invite.pendingFriends)
+          }
+        })
+      })
+      return Object.keys(resultingInvites).map(function(key) {
+        return resultingInvites[key]
+      })
+    })
+};
+
+const loadUpByField = (field: string, uid: string) => {
+  return restrictToCurrentRecords(admin.firestore().collection('up'))
     .where(field, "==", uid)
-    .where("timestamp", ">", midnight)
     .get()
     .then(function(querySnapshot) {
       const result: up.SavedUpRecord[] = []
@@ -168,33 +288,9 @@ export const respondToUp = (thisUserUid: string, upRecordId: string, isUp: boole
   })
 };
 
-export const loadMyUp = (uid: string) => {
-  return loadUpByField("uid", uid)
-};
-
 export const loadUp = (uid: string) => {
   return loadUpByField("inviteduid", uid)
 };
-
-export const nameForUser = (uid: string) => {
-  return admin.firestore().collection('users')
-    .doc(uid)
-    .get().then(function(userDoc) {
-      if (userDoc.exists) {
-        const userDocData = userDoc.data()
-        if (userDocData !== undefined) {
-          return userDocData.name
-        } else {
-          throw new Error('User data doc undefined for user: ' + uid)
-        }
-      } else {
-        throw new Error('Unable to load user doc for user: ' + uid)
-      }
-    })
-    .catch(function(error) {
-      console.log('Unable to load name record for user: ', error)
-    })
-}
 
 export const loadFriends = (uid: string) => {
   console.log('Loading friends for user', uid)
