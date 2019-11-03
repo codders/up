@@ -4,8 +4,8 @@
   </div>
   <div v-else jest="something-up">
     <h2>Here are your current requests...</h2>
-    <v-flex xs12 md4>
-      <v-list jest="you-are-up-list">
+    <v-flex>
+      <v-list two-line jest="you-are-up-list">
         <you-are-up
           v-for="invitation in youreUp"
           :id="invitation.id"

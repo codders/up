@@ -28,7 +28,7 @@ describe('YouAreUp.vue', () => {
       description: 'Play with me!'
     })
     const activityText = mounted.find('.youre-up').find('.activity')
-    expect(activityText.text()).toBe('Showing up to Play or Move\n    : "Play with me!"')
+    expect(activityText.text()).toBe('Showing up to Play or Move\n      : "Play with me!"')
   }),
   test('Renders activity details with description and triple select', () => {
     const mounted = shallowMount(YouAreUp, {
@@ -39,7 +39,7 @@ describe('YouAreUp.vue', () => {
       description: 'Play with me!'
     })
     const activityText = mounted.find('.youre-up').find('.activity')
-    expect(activityText.text()).toBe('Showing up to Play, Relax or Move\n    : "Play with me!"')
+    expect(activityText.text()).toBe('Showing up to Play, Relax or Move\n      : "Play with me!"')
   }),
   test('Does not render empty description', () => {
     const mounted = shallowMount(YouAreUp, {
@@ -76,6 +76,6 @@ describe('YouAreUp.vue', () => {
       acceptedFriends: [ 'Arthur' ]
     })
     const acceptedList = mounted.find('.youre-up').find('.accepted')
-    expect(acceptedList.text()).toBe('Arthur')
+    expect(acceptedList.text()).toBe('Replies from: Arthur')
   })
 })

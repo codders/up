@@ -1,13 +1,14 @@
 <template>
   <v-list-item class="youre-up">
-    <v-list-item-title class="activity">
-      Showing up to {{ getTitleForActivity(activity) }}
-      <span v-if="!isEmpty(description)">: "{{ description }}"</span>
-    </v-list-item-title>
-    <v-list-item-content v-if="acceptedFriends.length > 0" class="accepted">
-      {{ getFriendsListAsText(acceptedFriends) }}
+    <v-list-item-content>
+      <v-list-item-title class="activity">
+        Showing up to {{ getTitleForActivity(activity) }}
+        <span v-if="!isEmpty(description)">: "{{ description }}"</span>
+      </v-list-item-title>
+      <v-list-item-subtitle class="accepted">
+        {{ getFriendsListAsText(acceptedFriends) }}
+      </v-list-item-subtitle>
     </v-list-item-content>
-    <v-spacer />
     <v-list-item-action @click="cancelUpRequest(id)">
       <v-btn icon>
         <v-icon>delete</v-icon>
@@ -50,7 +51,11 @@ export default {
       return activityArrayToString(ids)
     },
     getFriendsListAsText(friends) {
-      return friends.join(',')
+      if (friends.length > 0) {
+        return 'Replies from: ' + friends.join(',')
+      } else {
+        return 'Nobody replied yet...'
+      }
     },
     cancelUpRequest(id) {
       this.$log.debug('Cancelling up request: ' + id)
