@@ -4,7 +4,6 @@
       v-model="drawer"
       :mini-variant="false"
       :clipped="false"
-      fixed
       app
     >
       <v-list>
@@ -33,7 +32,7 @@
         <nuxt />
       </v-container>
     </v-content>
-    <v-footer :fixed="fixed" app>
+    <v-footer app>
       <span>
         Created by Arthur Taylor &mdash;
         <a href="https://github.com/codders/up" target="_new">Source Code</a>

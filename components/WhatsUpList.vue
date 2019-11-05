@@ -9,6 +9,7 @@
         <whats-up
           v-for="invitation in whatsUp"
           :key="invitation.id"
+          :whatsupid="invitation.id"
           :uid="invitation.uid"
           :name="invitation.name"
           :activity="invitation.activity"

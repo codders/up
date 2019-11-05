@@ -1,14 +1,16 @@
 <template>
   <v-list-item class="up">
-    <v-list-item-content>
-      <v-list-item-title>
-        {{ name }} wants to
-        {{ getTitleForActivity(activity) }}
-      </v-list-item-title>
-      <v-list-item-subtitle v-if="!isEmpty(description)">
-        {{ description }}
-      </v-list-item-subtitle>
-    </v-list-item-content>
+    <router-link :to="{ name: 'whatsup-id', params: { id: whatsupid } }">
+      <v-list-item-content>
+        <v-list-item-title>
+          {{ name }} wants to
+          {{ getTitleForActivity(activity) }}
+        </v-list-item-title>
+        <v-list-item-subtitle v-if="!isEmpty(description)">
+          {{ description }}
+        </v-list-item-subtitle>
+      </v-list-item-content>
+    </router-link>
     <v-list-item-action
       v-if="isUp"
       class="delete_action"
@@ -52,6 +54,10 @@ export default {
     isUp: {
       type: Boolean,
       default: false
+    },
+    whatsupid: {
+      type: String,
+      default: undefined
     }
   },
   methods: {
