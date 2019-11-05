@@ -1,5 +1,6 @@
 /** Vuex-Easy-Firestore config **/
 import createEasyFirestore from 'vuex-easy-firestore'
+import axios from 'axios'
 
 import { auth, GoogleProvider } from '@/services/fireinit.js'
 
@@ -115,6 +116,25 @@ export const actions = {
         commit('setUser', null)
       })
       .catch(err => console.log(err)) // eslint-disable-line no-console
+  },
+
+  changeUp({ commit, state }, { id, isUp }) {
+    console.log('Axios: ', axios) // eslint-disable-line no-console
+    console.log('Id: ' + id + ' new value: ' + isUp) // eslint-disable-line no-console
+    axios({
+      method: 'post',
+      url: 'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/up/' + id,
+      data: { isUp },
+      headers: {
+        Authorization: 'Bearer ' + state.idToken
+      }
+    })
+      .then(response => {
+        commit('mergeWhatsUpRecords', response.data)
+      })
+      .catch(error => {
+        console.error('Unable to respond to up id ' + id, error) // eslint-disable-line no-console
+      })
   },
 
   addFriend({ dispatch }, payload) {

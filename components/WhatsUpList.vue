@@ -69,31 +69,11 @@ export default {
       })
   },
   methods: {
-    changeUp(id, isUp) {
-      const vm = this
-      this.$axios({
-        method: 'post',
-        url:
-          'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/up/' + id,
-        data: { isUp },
-        headers: {
-          Authorization: 'Bearer ' + this.$store.state.idToken
-        }
-      })
-        .then(response => {
-          vm.$store.commit('mergeWhatsUpRecords', response.data)
-        })
-        .catch(error => {
-          vm.$log.error('Unable to respond to up id ' + id, error)
-        })
-    },
     showUp(id) {
-      console.log('Showing up', id) // eslint-disable-line no-console
-      this.changeUp(id, true)
+      this.$store.dispatch('changeUp', { id, isUp: true })
     },
     cancelUp(id) {
-      console.log('Cancelling up', id) // eslint-disable-line no-console
-      this.changeUp(id, false)
+      this.$store.dispatch('changeUp', { id, isUp: false })
     }
   }
 }

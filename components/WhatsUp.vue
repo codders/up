@@ -28,6 +28,15 @@
   </v-list-item>
 </template>
 
+<style>
+div.v-list-item a {
+  text-decoration: none;
+}
+div.v-list-item a div.v-list-item__title {
+  color: white;
+}
+</style>
+
 <script>
 import { activityArrayToString } from '@/model/activity'
 

@@ -11,12 +11,22 @@
           <p v-if="whatsUpItem().description !== undefined">
             {{ whatsUpItem().description }}
           </p>
-          <v-btn v-if="whatsUpItem().isUp !== true" color="primary" rounded>
-            Accept Invitation
-          </v-btn>
-          <v-btn v-else color="secondary" rounded>
-            Cancel
-          </v-btn>
+          <div v-if="whatsUpItem().isUp !== true">
+            <p>You have not yet accepted this invitation</p>
+            <v-btn color="primary" rounded @click="showUp(whatsUpItem().id)">
+              Accept Invitation
+            </v-btn>
+          </div>
+          <div v-else>
+            <p>You have accepted this invitation</p>
+            <v-btn
+              color="secondary"
+              rounded
+              @click="cancelUp(whatsUpItem().id)"
+            >
+              Cancel
+            </v-btn>
+          </div>
         </v-card-text>
         <v-card-actions>
           <v-btn color="primary" text nuxt to="/">
@@ -46,6 +56,12 @@ export default {
     },
     getTitleForActivity(item) {
       return activityArrayToString(item.activity)
+    },
+    showUp(id) {
+      this.$store.dispatch('changeUp', { id, isUp: true })
+    },
+    cancelUp(id) {
+      this.$store.dispatch('changeUp', { id, isUp: false })
     }
   }
 }
