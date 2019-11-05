@@ -72,7 +72,6 @@ export default {
       return activityArrayToString(ids)
     },
     routeToItem(id) {
-      console.log('ID: ', id) // eslint-disable-line no-console
       this.$nuxt.$router.push({
         name: 'whatsup-id',
         params: { id }

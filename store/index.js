@@ -119,8 +119,6 @@ export const actions = {
   },
 
   changeUp({ commit, state }, { id, isUp }) {
-    console.log('Axios: ', axios) // eslint-disable-line no-console
-    console.log('Id: ' + id + ' new value: ' + isUp) // eslint-disable-line no-console
     axios({
       method: 'post',
       url: 'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/up/' + id,
@@ -133,7 +131,24 @@ export const actions = {
         commit('mergeWhatsUpRecords', response.data)
       })
       .catch(error => {
-        console.error('Unable to respond to up id ' + id, error) // eslint-disable-line no-console
+        console.log('Unable to respond to up id ' + id, error) // eslint-disable-line no-console
+      })
+  },
+
+  deleteUp({ commit, state }, id) {
+    axios({
+      method: 'DELETE',
+      headers: {
+        Authorization: 'Bearer ' + state.idToken,
+        'Content-Type': 'application/json'
+      },
+      url: 'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/up/' + id
+    })
+      .then(response => {
+        commit('deleteWhatsUp', id)
+      })
+      .catch(error => {
+        console.log('Delete failed, not removing element', error) // eslint-disable-line no-console
       })
   },
 

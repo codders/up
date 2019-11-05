@@ -1,6 +1,6 @@
 <template>
   <v-list-item class="youre-up">
-    <v-list-item-content>
+    <v-list-item-content @click="routeToItem(id)">
       <v-list-item-title class="activity">
         Showing up to {{ getTitleForActivity(activity) }}
         <span v-if="!isEmpty(description)">: "{{ description }}"</span>
@@ -16,6 +16,12 @@
     </v-list-item-action>
   </v-list-item>
 </template>
+
+<style>
+div.v-list-item__content {
+  cursor: pointer;
+}
+</style>
 
 <script>
 import { activityArrayToString } from '@/model/activity'
@@ -44,6 +50,12 @@ export default {
     }
   },
   methods: {
+    routeToItem(id) {
+      this.$nuxt.$router.push({
+        name: 'youreup-id',
+        params: { id }
+      })
+    },
     isEmpty(str) {
       return !str || str.length === 0
     },
@@ -58,22 +70,7 @@ export default {
       }
     },
     cancelUpRequest(id) {
-      this.$log.debug('Cancelling up request: ' + id)
-      this.$axios({
-        method: 'DELETE',
-        headers: {
-          Authorization: 'Bearer ' + this.$store.state.idToken,
-          'Content-Type': 'application/json'
-        },
-        url: 'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/up/' + id
-      })
-        .then(response => {
-          this.$log.debug('Delete completed, removing element')
-          this.$store.commit('deleteWhatsUp', id)
-        })
-        .catch(error => {
-          this.$log.error('Delete failed, not removing element', error)
-        })
+      this.$store.dispatch('deleteUp', id)
     }
   }
 }

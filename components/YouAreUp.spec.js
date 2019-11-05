@@ -53,18 +53,16 @@ describe('YouAreUp.vue', () => {
     expect(activityText.text()).toBe('Showing up to Play')
   }),
   test('Delete record sends delete request', () => {
-    let deleteUrl = null
+    Vue.config.async = true
+    const dispatcher = []
     const mounted = shallowMount(YouAreUp, {
-      mocks: Util.mockDataStore({ axios: (request) => {
-        deleteUrl = request.url
-        return new Promise(function(rs,rj) {
-          rs('Success!')
-        })
-      }}),
+      mocks: Util.mockDataStore({ dispatcher }),
       localVue
     })
     mounted.vm.cancelUpRequest('abc')
-    expect(deleteUrl).toEqual('https://europe-west1-up-now-a6da8.cloudfunctions.net/app/up/abc')
+    expect(dispatcher.length).toBe(1)
+    expect(dispatcher[0].method).toBe('deleteUp')
+    Vue.config.async = false
   }),
   test('Renders details of who is up', () => {
     const mounted = shallowMount(YouAreUp, {
