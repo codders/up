@@ -1,6 +1,7 @@
 <template>
   <v-app dark>
     <v-navigation-drawer
+      v-if="$store.getters.activeUser"
       v-model="drawer"
       :mini-variant="false"
       :clipped="false"
@@ -22,6 +23,12 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+
+      <template v-slot:append>
+        <div class="pa-2">
+          <v-btn block @click="signOut()">Logout</v-btn>
+        </div>
+      </template>
     </v-navigation-drawer>
     <v-app-bar :clipped-left="false" fixed app>
       <v-app-bar-nav-icon @click="drawer = !drawer" />
@@ -71,6 +78,11 @@ export default {
       right: true,
       rightDrawer: false,
       title: 'Up'
+    }
+  },
+  methods: {
+    signOut() {
+      this.$store.dispatch('signOut')
     }
   }
 }

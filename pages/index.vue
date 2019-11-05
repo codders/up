@@ -11,27 +11,11 @@
         <v-card-text v-else>
           <whats-up-list />
           <you-are-up-list />
-          <v-list two-line jest="activities-list">
-            <v-list-item nuxt to="/up">
-              <v-list-item-title>Show Up</v-list-item-title>
-            </v-list-item>
-            <v-list-item nuxt to="/friends">
-              <v-list-item-title>Show Friends</v-list-item-title>
-            </v-list-item>
-          </v-list>
-          <div class="flexWrapper align-center" jest="logged-in-div">
-            <h4 class="blue--text">
-              You're logged in!
-              <a @click="signOut">Logout</a>
-            </h4>
-            <v-btn icon class="blue white--text">
-              <v-icon>thumb_up</v-icon>
-            </v-btn>
-          </div>
-          <div v-if="pushSupport">
-            <p>Your user agent supports notifications!</p>
-          </div>
-          <div v-else>
+          <v-btn color="primary" rounded nuxt to="/up">
+            Show Up
+          </v-btn>
+          <div v-if="$store.getters.activeUser" jest="logged-in-div"></div>
+          <div v-if="!pushSupport">
             <p>Sorry, your user agent does not support notifications :(</p>
           </div>
         </v-card-text>
@@ -149,9 +133,6 @@ export default {
         greetingString = greetingString + ', ' + this.displayName
       }
       return greetingString
-    },
-    signOut() {
-      this.$store.dispatch('signOut')
     },
     askPermission() {
       this.$log.debug('Asking for permission')
