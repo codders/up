@@ -158,9 +158,9 @@ export const deleteUpRecordsByInvite = (recordId: string, requesterId: string) =
 }
 
 const restrictToCurrentRecords = (query: admin.firestore.CollectionReference) => {
-  const midnight = new Date();
-  midnight.setHours(0,0,0,0);
-  return query.where("timestamp", ">", midnight)
+  const dawn = new Date();
+  dawn.setHours(4,0,0,0);
+  return query.where("timestamp", ">", dawn)
 }
 
 export const nameForUser = (uid: string): Promise<string> => {
