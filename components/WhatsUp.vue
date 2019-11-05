@@ -1,16 +1,14 @@
 <template>
   <v-list-item class="up">
-    <router-link :to="{ name: 'whatsup-id', params: { id: whatsupid } }">
-      <v-list-item-content>
-        <v-list-item-title>
-          {{ name }} wants to
-          {{ getTitleForActivity(activity) }}
-        </v-list-item-title>
-        <v-list-item-subtitle v-if="!isEmpty(description)">
-          {{ description }}
-        </v-list-item-subtitle>
-      </v-list-item-content>
-    </router-link>
+    <v-list-item-content @click="routeToItem(whatsupid)">
+      <v-list-item-title>
+        {{ name }} wants to
+        {{ getTitleForActivity(activity) }}
+      </v-list-item-title>
+      <v-list-item-subtitle v-if="!isEmpty(description)">
+        {{ description }}
+      </v-list-item-subtitle>
+    </v-list-item-content>
     <v-list-item-action
       v-if="isUp"
       class="delete_action"
@@ -29,11 +27,8 @@
 </template>
 
 <style>
-div.v-list-item a {
-  text-decoration: none;
-}
-div.v-list-item a div.v-list-item__title {
-  color: white;
+div.v-list-item__content {
+  cursor: pointer;
 }
 </style>
 
@@ -75,6 +70,13 @@ export default {
     },
     getTitleForActivity(ids) {
       return activityArrayToString(ids)
+    },
+    routeToItem(id) {
+      console.log('ID: ', id) // eslint-disable-line no-console
+      this.$nuxt.$router.push({
+        name: 'whatsup-id',
+        params: { id }
+      })
     }
   }
 }
