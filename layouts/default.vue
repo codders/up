@@ -26,7 +26,9 @@
 
       <template v-slot:append>
         <div class="pa-2">
-          <v-btn block @click="signOut()">Logout</v-btn>
+          <v-btn block @click="signOut()">
+            Logout
+          </v-btn>
         </div>
       </template>
     </v-navigation-drawer>

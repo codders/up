@@ -14,7 +14,7 @@
           <v-btn color="primary" rounded nuxt to="/up">
             Show Up
           </v-btn>
-          <div v-if="$store.getters.activeUser" jest="logged-in-div"></div>
+          <div v-if="$store.getters.activeUser" jest="logged-in-div" />
           <div v-if="!pushSupport">
             <p>Sorry, your user agent does not support notifications :(</p>
           </div>
