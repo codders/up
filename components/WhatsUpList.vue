@@ -1,22 +1,24 @@
 <template>
-  <div v-if="whatsUp.length === 0" jest="nothing-up">
-    <p>Nothing's happening right now... Be the first to show up!</p>
-  </div>
-  <div v-else jest="something-up">
-    <h2>Here's what's up right now...</h2>
-    <v-list two-line>
-      <whats-up
-        v-for="invitation in whatsUp"
-        :key="invitation.id"
-        :uid="invitation.uid"
-        :name="invitation.name"
-        :activity="invitation.activity"
-        :description="invitation.description"
-        :is-up="invitation.isUp"
-        @showUp="showUp(invitation.id)"
-        @cancelUp="cancelUp(invitation.id)"
-      />
-    </v-list>
+  <div jest="top-level-list">
+    <div v-if="whatsUp.length === 0 && youreUp.length === 0" jest="nothing-up">
+      <p>Nothing's happening right now... Be the first to show up!</p>
+    </div>
+    <div v-if="whatsUp.length > 0" jest="something-up">
+      <h2>Here's what's up right now...</h2>
+      <v-list two-line>
+        <whats-up
+          v-for="invitation in whatsUp"
+          :key="invitation.id"
+          :uid="invitation.uid"
+          :name="invitation.name"
+          :activity="invitation.activity"
+          :description="invitation.description"
+          :is-up="invitation.isUp"
+          @showUp="showUp(invitation.id)"
+          @cancelUp="cancelUp(invitation.id)"
+        />
+      </v-list>
+    </div>
   </div>
 </template>
 
@@ -35,6 +37,15 @@ export default {
       }
       return whatsUpData.filter(
         item => item.uid !== this.$store.getters.activeUser.uid
+      )
+    },
+    youreUp() {
+      const whatsUpData = this.$store.getters.whatsUp
+      if (this.$store.getters.activeUser == null) {
+        return []
+      }
+      return whatsUpData.filter(
+        item => item.uid === this.$store.getters.activeUser.uid
       )
     }
   },

@@ -74,6 +74,7 @@ describe('WhatsUpList.vue', () => {
       }),
       localVue
     })
-    expect(mountedIndex.contains('[jest="nothing-up"]')).toBe(true)
+    expect(mountedIndex.contains('[jest="something-up"]')).toBe(false)
+    expect(mountedIndex.contains('[jest="nothing-up"]')).toBe(false)
   })
 })
