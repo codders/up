@@ -7,6 +7,8 @@ import { validateFirebaseIdToken,
          deleteUpRecordsByInvite,
          loadDirectory,
          loadFriends,
+         lookupUserByEmail,
+         addFriendRecord,
          nameForUser,
          respondToUp,
          saveInviteRecordForUser,
@@ -163,6 +165,32 @@ app.post('/saveSubscription', (request: express.Request, response: express.Respo
   })
 });
 
+app.post('/addFriendByEmail', (request: express.Request, response: express.Response) => {
+  const email = Object.assign({}, request.body).email;
+  console.log('Adding friend by email: ', email);
+  lookupUserByEmail(email).then(friendUid => {
+    addFriendRecord(request.user.uid, friendUid).then(writeResults => {
+      console.log('Got friend add result', writeResults);
+      response.status(201).send({
+        success: true,
+        message: 'Friend added'
+      })
+    })
+    .catch(err => {
+      console.log('Unable to save friend record', err)
+      response.status(500).send({
+        message: 'Unable to save friend record'
+      })
+    })
+  })
+  .catch(err => {
+    console.log('Error adding friend', err)
+    response.status(404).send({
+      code: 'NOT_FOUND',
+      message: 'Unable to find friend record ' + err
+    })
+  })
+});
 
 // This HTTPS endpoint can only be accessed by your Firebase Users.
 // Requests need to be authorized by providing an `Authorization` HTTP header

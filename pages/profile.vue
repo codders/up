@@ -17,6 +17,12 @@
   </v-layout>
 </template>
 
+<style>
+div.v-card div input {
+  border-style: solid;
+}
+</style>
+
 <script>
 export default {
   computed: {

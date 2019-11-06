@@ -183,6 +183,37 @@ export const nameForUser = (uid: string): Promise<string> => {
     })
 }
 
+export const lookupUserByEmail = (email: string): Promise<string> => {
+  return admin.firestore().collection('users')
+    .where("email", "==", email)
+    .get()
+    .then(function(querySnapshot) {
+      if (querySnapshot.size !== 1) {
+        throw new Error('No such friend')
+      } else {
+        let result = null;
+        querySnapshot.forEach(function(doc) {
+          result = doc.id;
+        })
+        if (result === null) {
+          throw new Error('Logic error finding friend')
+        } else {
+          return result;
+        }
+      }
+    })
+}
+
+export const addFriendRecord = (uid: string, frienduid: string) => {
+  const friendRecord = {
+    created_at: admin.firestore.FieldValue.serverTimestamp(),
+    created_by: uid,
+    id: frienduid,
+    uid: frienduid
+  }
+  return admin.firestore().collection('users').doc(uid).collection('friends').doc(frienduid).set(friendRecord)
+}
+
 export const loadInvites = (uid: string) => {
   return restrictToCurrentRecords(admin.firestore().collection('users').doc(uid).collection('invites'))
     .get()

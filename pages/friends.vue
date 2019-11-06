@@ -13,13 +13,13 @@
                 :key="key"
                 class="friend"
               >
-                <nuxt-link :to="'/friends/' + key">
+                <nuxt-link :to="'/friends/' + friend.uid">
                   <v-list-item-title class="name">
                     {{ friend.name }}
                   </v-list-item-title>
                 </nuxt-link>
                 <v-spacer />
-                <v-list-item-action @click="deleteFriend(key)">
+                <v-list-item-action @click="deleteFriend(friend.uid)">
                   <v-btn icon>
                     <v-icon>delete</v-icon>
                   </v-btn>
