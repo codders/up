@@ -17,7 +17,19 @@ describe('add-friend.vue', () => {
     const mountedForm = mount(AddFriend, {
       mocks: Util.mockDataStore({ uid: '123' })
     })
+    mountedForm.setData({
+      directoryEntries: [
+        { uid: 'abc', name: 'Arthur' },
+        { uid: 'def', name: 'Jenny' }
+      ]
+    })
     expect(mountedForm.contains('[jest="directory-listing"]')).toBe(true)
+  }),
+  test('Does not show directory listing for empty directory', () => {
+    const mountedForm = mount(AddFriend, {
+      mocks: Util.mockDataStore({ uid: '123' })
+    })
+    expect(mountedForm.contains('[jest="directory-listing"]')).toBe(false)
   }),
   test('Entries shown matches directory size', () => {
     const mountedForm = mount(AddFriend, {

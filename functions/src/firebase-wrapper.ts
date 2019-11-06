@@ -323,53 +323,73 @@ export const loadUp = (uid: string) => {
   return loadUpByField("inviteduid", uid)
 };
 
-export const loadFriends = (uid: string) => {
-  console.log('Loading friends for user', uid)
+const resolveNames = (uids: string[]) => {
+  const entries: up.DirectoryEntry[] = []
+  const promises: PromiseLike<void | up.DirectoryEntry>[] = []
+  uids.forEach(function(uid) {
+    promises.push(
+      nameForUser(uid).then(function(name) {
+        if (name !== undefined) {
+          entries.push({
+            uid: uid,
+            name: name
+          })
+        }
+      })
+    )
+  })
+  return Promise.all(promises).then(function (results) {
+    return entries
+  })
+}
+
+const loadFriendUids = (uid: string) => {
   return admin.firestore().collection('users').doc(uid).collection('friends')
     .get().then(function(querySnapshot) {
-      const promises: PromiseLike<void>[] = []
-      const friends: up.DirectoryEntry[] = [];
+      const frienduids: string[] = []
       querySnapshot.forEach(function(friendDoc) {
         const record = friendDoc.data();
-        promises.push(
-          nameForUser(record.uid).then(function(name) {
-            if (name !== undefined) {
-              friends.push({
-                uid: record.uid,
-                name: name
-              })
-            }
-          })
-        )
+        frienduids.push(record.uid)
       })
-      return Promise.all(promises).then(function(results) {
-        return friends
-      })
+      return frienduids
     })
     .catch(function(error) {
       console.log("Error fetching list of friends: ", error);
       return [];
     });
+}
+
+export const loadFriends = (uid: string) => {
+  console.log('Loading friends for user', uid)
+  return loadFriendUids(uid).then(function(frienduids: string[]) {
+    return resolveNames(frienduids)
+  })
 };
 
-export const loadDirectory = (uid: String) => {
-  return admin.firestore().collection('users')
-    .get()
-    .then(function(querySnapshot) {
-      const result: up.DirectoryEntry[] = [];
-      querySnapshot.forEach(function(doc) {
-        const record = doc.data();
-        if (record.id != uid) {
-          result.push({
-            uid: record.id,
-            name: record.name
-          });
-        }
-      });
-      return result;
+export const loadDirectory = (uid: string) => {
+  return loadFriendUids(uid).then(function(frienduids: string[]) {
+    const promises: PromiseLike<string[]>[] = []
+    frienduids.forEach(function (frienduid) {
+      promises.push(
+        loadFriendUids(frienduid).then(function (friendfrienduids: string[]) {
+          if (friendfrienduids.includes(uid)) {
+            return friendfrienduids.filter(item => item !== uid)
+          } else {
+            return []
+          }
+        })
+      )
     })
-    .catch(function(error) {
-      console.log("Error fetching directory: ", error);
-      return [];
-    });
+    promises.push(Promise.resolve(frienduids))
+    return Promise.all(promises)
+  }).then(function(frienduidarrays: string[][]) {
+    const uniqueFriends: string[] = [];
+    const emptyArray: string[] = [];
+    emptyArray.concat.apply([], frienduidarrays).forEach(function (frienduid) {
+      if (!uniqueFriends.includes(frienduid)) {
+        uniqueFriends.push(frienduid)
+      }
+    })
+    return resolveNames(uniqueFriends)
+  })
 };

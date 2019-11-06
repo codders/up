@@ -24,14 +24,22 @@
             </p>
           </div>
           <h1>Add from Directory</h1>
-          <v-list jest="directory-listing">
-            <directory-entry
-              v-for="entry in $data.directoryEntries"
-              :key="entry.uid"
-              :name="entry.name"
-              :uid="entry.uid"
-            />
-          </v-list>
+          <div v-if="$data.directoryEntries.length > 0">
+            <v-list jest="directory-listing">
+              <directory-entry
+                v-for="entry in $data.directoryEntries"
+                :key="entry.uid"
+                :name="entry.name"
+                :uid="entry.uid"
+              />
+            </v-list>
+          </div>
+          <div v-else>
+            <p>You can't see anyone in the directory right now</p>
+            <p>
+              Try adding some friends manually, and your directory will grow
+            </p>
+          </div>
         </v-flex>
       </v-layout>
     </v-flex>
