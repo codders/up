@@ -51,19 +51,6 @@ import { activityArrayToString } from '@/model/activity'
 import { loadDirectoryFriends, filterKnownFriends } from '@/model/friends'
 
 export default {
-  data: () => ({
-    selected: {},
-    directoryFriends: [],
-    description: ''
-  }),
-  computed: {
-    friends() {
-      return this.$store.getters.friends
-    },
-    knownFriends() {
-      return filterKnownFriends(this.friends, this.directoryFriends)
-    }
-  },
   asyncData({ $axios, store }) {
     return loadDirectoryFriends($axios, store)
       .then(function(data) {
@@ -80,6 +67,19 @@ export default {
           error
         }
       })
+  },
+  data: () => ({
+    selected: {},
+    directoryFriends: [],
+    description: ''
+  }),
+  computed: {
+    friends() {
+      return this.$store.getters.friends
+    },
+    knownFriends() {
+      return filterKnownFriends(this.friends, this.directoryFriends)
+    }
   },
   methods: {
     activityName() {

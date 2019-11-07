@@ -9,7 +9,7 @@ const activities = [
     icon: 'home',
     title: 'Relax',
     id: 'relax',
-    description: 'Hang out, cuddle, massage, sleep'
+    description: 'Hang out, cuddle, sleep'
   },
   {
     icon: 'local_bar',
@@ -21,7 +21,7 @@ const activities = [
     icon: 'whatshot',
     title: 'Play',
     id: 'play',
-    description: 'Enjoy each other'
+    description: 'Skip the smalltalk'
   }
 ]
 
