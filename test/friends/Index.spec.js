@@ -4,7 +4,7 @@ import VeeValidate, { Validator } from 'vee-validate'
 import { mount, config } from '@vue/test-utils'
 import Util from '@/test/utils.js'
 
-import Friends from '@/pages/friends.vue'
+import Friends from '@/pages/friends/index.vue'
 
 Vue.use(Vuetify)
 Vue.use(VeeValidate, null)

@@ -39,7 +39,7 @@ const dataStore = function({ uid, friends, profile, dispatcher, whatsUp }) {
   return {
     state: {
       friends: {
-        data: (friends == null ? [] : friends)
+        data: (friends == null ? {} : friends)
       },
       profile: {
         data: (profile == null ? {} : profile)
@@ -55,7 +55,7 @@ const dataStore = function({ uid, friends, profile, dispatcher, whatsUp }) {
     },
     getters: {
       activeUser: user,
-      friends: friends,
+      friends: (friends == null ? {} : friends),
       whatsUp: (whatsUp == null ? [] : whatsUp)
     }
   }

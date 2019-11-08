@@ -66,12 +66,7 @@ export default {
       return this.$store.getters.friends
     },
     friendCount() {
-      let count = 0
-      // eslint-disable-next-line no-unused-vars
-      for (const friend in this.$store.getters.friends) {
-        count += 1
-      }
-      return count
+      return Object.entries(this.$store.getters.friends).length
     }
   },
   methods: {
