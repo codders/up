@@ -84,7 +84,9 @@ export default {
   },
   methods: {
     signOut() {
-      this.$store.dispatch('signOut')
+      this.$store.dispatch('signOut').then(() => {
+        this.$nuxt.$router.replace('/')
+      })
     }
   }
 }
