@@ -8,12 +8,14 @@ import { validateFirebaseIdToken,
          loadDirectory,
          loadFriends,
          lookupUserByEmail,
+         loadInterestRegisterForUser,
          addFriendRecord,
          nameForUser,
          respondToUp,
          saveInviteRecordForUser,
          saveSubscription } from './firebase-wrapper';
-import upLogic from './up-logic';
+import { findMatches,
+         getUpRecordsForRequest } from './up-logic';
 import { sendShowUpNotification,
          sendUpMatchNotification } from './notification';
 
@@ -57,7 +59,7 @@ app.post('/up/:id', (request: express.Request, response: express.Response) => {
   })
   .then(result =>
     loadUp(request.user.uid).then(whatsUp => {
-      response.status(200).send(upLogic.findMatches(whatsUp));
+      response.status(200).send(findMatches(whatsUp));
     })
     .catch(err => {
       console.log('Unable to load up records after response', err)
@@ -80,7 +82,7 @@ app.get('/myUp', (request: express.Request, response: express.Response) => {
 app.get('/whatsUp', (request: express.Request, response: express.Response) => {
   console.log('Checking what\'s up for ' + request.user.email + ':' + request.user.uid);
   loadUp(request.user.uid).then(whatsUp => {
-    response.status(200).send(upLogic.findMatches(whatsUp));
+    response.status(200).send(findMatches(whatsUp));
   })
   .catch(err => {
     console.log('Unable to work out what\'s up', err);
@@ -111,12 +113,16 @@ app.post('/saveRecord', (request: express.Request, response: express.Response) =
       description: record.description,
       friends: record.friends
     }
-    return saveInviteRecordForUser(request.user.uid, parentUpRecord).then(function(parentRecordId) {
-      const upRecords = upLogic.getUpRecordsForRequest(
+    return Promise.all([saveInviteRecordForUser(request.user.uid, parentUpRecord),
+    loadInterestRegisterForUser(request.user.uid, record.friends)]).then(function(results) {
+      const parentRecordId: string = results[0]
+      const interestRegister: { [uid: string]: up.InterestRegister } = results[1]
+      const upRecords = getUpRecordsForRequest(
         Object.assign(parentUpRecord, {
           parentId: parentRecordId,
           uid: request.user.uid
-        })
+        }),
+        interestRegister
       );
       console.log('Saving data: ', upRecords);
       const promises: PromiseLike<String>[] = [];

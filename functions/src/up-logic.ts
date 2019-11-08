@@ -1,12 +1,23 @@
 import './up-types';
 
+export const filterInterests = function(proposedActivities: string[], interestedActivities: string[]) {
+  return proposedActivities.filter(item => interestedActivities.includes(item))
+}
 
-const upLogic = {
-  getUpRecordsForRequest: function(request: up.UpRequestWithParent) {
-    const result: up.UpRecord[] = [];
-    request.friends.forEach(function(inviteduid) {
+export const getUpRecordsForRequest = function(
+    request: up.UpRequestWithParent,
+    interestedFriends: { [friendUid:string] : up.InterestRegister }
+  )
+{
+  const result: up.UpRecord[] = [];
+  request.friends.forEach(function(inviteduid) {
+    if (interestedFriends[inviteduid] !== undefined) {
+      const filteredInterests = filterInterests(request.activity, interestedFriends[inviteduid].activity)
+      if (filteredInterests.length === 0) {
+        return;
+      }
       const record: up.UpRecord = {
-        activity: request.activity,
+        activity: filteredInterests,
         description: request.description,
         name: request.name,
         uid: request.uid,
@@ -19,12 +30,11 @@ const upLogic = {
         inviteduid: inviteduid
       };
       result.push(record)
-    });
-    return result;
-  },
-  findMatches: function(whatsUp: up.UpRecord[]) {
-    return whatsUp;
-  }
+    }
+  });
+  return result;
 }
 
-export default upLogic;
+export const findMatches = function(whatsUp: up.UpRecord[]) {
+  return whatsUp;
+}

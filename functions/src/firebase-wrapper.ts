@@ -214,6 +214,46 @@ export const addFriendRecord = (uid: string, frienduid: string) => {
   return admin.firestore().collection('users').doc(uid).collection('friends').doc(frienduid).set(friendRecord)
 }
 
+const loadFriendUids = (uid: string): Promise<string[]> => {
+  return admin.firestore().collection('users').doc(uid).collection('friends')
+    .get().then(function(querySnapshot) {
+      const frienduids: string[] = []
+      querySnapshot.forEach(function(friendDoc) {
+        const record = friendDoc.data();
+        frienduids.push(record.uid)
+      })
+      return frienduids
+    })
+    .catch(function(error) {
+      console.log("Error fetching list of friends: ", error);
+      return [];
+    });
+}
+
+function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
+  return value !== null && value !== undefined
+}
+
+export const loadInterestRegisterForUser = (uid: string, frienduids: string[]) => {
+  return Promise.all(frienduids.map((frienduid) => {
+      return loadFriendUids(frienduid).then(function(friends) {
+        return { friend: frienduid, friends: friends }
+      })
+    }))
+    .then(function(friendarrays) {
+      return friendarrays.map((friendentry) => {
+        if (friendentry.friends.includes(uid)) {
+          return { uid: friendentry.friend, activity: [ 'play', 'out', 'move', 'relax' ] }
+        } else {
+          return null
+        }
+      }).filter(notEmpty).reduce(function(map, obj) {
+        map[obj.uid] = obj
+        return map
+      }, <{[uid: string]: up.InterestRegister;}>{})
+    })
+}
+
 export const loadInvites = (uid: string) => {
   return restrictToCurrentRecords(admin.firestore().collection('users').doc(uid).collection('invites'))
     .get()
@@ -259,6 +299,21 @@ export const loadInvites = (uid: string) => {
                )
             })
             return Promise.all(upRecordPromisesWithFriend)
+          }).then(function(upRecordsWithFriends) {
+            /**
+             * Handle the case here where no up records were created by the
+             * invitation (because no friends were interested in the invite)
+             */
+            if (upRecordsWithFriends.length === 0) {
+              return Promise.all(invite.friends.map(name => nameForUser(name)))
+                .then(function(resolvedNames) {
+                  return [ Object.assign({
+                    pendingFriends: resolvedNames,
+                    acceptedFriends: []
+                  }, invite) ]
+                })
+            }
+            return Promise.resolve(upRecordsWithFriends)
           })
         )
       })
@@ -341,22 +396,6 @@ const resolveNames = (uids: string[]) => {
   return Promise.all(promises).then(function (results) {
     return entries
   })
-}
-
-const loadFriendUids = (uid: string) => {
-  return admin.firestore().collection('users').doc(uid).collection('friends')
-    .get().then(function(querySnapshot) {
-      const frienduids: string[] = []
-      querySnapshot.forEach(function(friendDoc) {
-        const record = friendDoc.data();
-        frienduids.push(record.uid)
-      })
-      return frienduids
-    })
-    .catch(function(error) {
-      console.log("Error fetching list of friends: ", error);
-      return [];
-    });
 }
 
 export const loadFriends = (uid: string) => {

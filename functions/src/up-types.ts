@@ -7,7 +7,7 @@ declare namespace vapid {
 
 declare namespace up {
   interface UpRecord {
-    activity: string
+    activity: string[]
     inviteduid: string
     description: string
     name: string
@@ -25,7 +25,7 @@ declare namespace up {
   }
 
   interface UpRequest {
-    activity: string
+    activity: string[]
     description: string
     name: string
     friends: string[]
@@ -49,5 +49,10 @@ declare namespace up {
   interface DirectoryEntry {
     uid: string
     name: string
+  }
+
+  interface InterestRegister {
+    uid: string,
+    activity: string[]
   }
 }
