@@ -1,5 +1,5 @@
 <template>
-  <div v-if="youreUp.length === 0" jest="nothing-up"></div>
+  <div v-if="youreUp.length === 0" jest="nothing-up" />
   <div v-else jest="something-up">
     <h2>Here are your current requests...</h2>
     <v-flex>

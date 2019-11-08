@@ -50,6 +50,9 @@
 import { loadDirectoryFriends, filterKnownFriends } from '@/model/friends'
 
 export default {
+  asyncData({ $axios, store }) {
+    return loadDirectoryFriends($axios, store)
+  },
   data() {
     return {
       directoryFriends: []
@@ -70,9 +73,6 @@ export default {
       }
       return count
     }
-  },
-  asyncData({ $axios, store }) {
-    return loadDirectoryFriends($axios, store)
   },
   methods: {
     deleteFriend(key) {

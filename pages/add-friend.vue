@@ -59,14 +59,6 @@ export default {
   components: {
     DirectoryEntry
   },
-  data() {
-    return {
-      directoryEntries: [],
-      email: '',
-      inputEnabled: true,
-      addFriendError: null
-    }
-  },
   asyncData({ $axios, store }) {
     return $axios
       .$get(
@@ -83,6 +75,14 @@ export default {
       .catch(error => {
         return { directoryEntries: error }
       })
+  },
+  data() {
+    return {
+      directoryEntries: [],
+      email: '',
+      inputEnabled: true,
+      addFriendError: null
+    }
   },
   methods: {
     addFriendByEmail(email) {
