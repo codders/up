@@ -66,7 +66,7 @@ export default {
   methods: {
     deleteFriend(key) {
       this.$log.debug('Deleting friend with key: ', key)
-      this.$store.dispatch('friends/delete', key)
+      this.$store.dispatch('deleteFriend', key)
     }
   }
 }

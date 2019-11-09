@@ -56,6 +56,9 @@ div.flex input {
 import DirectoryEntry from '@/components/DirectoryEntry'
 
 export default {
+  async fetch({ store, params }) {
+    await store.dispatch('loadFriends')
+  },
   components: {
     DirectoryEntry
   },
@@ -88,17 +91,9 @@ export default {
     addFriendByEmail(email) {
       this.addFriendError = null
       this.inputEnabled = false
-      this.$axios
-        .$post(
-          'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/addFriendByEmail',
-          { email: this.email },
-          {
-            headers: {
-              Authorization: 'Bearer ' + this.$store.state.idToken
-            }
-          }
-        )
-        .then(response => {
+      this.$store
+        .dispatch('addFriendByEmail', this.email)
+        .then(() => {
           this.inputEnabled = true
           this.email = ''
           this.$nuxt.$router.replace('/friends')

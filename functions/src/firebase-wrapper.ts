@@ -183,7 +183,7 @@ export const nameForUser = (uid: string): Promise<string> => {
     })
 }
 
-export const lookupUserByEmail = (email: string): Promise<string> => {
+export const lookupUserByEmail = (email: string): Promise<up.UserRecord> => {
   return admin.firestore().collection('users')
     .where("email", "==", email)
     .get()
@@ -193,11 +193,12 @@ export const lookupUserByEmail = (email: string): Promise<string> => {
       } else {
         let result = null;
         querySnapshot.forEach(function(doc) {
-          result = doc.id;
+          result = doc.data() as up.UserRecord;
         })
         if (result === null) {
           throw new Error('Logic error finding friend')
         } else {
+          console.log('Lookup result', result)
           return result;
         }
       }
@@ -212,6 +213,16 @@ export const addFriendRecord = (uid: string, frienduid: string) => {
     uid: frienduid
   }
   return admin.firestore().collection('users').doc(uid).collection('friends').doc(frienduid).set(friendRecord)
+}
+
+export const deleteFriendByUid = (uid: string, friendUid: string) => {
+  return admin.firestore().collection('users').doc(uid)
+    .collection('friends')
+    .doc(friendUid)
+    .get()
+    .then(function(docSnapshot) {
+      return docSnapshot.ref.delete()
+    })
 }
 
 const loadFriendUids = (uid: string): Promise<string[]> => {

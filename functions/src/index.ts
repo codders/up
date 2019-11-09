@@ -10,6 +10,7 @@ import { validateFirebaseIdToken,
          lookupUserByEmail,
          loadInterestRegisterForUser,
          addFriendRecord,
+         deleteFriendByUid,
          nameForUser,
          respondToUp,
          saveInviteRecordForUser,
@@ -104,6 +105,28 @@ app.get('/friends', (request: express.Request, response: express.Response) => {
     console.log('Unable to fetch the list of friends');
   });
 });
+app.post('/friends', (request: express.Request, response: express.Response) => {
+  const friend = Object.assign({}, request.body);
+  addFriendRecord(request.user.uid, friend.uid).then(writeResult => {
+    response.status(201).send({
+      uid: friend.uid,
+      name: friend.name
+    });
+  })
+  .catch(err => {
+    console.log('Unable to add friend');
+  });
+});
+app.delete('/friends/:id', (request: express.Request, response: express.Response) => {
+  console.log('Deleting friend ' + request.params.id + ' for ' + request.user.uid);
+  deleteFriendByUid(request.user.uid, request.params.id).then(writeResult => {
+    response.status(200).send({ uid: request.params.id })
+  })
+  .catch(err => {
+    console.log('Unable to delete friend:', err)
+    response.status(500).send({ error: err })
+  })
+});
 app.post('/saveRecord', (request: express.Request, response: express.Response) => {
   const record = Object.assign({}, request.body);
   nameForUser(request.user.uid).then(function(userName) {
@@ -174,12 +197,12 @@ app.post('/saveSubscription', (request: express.Request, response: express.Respo
 app.post('/addFriendByEmail', (request: express.Request, response: express.Response) => {
   const email = Object.assign({}, request.body).email;
   console.log('Adding friend by email: ', email);
-  lookupUserByEmail(email).then(friendUid => {
-    addFriendRecord(request.user.uid, friendUid).then(writeResults => {
+  lookupUserByEmail(email).then(friend => {
+    addFriendRecord(request.user.uid, friend.id).then(writeResults => {
       console.log('Got friend add result', writeResults);
       response.status(201).send({
-        success: true,
-        message: 'Friend added'
+        uid: friend.id,
+        name: friend.name
       })
     })
     .catch(err => {

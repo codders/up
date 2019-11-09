@@ -32,7 +32,7 @@ describe('DirectoryEntry.vue', () => {
     await mountedForm.vm.addFriend()
     expect(dispatcher.length).toBe(1)
     expect(dispatcher[0].method).toBe('addFriend')
-    Vue.config.async = false 
+    Vue.config.async = false
   }),
   test('Removing friend calls firestore', async () => {
     Vue.config.async = true
@@ -42,7 +42,7 @@ describe('DirectoryEntry.vue', () => {
     })
     await mountedForm.vm.deleteFriend()
     expect(dispatcher.length).toBe(1)
-    expect(dispatcher[0].method).toBe('friends/delete')
+    expect(dispatcher[0].method).toBe('deleteFriend')
     Vue.config.async = false
   }),
   test('Directory renders who is friend', () => {

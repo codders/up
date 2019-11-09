@@ -55,4 +55,9 @@ declare namespace up {
     uid: string,
     activity: string[]
   }
+
+  interface UserRecord {
+    id: string,
+    name: string
+  }
 }

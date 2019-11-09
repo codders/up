@@ -94,6 +94,19 @@ export const mutations = {
       state.whatsUp.splice(index, 1)
     }
   },
+  addFriend(state, friend) {
+    const index = state.friends.findIndex(item => item.uid === friend.uid)
+    if (index !== -1) {
+      state.friends.splice(index, 1)
+    }
+    state.friends.push(friend)
+  },
+  deleteFriend(state, frienduid) {
+    const index = state.friends.findIndex(item => item.uid === frienduid)
+    if (index !== -1) {
+      state.friends.splice(index, 1)
+    }
+  },
   updateFriendsList(state, friends) {
     state.friends.splice(0, state.friends.length)
     friends.forEach(function(friend) {
@@ -102,6 +115,8 @@ export const mutations = {
     state.loadedFriends = true
   }
 }
+
+const BASE_URL = 'https://europe-west1-up-now-a6da8.cloudfunctions.net/app'
 
 export const actions = {
   signInWithGoogle({ commit }) {
@@ -132,7 +147,7 @@ export const actions = {
   changeUp({ commit, state }, { id, isUp }) {
     axios({
       method: 'post',
-      url: 'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/up/' + id,
+      url: BASE_URL + '/up/' + id,
       data: { isUp },
       headers: {
         Authorization: 'Bearer ' + state.idToken
@@ -153,7 +168,7 @@ export const actions = {
         Authorization: 'Bearer ' + state.idToken,
         'Content-Type': 'application/json'
       },
-      url: 'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/up/' + id
+      url: BASE_URL + '/up/' + id
     })
       .then(response => {
         commit('deleteWhatsUp', id)
@@ -173,7 +188,7 @@ export const actions = {
         Authorization: 'Bearer ' + state.idToken,
         'Content-Type': 'application/json'
       },
-      url: 'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/friends'
+      url: BASE_URL + '/friends'
     })
       .then(response => {
         commit('updateFriendsList', response.data)
@@ -183,16 +198,51 @@ export const actions = {
       })
   },
 
-  addFriend({ dispatch }, payload) {
-    dispatch(
-      'friends/set',
-      Object.assign(
-        {
-          id: payload.uid
-        },
-        payload
-      )
-    )
+  addFriend({ dispatch, state, commit }, friend) {
+    axios({
+      method: 'post',
+      url: BASE_URL + '/friends',
+      data: friend,
+      headers: {
+        Authorization: 'Bearer ' + state.idToken
+      }
+    })
+      .then(response => {
+        commit('addFriend', friend)
+      })
+      .catch(error => {
+        console.log('Unable to respond to add friend', error) // eslint-disable-line no-console
+      })
+  },
+
+  addFriendByEmail({ dispatch, state, commit }, email) {
+    return axios({
+      method: 'post',
+      url: BASE_URL + '/addFriendByEmail',
+      data: { email },
+      headers: {
+        Authorization: 'Bearer ' + state.idToken
+      }
+    }).then(response => {
+      commit('addFriend', response.data)
+    })
+  },
+
+  deleteFriend({ dispatch, state, commit }, friendUid) {
+    return axios({
+      method: 'DELETE',
+      headers: {
+        Authorization: 'Bearer ' + state.idToken,
+        'Content-Type': 'application/json'
+      },
+      url: BASE_URL + '/friends/' + friendUid
+    })
+      .then(response => {
+        commit('deleteFriend', response.data.uid)
+      })
+      .catch(error => {
+        console.log('Unable to delete friend', error) // eslint-disable-line no-console
+      })
   },
 
   setInitialProfileIfBlank({ dispatch, state }, doc) {
