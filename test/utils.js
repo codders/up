@@ -13,22 +13,12 @@ const makeName = function() {
   return names[Math.floor(Math.random() * names.length)]
 }
 
-export const directoryFriends = function(friendList) {
-  const result = []
-  for (const id in friendList) {
-    result.push({
-      uid: friendList[id].uid,
-      name: makeName()
-    })
-  }
-  return result
-}
-
 export const friendList = function(friendCount) {
   const result = []
   for (var i=0; i<friendCount; i++) {
     result.push({
-      uid: makeUid(15)
+      uid: makeUid(15),
+      name: makeName()
     })
   }
   return result
@@ -38,9 +28,8 @@ const dataStore = function({ uid, friends, profile, dispatcher, whatsUp }) {
   const user = (uid === null ? null : { uid: uid })
   return {
     state: {
-      friends: {
-        data: (friends == null ? {} : friends)
-      },
+      friends: (friends == null ? [] : friends),
+      loadedFriends: false,
       profile: {
         data: (profile == null ? {} : profile)
       },
@@ -55,7 +44,7 @@ const dataStore = function({ uid, friends, profile, dispatcher, whatsUp }) {
     },
     getters: {
       activeUser: user,
-      friends: (friends == null ? {} : friends),
+      friends: (friends == null ? [] : friends),
       whatsUp: (whatsUp == null ? [] : whatsUp)
     }
   }
@@ -91,8 +80,7 @@ const mockWithStore = function({ store, router, routeParams, axios }) {
 
 const Util = {
   mockDataStore: mockDataStore,
-  friendList: friendList,
-  directoryFriends: directoryFriends
+  friendList: friendList
 }
 
 export default Util

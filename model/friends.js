@@ -16,24 +16,6 @@ export const friendByUid = function(friends, uid) {
   return undefined
 }
 
-export const loadDirectoryFriends = function($axios, store) {
-  return $axios
-    .$get('https://europe-west1-up-now-a6da8.cloudfunctions.net/app/friends', {
-      headers: {
-        Authorization: 'Bearer ' + store.state.idToken
-      }
-    })
-    .then(response => {
-      return { directoryFriends: response }
-    })
-    .catch(error => {
-      return {
-        directoryFriends: [],
-        error
-      }
-    })
-}
-
 export const getNameForFriend = function(directoryFriends, uid) {
   for (const id in directoryFriends) {
     if (directoryFriends[id].uid === uid) {
@@ -41,18 +23,4 @@ export const getNameForFriend = function(directoryFriends, uid) {
     }
   }
   return undefined
-}
-
-export const filterKnownFriends = function(friends, directoryFriends) {
-  const result = []
-  for (const id in friends) {
-    const name = getNameForFriend(directoryFriends, friends[id].uid)
-    if (name !== undefined) {
-      result.push({
-        uid: friends[id].uid,
-        name
-      })
-    }
-  }
-  return result
 }

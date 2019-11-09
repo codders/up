@@ -13,11 +13,9 @@ config.stubs['nuxt-child'] = '<br />'
 describe('up/_activity/index.vue', () => {
   test('Shows the friend list', () => {
     const friends = Util.friendList(2)
-    const directoryFriends = Util.directoryFriends(friends)
     const mountedCard = mount(Index, {
       mocks: Util.mockDataStore({ uid: '123', friends: friends, routeParams: { activity: 'play' }})
     })
-    mountedCard.setData({ directoryFriends: directoryFriends })
     expect(mountedCard.contains('[jest="friends-list"]')).toBe(true)
     expect(mountedCard.findAll(".friend").length).toBe(2)
     expect(mountedCard.find(".headline").text()).toBe('Play')
@@ -25,11 +23,9 @@ describe('up/_activity/index.vue', () => {
   }),
   test('Shows the friend list with multiple activities', () => {
     const friends = Util.friendList(2)
-    const directoryFriends = Util.directoryFriends(friends)
     const mountedCard = mount(Index, {
       mocks: Util.mockDataStore({ uid: '123', friends: friends, routeParams: { activity: 'move-relax' }})
     })
-    mountedCard.setData({ directoryFriends: directoryFriends })
     expect(mountedCard.contains('[jest="friends-list"]')).toBe(true)
     expect(mountedCard.findAll(".friend").length).toBe(2)
     expect(mountedCard.find(".friend .name").text()).not.toBe('')
@@ -37,11 +33,9 @@ describe('up/_activity/index.vue', () => {
   }),
   test('Shows the friend list with three activities', () => {
     const friends = Util.friendList(2)
-    const directoryFriends = Util.directoryFriends(friends)
     const mountedCard = mount(Index, {
       mocks: Util.mockDataStore({ uid: '123', friends: friends, routeParams: { activity: 'move-relax-out' }})
     })
-    mountedCard.setData({ directoryFriends: directoryFriends })
     expect(mountedCard.contains('[jest="friends-list"]')).toBe(true)
     expect(mountedCard.findAll(".friend").length).toBe(2)
     expect(mountedCard.find(".friend .name").text()).not.toBe('')
@@ -49,8 +43,9 @@ describe('up/_activity/index.vue', () => {
   }),
   test('Submits data to server', () => {
     let postedData = null
+    const friends = Util.friendList(2)
     const mountedCard = mount(Index, {
-      mocks: Util.mockDataStore({ uid: '123', friends: Util.friendList(2), routeParams: { activity: 'play' }, axios: (request) => {
+      mocks: Util.mockDataStore({ uid: '123', friends: friends, routeParams: { activity: 'play' }, axios: (request) => {
         postedData = request.data
         return new Promise(function(rs,rj) {
           rs('Success!')
@@ -63,14 +58,15 @@ describe('up/_activity/index.vue', () => {
     mountedCard.vm.showUp()
     expect(postedData).toEqual({
       activity: ['play'],
-      friends: [],
+      friends: friends.map(item => item.uid),
       description: 'Let\'s play!'
     })
   }),
   test('Handles multiple activities', () => {
     let postedData = null
+    const friends = Util.friendList(2)
     const mountedCard = mount(Index, {
-      mocks: Util.mockDataStore({ uid: '123', friends: Util.friendList(2), routeParams: { activity: 'play-out' }, axios: (request) => {
+      mocks: Util.mockDataStore({ uid: '123', friends: friends, routeParams: { activity: 'play-out' }, axios: (request) => {
         postedData = request.data
         return new Promise(function(rs,rj) {
           rs('Success!')
@@ -83,7 +79,7 @@ describe('up/_activity/index.vue', () => {
     mountedCard.vm.showUp()
     expect(postedData).toEqual({
       activity: ['play', 'out'],
-      friends: [],
+      friends: friends.map(item => item.uid),
       description: 'Let\'s play!'
     })
   })

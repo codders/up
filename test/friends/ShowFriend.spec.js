@@ -16,14 +16,15 @@ describe('friends/_id/index.vue', () => {
       mocks: Util.mockDataStore({
         uid: '123',
         routeParams: { id: 'abc' },
-        friends: {
-          abc: {
-            uid: 'abc'
+        friends: [
+          {
+            uid: 'abc',
+            name: 'Arthur'
           }
-        }
+        ]
       })
     })
-    expect(mountedCard.find('[jest="friend-name"]').text()).toBe('robert')
+    expect(mountedCard.find('[jest="friend-name"]').text()).toBe('Arthur')
   }),
   test('Redirects to not found if friend does not exist', () => {
     var redirectPath = undefined

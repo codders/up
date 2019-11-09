@@ -9,8 +9,8 @@
           <v-flex xs12 md4>
             <v-list jest="friends-list">
               <v-list-item
-                v-for="(friend, key) in knownFriends"
-                :key="key"
+                v-for="(friend, index) in friends"
+                :key="index"
                 class="friend"
               >
                 <nuxt-link :to="'/friends/' + friend.uid">
@@ -47,26 +47,20 @@
 </template>
 
 <script>
-import { loadDirectoryFriends, filterKnownFriends } from '@/model/friends'
-
 export default {
-  asyncData({ $axios, store }) {
-    return loadDirectoryFriends($axios, store)
-  },
-  data() {
-    return {
-      directoryFriends: []
-    }
+  async fetch({ store, params }) {
+    await store.dispatch('loadFriends')
   },
   computed: {
-    knownFriends() {
-      return filterKnownFriends(this.friends, this.directoryFriends)
-    },
     friends() {
       return this.$store.getters.friends
     },
     friendCount() {
-      return Object.entries(this.$store.getters.friends).length
+      if (this.$store.getters.friends !== undefined) {
+        return this.$store.getters.friends.length
+      } else {
+        return 0
+      }
     }
   },
   methods: {

@@ -23,6 +23,9 @@
 
 <script>
 export default {
+  async fetch({ store, params }) {
+    await store.dispatch('loadFriends')
+  },
   beforeMount() {
     if (this.friend() === undefined) {
       this.$nuxt.$router.replace('/friends/unknown_friend')
@@ -30,9 +33,9 @@ export default {
   },
   methods: {
     friend() {
-      for (const [key, value] of Object.entries(this.$store.getters.friends)) {
-        if (key === this.$route.params.id) {
-          return value
+      for (const friend of this.$store.getters.friends) {
+        if (friend.uid === this.$route.params.id) {
+          return friend
         }
       }
       return undefined

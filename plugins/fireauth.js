@@ -7,14 +7,10 @@ export default context => {
     const updateUser = user => {
       if (user != null) {
         user.getIdToken().then(function(idToken) {
-          store.commit('setUser', user)
-          store.commit('setIdToken', idToken)
-          resolve()
+          store.dispatch('userChanged', { user, idToken }).then(() => resolve())
         })
       } else {
-        store.commit('setUser', null)
-        store.commit('setIdToken', null)
-        resolve()
+        store.dispatch('clearUser').then(() => resolve())
       }
     }
 

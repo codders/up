@@ -9,8 +9,8 @@
           <h3>with these friends</h3>
           <v-list jest="friends-list">
             <v-list-item
-              v-for="(friend, key) in knownFriends"
-              :key="key"
+              v-for="(friend, index) in friends"
+              :key="index"
               class="friend"
               @click="selectFriend(friend)"
             >
@@ -18,7 +18,10 @@
                 {{ friend.name }}
               </v-list-item-title>
               <v-list-item-action>
-                <v-checkbox v-model="selected[friend.uid]" @click.prevent="" />
+                <v-checkbox
+                  v-model="getSelected()[friend.uid]"
+                  @click.prevent=""
+                />
               </v-list-item-action>
               <v-spacer />
             </v-list-item>
@@ -48,40 +51,34 @@
 
 <script>
 import { activityArrayToString } from '@/model/activity'
-import { loadDirectoryFriends, filterKnownFriends } from '@/model/friends'
 
 export default {
-  asyncData({ $axios, store }) {
-    return loadDirectoryFriends($axios, store)
-      .then(function(data) {
-        const selected = {}
-        for (const friend in data.directoryFriends) {
-          selected[data.directoryFriends[friend].uid] = true
-        }
-        return Object.assign(data, { selected })
-      })
-      .catch(function(error) {
-        return {
-          selected: {},
-          directoryFriends: [],
-          error
-        }
-      })
+  async fetch({ store, params }) {
+    await store.dispatch('loadFriends')
   },
   data: () => ({
-    selected: {},
-    directoryFriends: [],
+    selected: null,
     description: ''
   }),
   computed: {
     friends() {
       return this.$store.getters.friends
-    },
-    knownFriends() {
-      return filterKnownFriends(this.friends, this.directoryFriends)
     }
   },
   methods: {
+    getSelected() {
+      if (this.selected === null) {
+        this.selected = this.selectAllFriends()
+      }
+      return this.selected
+    },
+    selectAllFriends() {
+      const selected = {}
+      for (const friend of this.$store.getters.friends) {
+        selected[friend.uid] = true
+      }
+      return selected
+    },
     activityName() {
       return activityArrayToString(this.$route.params.activity.split('-'))
     },

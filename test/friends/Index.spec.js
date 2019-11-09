@@ -20,37 +20,14 @@ describe('friends.vue', () => {
   }),
   test('Shows friends list if there are friends', () => {
     const friendList = [
-      { uid: 'vRHbWPYcJdVbv33kopy4fNWDgwg1' },
-      { uid: 'uurGYXhegkXrW0Jy2rH4l75dxOf1' }
+      { uid: 'vRHbWPYcJdVbv33kopy4fNWDgwg1', name: 'Arthur' },
+      { uid: 'uurGYXhegkXrW0Jy2rH4l75dxOf1', name: 'Bob' }
     ]
     const mountedForm = mount(Friends, {
       mocks: Util.mockDataStore({ uid: '123', friends: friendList })
-    })
-    mountedForm.setData({
-      directoryFriends: [
-        { uid: 'vRHbWPYcJdVbv33kopy4fNWDgwg1', name: 'Arthur' },
-        { uid: 'uurGYXhegkXrW0Jy2rH4l75dxOf1', name: 'Bob' }
-      ]
     })
     expect(mountedForm.contains('[jest="friends-list"]')).toBe(true)
     expect(mountedForm.findAll(".friend").length).toBe(2)
-    expect(mountedForm.find(".friend .name").text()).toBe('Arthur')
-  }),
-  test('Only render friends that appear in the directory', () => {
-    const friendList = [
-      { uid: 'vRHbWPYcJdVbv33kopy4fNWDgwg1' },
-      { uid: 'uurGYXhegkXrW0Jy2rH4l75dxOf1' }
-    ]
-    const mountedForm = mount(Friends, {
-      mocks: Util.mockDataStore({ uid: '123', friends: friendList })
-    })
-    mountedForm.setData({
-      directoryFriends: [
-        { uid: 'vRHbWPYcJdVbv33kopy4fNWDgwg1', name: 'Arthur' }
-      ]
-    })
-    expect(mountedForm.contains('[jest="friends-list"]')).toBe(true)
-    expect(mountedForm.findAll(".friend").length).toBe(1)
     expect(mountedForm.find(".friend .name").text()).toBe('Arthur')
   })
 })
