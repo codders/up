@@ -101,6 +101,12 @@ export const mutations = {
     }
     state.friends.push(friend)
   },
+  updateFriendNotificationSubscription(state, details) {
+    const friend = state.friends.find(item => item.uid === details.frienduid)
+    if (friend !== undefined) {
+      friend.subscription = details.subscription
+    }
+  },
   deleteFriend(state, frienduid) {
     const index = state.friends.findIndex(item => item.uid === frienduid)
     if (index !== -1) {
@@ -228,7 +234,7 @@ export const actions = {
     })
   },
 
-  deleteFriend({ dispatch, state, commit }, friendUid) {
+  deleteFriend({ state, commit }, friendUid) {
     return axios({
       method: 'DELETE',
       headers: {
@@ -242,6 +248,32 @@ export const actions = {
       })
       .catch(error => {
         console.log('Unable to delete friend', error) // eslint-disable-line no-console
+      })
+  },
+
+  updateFriendNotificationSubscription({ state, commit }, details) {
+    const postData = {}
+    postData[details.activity] = details.subscribe
+    return axios({
+      method: 'post',
+      url: BASE_URL + '/friends/' + details.uid + '/subscriptions',
+      data: postData,
+      headers: {
+        Authorization: 'Bearer ' + state.idToken,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        commit('updateFriendNotificationSubscription', {
+          frienduid: details.uid,
+          subscription: response.data
+        })
+      })
+      .catch(error => {
+        console.log(
+          'Unable to update subcription to ' + details.uid + ' events',
+          error
+        )
       })
   },
 

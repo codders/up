@@ -215,6 +215,17 @@ export const addFriendRecord = (uid: string, frienduid: string) => {
   return admin.firestore().collection('users').doc(uid).collection('friends').doc(frienduid).set(friendRecord)
 }
 
+export const setSubscriptionStatusForFriend = (uid: string, friendUid: string, activityUpdate: { [id: string]: string }) => {
+  const subscriptionsUpdate = Object.keys(activityUpdate).reduce(function(result, key) {
+    result['subscription.' + key] = activityUpdate[key]
+    return result
+  }, <{[id:string]:string}>{})
+  return admin.firestore().collection('users').doc(uid)
+    .collection('friends')
+    .doc(friendUid)
+    .update(subscriptionsUpdate)
+}
+
 export const deleteFriendByUid = (uid: string, friendUid: string) => {
   return admin.firestore().collection('users').doc(uid)
     .collection('friends')
@@ -225,15 +236,18 @@ export const deleteFriendByUid = (uid: string, friendUid: string) => {
     })
 }
 
-const loadFriendUids = (uid: string): Promise<string[]> => {
+const loadFriendRecords = (uid: string): Promise<up.FriendRecord[]> => {
   return admin.firestore().collection('users').doc(uid).collection('friends')
     .get().then(function(querySnapshot) {
-      const frienduids: string[] = []
+      const friends: up.FriendRecord[] = []
       querySnapshot.forEach(function(friendDoc) {
         const record = friendDoc.data();
-        frienduids.push(record.uid)
+        friends.push({
+          uid: record.uid,
+          subscription: record.subscription
+        })
       })
-      return frienduids
+      return friends
     })
     .catch(function(error) {
       console.log("Error fetching list of friends: ", error);
@@ -246,15 +260,25 @@ function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
 }
 
 export const loadInterestRegisterForUser = (uid: string, frienduids: string[]) => {
-  return Promise.all(frienduids.map((frienduid) => {
-      return loadFriendUids(frienduid).then(function(friends) {
-        return { friend: frienduid, friends: friends }
-      })
-    }))
+  return loadFriendRecords(uid)
+    .then(function(allfriends) {
+      return Promise.all(allfriends.filter(item => frienduids.includes(item.uid)).map((friend) => {
+        return loadFriendRecords(friend.uid).then(function(friendsoffriend) {
+          return { friend: friend, friends: friendsoffriend }
+        })
+      }))
+    })
     .then(function(friendarrays) {
       return friendarrays.map((friendentry) => {
-        if (friendentry.friends.includes(uid)) {
-          return { uid: friendentry.friend, activity: [ 'play', 'out', 'move', 'relax' ] }
+        const reflectedFriendRecord = friendentry.friends.find(item => item.uid === uid)
+        if (reflectedFriendRecord !== undefined) {
+          const activityList = [ 'play', 'out', 'move', 'relax' ].filter(activity => {
+            if (reflectedFriendRecord.subscription !== undefined) {
+              return reflectedFriendRecord.subscription[activity] !== false
+            }
+            return true
+          })
+          return { uid: friendentry.friend.uid, activity: activityList }
         } else {
           return null
         }
@@ -389,17 +413,14 @@ export const loadUp = (uid: string) => {
   return loadUpByField("inviteduid", uid)
 };
 
-const resolveNames = (uids: string[]) => {
+const resolveNames = (friends: up.FriendRecord[]) => {
   const entries: up.DirectoryEntry[] = []
   const promises: PromiseLike<void | up.DirectoryEntry>[] = []
-  uids.forEach(function(uid) {
+  friends.forEach(function(friend) {
     promises.push(
-      nameForUser(uid).then(function(name) {
+      nameForUser(friend.uid).then(function(name) {
         if (name !== undefined) {
-          entries.push({
-            uid: uid,
-            name: name
-          })
+          entries.push(Object.assign({ name }, friend))
         }
       })
     )
@@ -411,33 +432,33 @@ const resolveNames = (uids: string[]) => {
 
 export const loadFriends = (uid: string) => {
   console.log('Loading friends for user', uid)
-  return loadFriendUids(uid).then(function(frienduids: string[]) {
+  return loadFriendRecords(uid).then(function(frienduids: up.FriendRecord[]) {
     return resolveNames(frienduids)
   })
 };
 
 export const loadDirectory = (uid: string) => {
-  return loadFriendUids(uid).then(function(frienduids: string[]) {
-    const promises: PromiseLike<string[]>[] = []
-    frienduids.forEach(function (frienduid) {
+  return loadFriendRecords(uid).then(function(friendrecords: up.FriendRecord[]) {
+    const promises: PromiseLike<up.FriendRecord[]>[] = []
+    friendrecords.forEach(function (friendrecord) {
       promises.push(
-        loadFriendUids(frienduid).then(function (friendfrienduids: string[]) {
-          if (friendfrienduids.includes(uid)) {
-            return friendfrienduids.filter(item => item !== uid)
+        loadFriendRecords(friendrecord.uid).then(function (friendfriendrecords: up.FriendRecord[]) {
+          if (friendfriendrecords.findIndex(item => item.uid === uid) !== -1) {
+            return friendfriendrecords.filter(item => item.uid !== uid)
           } else {
             return []
           }
         })
       )
     })
-    promises.push(Promise.resolve(frienduids))
+    promises.push(Promise.resolve(friendrecords))
     return Promise.all(promises)
-  }).then(function(frienduidarrays: string[][]) {
-    const uniqueFriends: string[] = [];
-    const emptyArray: string[] = [];
-    emptyArray.concat.apply([], frienduidarrays).forEach(function (frienduid) {
-      if (!uniqueFriends.includes(frienduid)) {
-        uniqueFriends.push(frienduid)
+  }).then(function(friendrecordarrays: up.FriendRecord[][]) {
+    const uniqueFriends: up.FriendRecord[] = [];
+    const emptyArray: up.FriendRecord[] = [];
+    emptyArray.concat.apply([], friendrecordarrays).forEach(function (friendrecord) {
+      if (uniqueFriends.findIndex(item => item.uid === friendrecord.uid) === -1) {
+        uniqueFriends.push(friendrecord)
       }
     })
     return resolveNames(uniqueFriends)

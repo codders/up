@@ -10,6 +10,7 @@ import { validateFirebaseIdToken,
          lookupUserByEmail,
          loadInterestRegisterForUser,
          addFriendRecord,
+         setSubscriptionStatusForFriend,
          deleteFriendByUid,
          nameForUser,
          respondToUp,
@@ -117,6 +118,19 @@ app.post('/friends', (request: express.Request, response: express.Response) => {
     console.log('Unable to add friend');
   });
 });
+app.post('/friends/:id/subscriptions', (request: express.Request, response: express.Response) => {
+  const activityUpdate = Object.assign({}, request.body);
+  setSubscriptionStatusForFriend(
+    request.user.uid,
+    request.params.id,
+    activityUpdate
+  ).then(writeResult => {
+    response.status(201).send(activityUpdate)
+  })
+  .catch(err => {
+    console.log('Unable to update subscription information for friend')
+  })
+});
 app.delete('/friends/:id', (request: express.Request, response: express.Response) => {
   console.log('Deleting friend ' + request.params.id + ' for ' + request.user.uid);
   deleteFriendByUid(request.user.uid, request.params.id).then(writeResult => {
@@ -138,6 +152,10 @@ app.post('/saveRecord', (request: express.Request, response: express.Response) =
     }
     return Promise.all([saveInviteRecordForUser(request.user.uid, parentUpRecord),
     loadInterestRegisterForUser(request.user.uid, record.friends)]).then(function(results) {
+      console.log('Loaded interest register', results)
+      Object.values(results[1]).forEach(function(friend) {
+        console.log('Friend', friend)
+      })
       const parentRecordId: string = results[0]
       const interestRegister: { [uid: string]: up.InterestRegister } = results[1]
       const upRecords = getUpRecordsForRequest(

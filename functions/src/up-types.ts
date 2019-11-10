@@ -60,4 +60,14 @@ declare namespace up {
     id: string,
     name: string
   }
+
+  interface FriendRecord {
+    uid: string
+    subscription: { [id: string]: boolean }
+  }
+
+
+  interface FriendRecordWithName extends FriendRecord {
+    name: string
+  }
 }
