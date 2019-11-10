@@ -7,7 +7,7 @@
         </v-card-title>
         <v-card-actions>
           <v-spacer />
-          <v-btn color="primary" text nuxt to="/">
+          <v-btn color="primary" text nuxt @click="$router.go(-1)">
             Go Back
           </v-btn>
         </v-card-actions>

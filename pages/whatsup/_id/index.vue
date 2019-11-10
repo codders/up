@@ -29,8 +29,8 @@
           </div>
         </v-card-text>
         <v-card-actions>
-          <v-btn color="primary" text nuxt to="/">
-            GO BACK
+          <v-btn color="primary" text nuxt @click="$router.go(-1)">
+            Go Back
           </v-btn>
           <v-spacer />
         </v-card-actions>

@@ -1,12 +1,12 @@
 <template>
   <v-layout column align-center justify-center>
-    <v-card>
-      <v-card-title class="headline">
-        Your Friends
-      </v-card-title>
-      <v-card-text>
-        <template v-if="friendCount > 0">
-          <v-flex xs12 md4>
+    <v-flex xs12 sm8 md6>
+      <v-card>
+        <v-card-title class="headline">
+          Your Friends
+        </v-card-title>
+        <v-card-text>
+          <template v-if="friendCount > 0">
             <v-list jest="friends-list">
               <v-list-item
                 v-for="(friend, index) in friends"
@@ -26,23 +26,23 @@
                 </v-list-item-action>
               </v-list-item>
             </v-list>
-          </v-flex>
+            <v-spacer />
+          </template>
+          <template v-else>
+            <p>No friends yet? Why not add one!</p>
+          </template>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" text nuxt @click="$router.go(-1)">
+            Go Back
+          </v-btn>
           <v-spacer />
-        </template>
-        <template v-else>
-          <p>No friends yet? Why not add one!</p>
-        </template>
-      </v-card-text>
-      <v-card-actions>
-        <v-btn color="primary" text nuxt to="/">
-          Go Back
-        </v-btn>
-        <v-spacer />
-        <v-btn color="primary" text nuxt to="/add-friend">
-          Add Friend
-        </v-btn>
-      </v-card-actions>
-    </v-card>
+          <v-btn color="primary" text nuxt to="/add-friend">
+            Add Friend
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-flex>
   </v-layout>
 </template>
 

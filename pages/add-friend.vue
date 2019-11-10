@@ -1,9 +1,12 @@
 <template>
-  <v-layout>
-    <v-flex text-xs-center>
-      <v-layout row wrap>
-        <v-flex xs12>
-          <h1>Add by e-mail address</h1>
+  <v-layout column justify-center align-center>
+    <v-flex xs12 sm8 md6>
+      <v-card>
+        <v-card-title>
+          Add a friend
+        </v-card-title>
+        <v-card-text>
+          <h3>Add by e-mail address</h3>
           <div>
             <input
               v-model="email"
@@ -23,7 +26,7 @@
               {{ addFriendError }}
             </p>
           </div>
-          <h1>Add from Directory</h1>
+          <h3>Add from Directory</h3>
           <div v-if="$data.directoryEntries.length > 0">
             <v-list jest="directory-listing">
               <directory-entry
@@ -40,8 +43,13 @@
               Try adding some friends manually, and your directory will grow
             </p>
           </div>
-        </v-flex>
-      </v-layout>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" text nuxt @click="$router.go(-1)">
+            Go Back
+          </v-btn>
+        </v-card-actions>
+      </v-card>
     </v-flex>
   </v-layout>
 </template>
@@ -56,11 +64,11 @@ div.flex input {
 import DirectoryEntry from '@/components/DirectoryEntry'
 
 export default {
-  async fetch({ store, params }) {
-    await store.dispatch('loadFriends')
-  },
   components: {
     DirectoryEntry
+  },
+  async fetch({ store, params }) {
+    await store.dispatch('loadFriends')
   },
   asyncData({ $axios, store }) {
     return $axios
