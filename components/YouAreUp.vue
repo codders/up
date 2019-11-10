@@ -1,6 +1,6 @@
 <template>
-  <v-list-item class="youre-up">
-    <v-list-item-content @click="routeToItem(id)">
+  <v-list-item class="youre-up" @click="routeToItem(id)">
+    <v-list-item-content>
       <v-list-item-title class="activity">
         Showing up to {{ getTitleForActivity(activity) }}
         <span v-if="!isEmpty(description)">: "{{ description }}"</span>
@@ -9,19 +9,13 @@
         {{ getFriendsListAsText(acceptedFriends) }}
       </v-list-item-subtitle>
     </v-list-item-content>
-    <v-list-item-action @click="cancelUpRequest(id)">
+    <v-list-item-action @click.stop="cancelUpRequest(id)">
       <v-btn icon>
         <v-icon>delete</v-icon>
       </v-btn>
     </v-list-item-action>
   </v-list-item>
 </template>
-
-<style>
-div.v-list-item__content {
-  cursor: pointer;
-}
-</style>
 
 <script>
 import { activityArrayToString } from '@/model/activity'

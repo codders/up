@@ -23,7 +23,6 @@
                   @click.prevent=""
                 />
               </v-list-item-action>
-              <v-spacer />
             </v-list-item>
           </v-list>
           <h3>Provide some details (optional)</h3>

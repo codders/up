@@ -1,13 +1,12 @@
 <template>
-  <v-list-item class="entry">
-    <nuxt-link :to="'/friends/' + uid">
+  <v-list-item class="entry" @click="routeToFriend(uid)">
+    <v-list-item-content @click="routeToFriend(uid)">
       <v-list-item-title>{{ name }}</v-list-item-title>
-    </nuxt-link>
-    <v-spacer />
+    </v-list-item-content>
     <v-list-item-action
       v-if="isFriend"
       class="delete_action"
-      @click="deleteFriend(uid)"
+      @click.stop="deleteFriend(uid)"
     >
       <v-btn icon>
         <v-icon>delete</v-icon>
@@ -42,6 +41,14 @@ export default {
     }
   },
   methods: {
+    routeToFriend(uid) {
+      if (friendByUid(this.$store.getters.friends, uid) !== undefined) {
+        this.$nuxt.$router.push({
+          name: 'friends-id',
+          params: { id: uid }
+        })
+      }
+    },
     addFriend(uid, name) {
       this.$store.dispatch('addFriend', { uid, name })
     },

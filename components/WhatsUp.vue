@@ -1,6 +1,6 @@
 <template>
-  <v-list-item class="up">
-    <v-list-item-content @click="routeToItem(whatsupid)">
+  <v-list-item class="up" @click="routeToItem(whatsupid)">
+    <v-list-item-content>
       <v-list-item-title>
         {{ name }} wants to
         {{ getTitleForActivity(activity) }}
@@ -12,25 +12,19 @@
     <v-list-item-action
       v-if="isUp"
       class="delete_action"
-      @click="$emit('cancelUp')"
+      @click.stop="$emit('cancelUp')"
     >
       <v-btn icon>
         <v-icon>remove_circle</v-icon>
       </v-btn>
     </v-list-item-action>
-    <v-list-item-action v-else class="add_action" @click="$emit('showUp')">
+    <v-list-item-action v-else class="add_action" @click.stop="$emit('showUp')">
       <v-btn icon>
         <v-icon>add_circle</v-icon>
       </v-btn>
     </v-list-item-action>
   </v-list-item>
 </template>
-
-<style>
-div.v-list-item__content {
-  cursor: pointer;
-}
-</style>
 
 <script>
 import { activityArrayToString } from '@/model/activity'

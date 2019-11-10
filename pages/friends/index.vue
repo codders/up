@@ -12,14 +12,14 @@
                 v-for="(friend, index) in friends"
                 :key="index"
                 class="friend"
+                @click="routeToFriend(friend)"
               >
-                <nuxt-link :to="'/friends/' + friend.uid">
+                <v-list-item-content>
                   <v-list-item-title class="name">
                     {{ friend.name }}
                   </v-list-item-title>
-                </nuxt-link>
-                <v-spacer />
-                <v-list-item-action @click="deleteFriend(friend.uid)">
+                </v-list-item-content>
+                <v-list-item-action @click.stop="deleteFriend(friend.uid)">
                   <v-btn icon>
                     <v-icon>delete</v-icon>
                   </v-btn>
@@ -67,6 +67,12 @@ export default {
     deleteFriend(key) {
       this.$log.debug('Deleting friend with key: ', key)
       this.$store.dispatch('deleteFriend', key)
+    },
+    routeToFriend(friend) {
+      this.$nuxt.$router.push({
+        name: 'friends-id',
+        params: { id: friend.uid }
+      })
     }
   }
 }
