@@ -32,8 +32,11 @@
         </div>
       </template>
     </v-navigation-drawer>
-    <v-app-bar :clipped-left="false" fixed app>
-      <v-app-bar-nav-icon @click="drawer = !drawer" />
+    <v-app-bar :clipped-left="false" dense fixed app>
+      <v-app-bar-nav-icon
+        v-if="$store.getters.activeUser"
+        @click="drawer = !drawer"
+      />
       <v-toolbar-title v-text="title" />
     </v-app-bar>
     <v-content>
