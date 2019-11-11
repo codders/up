@@ -88,17 +88,17 @@ export default {
         return { directoryEntries: error }
       })
   },
-  computed: {
-    sortedFriends() {
-      return sortFriends(this.directoryEntries)
-    }
-  },
   data() {
     return {
       directoryEntries: [],
       email: '',
       inputEnabled: true,
       addFriendError: null
+    }
+  },
+  computed: {
+    sortedFriends() {
+      return sortFriends(this.directoryEntries)
     }
   },
   methods: {
