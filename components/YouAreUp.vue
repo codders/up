@@ -60,7 +60,7 @@ export default {
       if (friends.length > 0) {
         return 'Replies from: ' + friends.join(',')
       } else {
-        return 'Nobody replied yet...'
+        return 'Waiting for replies...'
       }
     },
     cancelUpRequest(id) {
