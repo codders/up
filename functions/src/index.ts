@@ -6,6 +6,8 @@ import { validateFirebaseIdToken,
          loadInvites,
          deleteUpRecordsByInvite,
          loadDirectory,
+         loadProfile,
+         updateProfile,
          loadFriends,
          lookupUserByEmail,
          loadInterestRegisterForUser,
@@ -70,6 +72,26 @@ app.post('/up/:id', (request: express.Request, response: express.Response) => {
   .catch(err => {
     console.log('Unable to record response', err);
     response.status(500).send({ error: err })
+  })
+});
+app.get('/profile', (request: express.Request, response: express.Response) => {
+  console.log('Loading profile for user ' + request.user.uid)
+  loadProfile(request.user.uid).then(profile => {
+    response.status(200).send(profile)
+  })
+  .catch(err => {
+    console.log('Unable to load profile', err)
+    response.status(201).send({ id: request.user.uid })
+  })
+});
+app.post('/profile', (request: express.Request, response: express.Response) => {
+  console.log('Updating profile for user ' + request.user.uid)
+  updateProfile(request.user.uid, Object.assign({}, request.body)).then(profile => {
+    response.status(201).send(profile)
+  })
+  .catch(err => {
+    console.log('Unable to save profile', err)
+    response.status(500).send({ message: 'Error updating profile' })
   })
 });
 app.get('/myUp', (request: express.Request, response: express.Response) => {

@@ -1,27 +1,6 @@
-/** Vuex-Easy-Firestore config **/
-import createEasyFirestore from 'vuex-easy-firestore'
 import axios from 'axios'
 
 import { auth, GoogleProvider } from '@/services/fireinit.js'
-
-/* Profile firestore */
-const profile = {
-  firestorePath: 'users/{userId}',
-  firestoreRefType: 'document',
-  moduleName: 'profile',
-  statePropName: 'data',
-  namespaced: true,
-  serverChange: {
-    modifiedHook(updateStore, doc, id, store, source, change) {
-      store.dispatch('setInitialProfileIfBlank', doc)
-      updateStore(doc)
-    }
-  }
-}
-const easyProfileFirestore = createEasyFirestore(profile, { logging: true })
-
-export const plugins = [easyProfileFirestore]
-/** Vuex-Easy-Firestore config **/
 
 /* Plugin appears to cause problems with strict mode
    Disabling strict mode here */
@@ -39,7 +18,8 @@ export const state = () => ({
   user: Object.assign({}, emptyUser),
   friends: [],
   loadedFriends: false,
-  whatsUp: []
+  whatsUp: [],
+  profile: {}
 })
 
 export const getters = {
@@ -62,14 +42,12 @@ export const mutations = {
   setUser(state, payload) {
     if (payload === null) {
       state.user = Object.assign({}, emptyUser)
-      this.dispatch('profile/closeDBChannel', { clearModule: true })
     } else {
       state.user.email = payload.email
       state.user.displayName = payload.displayName
       state.user.photoURL = payload.photoURL
       if (state.user.uid !== payload.uid) {
         state.user.uid = payload.uid
-        this.dispatch('profile/openDBChannel')
       }
     }
   },
@@ -124,6 +102,9 @@ export const mutations = {
       state.friends.push(friend)
     })
     state.loadedFriends = true
+  },
+  updateProfile(state, profile) {
+    state.profile = profile
   }
 }
 
@@ -134,7 +115,7 @@ export const actions = {
     return auth.signInWithRedirect(GoogleProvider)
   },
 
-  signOut({ commit }) {
+  signOut({ commit, dispatch }) {
     auth
       .signOut()
       .then(() => {
@@ -143,14 +124,16 @@ export const actions = {
       .catch(err => console.log(err)) // eslint-disable-line no-console
   },
 
-  userChanged({ commit, state }, { user, idToken }) {
+  userChanged({ commit, state, dispatch }, { user, idToken }) {
     if (state.user === undefined || state.user.uid !== user.uid) {
       commit('setUser', user)
       commit('setIdToken', idToken)
+      console.log('Loggedin', { user, idToken }) // eslint-disable-line no-console
+      return dispatch('loadProfile')
     }
   },
 
-  clearUser({ commit }) {
+  clearUser({ commit, dispatch }) {
     commit('setUser', null)
     commit('setIdToken', null)
   },
@@ -280,6 +263,54 @@ export const actions = {
           'Unable to update subcription to ' + details.uid + ' events',
           error
         )
+      })
+  },
+
+  loadProfile({ state, commit }) {
+    return axios({
+      method: 'get',
+      url: BASE_URL + '/profile',
+      headers: {
+        Authorization: 'Bearer ' + state.idToken,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        let changed = false
+        const profileUpdate = {}
+        if (response.data.name == null) {
+          profileUpdate.name = state.user.displayName
+          changed = true
+        }
+        if (response.data.email == null) {
+          profileUpdate.email = state.user.email
+          changed = true
+        }
+        if (response.data.photoURL == null) {
+          profileUpdate.photoURL = state.user.photoURL
+          changed = true
+        }
+        if (changed) {
+          return axios({
+            method: 'post',
+            url: BASE_URL + '/profile',
+            data: profileUpdate,
+            headers: {
+              Authorization: 'Bearer ' + state.idToken,
+              'Content-Type': 'application/json'
+            }
+          }).then(postResponse => {
+            return postResponse.data
+          })
+        } else {
+          return Promise.resolve(response.data)
+        }
+      })
+      .then(result => {
+        commit('updateProfile', result)
+      })
+      .catch(error => {
+        console.log('Unable to load profile', error) // eslint-disable-line no-console
       })
   },
 

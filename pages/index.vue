@@ -51,7 +51,7 @@ export default {
   computed: {
     displayName() {
       if (this.$store.state.profile != null) {
-        return this.$store.state.profile.data.name
+        return this.$store.state.profile.name
       } else {
         return null
       }

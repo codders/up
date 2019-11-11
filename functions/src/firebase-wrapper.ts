@@ -411,6 +411,34 @@ export const respondToUp = (thisUserUid: string, upRecordId: string, isUp: boole
   })
 };
 
+export const loadProfile = (uid: string) => {
+  return admin.firestore().collection('users').doc(uid).get().then(docSnapshot => {
+    if (docSnapshot.exists) {
+      return Promise.resolve(Object.assign({}, docSnapshot.data()))
+    } else {
+      const baseProfile = {
+        created_at: admin.firestore.FieldValue.serverTimestamp(),
+        created_by: uid,
+        id: uid,
+        uid: uid
+      }
+      return admin.firestore().collection('users').doc(uid).set(baseProfile).then(writeResult => {
+        return baseProfile
+      })
+    }
+  })
+};
+
+export const updateProfile = (uid: string, profile: { [id:string]: string }) => {
+  const profileUpdate = Object.assign({
+    updated_at: admin.firestore.FieldValue.serverTimestamp(),
+    updated_by: uid
+  }, profile)
+  return admin.firestore().collection('users').doc(uid).update(profileUpdate).then(writeResult => {
+    return loadProfile(uid)
+  })
+}
+
 export const loadUp = (uid: string) => {
   return loadUpByField("inviteduid", uid)
 };
