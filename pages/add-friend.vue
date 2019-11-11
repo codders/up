@@ -15,6 +15,7 @@
             />
             <v-btn
               color="primary"
+              rounded
               :disabled="!inputEnabled"
               @click="addFriendByEmail(email)"
             >

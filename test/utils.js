@@ -30,9 +30,7 @@ const dataStore = function({ uid, friends, profile, dispatcher, whatsUp }) {
     state: {
       friends: (friends == null ? [] : friends),
       loadedFriends: false,
-      profile: {
-        data: (profile == null ? {} : profile)
-      },
+      profile: profile,
       whatsUp: {
         data: (whatsUp == null ? [] : whatsUp)
       }

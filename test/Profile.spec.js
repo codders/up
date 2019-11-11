@@ -17,6 +17,6 @@ describe('profile.vue', () => {
       mocks: Util.mockDataStore({ uid: '123', profile: { name: 'Arthur' } })
     })
     expect(mountedForm.contains('[jest="name"]')).toBe(true)
-    expect(mountedForm.vm.$options.computed.name.get.call(mountedForm.vm)).toBe('Arthur')
+    expect(mountedForm.vm.$data.name).toBe('Arthur')
   })
 })

@@ -37,7 +37,7 @@
             Go Back
           </v-btn>
           <v-spacer />
-          <v-btn color="primary" text nuxt to="/add-friend">
+          <v-btn color="primary" rounded nuxt @click="goAddFriend()">
             Add Friend
           </v-btn>
         </v-card-actions>
@@ -66,6 +66,11 @@ export default {
     }
   },
   methods: {
+    goAddFriend() {
+      this.$nuxt.$router.push({
+        name: 'add-friend'
+      })
+    },
     deleteFriend(key) {
       this.$log.debug('Deleting friend with key: ', key)
       this.$store.dispatch('deleteFriend', key)

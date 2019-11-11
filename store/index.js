@@ -266,7 +266,7 @@ export const actions = {
       })
   },
 
-  loadProfile({ state, commit }) {
+  loadProfile({ state, commit, dispatch }) {
     return axios({
       method: 'get',
       url: BASE_URL + '/profile',
@@ -291,46 +291,33 @@ export const actions = {
           changed = true
         }
         if (changed) {
-          return axios({
-            method: 'post',
-            url: BASE_URL + '/profile',
-            data: profileUpdate,
-            headers: {
-              Authorization: 'Bearer ' + state.idToken,
-              'Content-Type': 'application/json'
-            }
-          }).then(postResponse => {
-            return postResponse.data
-          })
+          return dispatch('updateProfile', profileUpdate)
         } else {
+          commit('updateProfile', response.data)
           return Promise.resolve(response.data)
         }
-      })
-      .then(result => {
-        commit('updateProfile', result)
       })
       .catch(error => {
         console.log('Unable to load profile', error) // eslint-disable-line no-console
       })
   },
 
-  setInitialProfileIfBlank({ dispatch, state }, doc) {
-    const profileUpdate = {}
-    let changed = false
-    if (state.user == null) {
-      // Nobody is logged in, just return
-      return
-    }
-    if (doc.name == null) {
-      profileUpdate.name = state.user.displayName
-      changed = true
-    }
-    if (doc.email == null) {
-      profileUpdate.email = state.user.email
-      changed = true
-    }
-    if (changed) {
-      dispatch('profile/patch', profileUpdate)
-    }
+  updateProfile({ state, commit }, profileUpdate) {
+    return axios({
+      method: 'post',
+      url: BASE_URL + '/profile',
+      data: profileUpdate,
+      headers: {
+        Authorization: 'Bearer ' + state.idToken,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(postResponse => {
+        commit('updateProfile', profileUpdate)
+        return postResponse.data
+      })
+      .catch(error => {
+        console.log('Unable to update profile', error) // eslint-disable-line no-console
+      })
   }
 }
