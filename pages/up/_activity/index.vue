@@ -8,6 +8,18 @@
         <v-card-text>
           <h3>with these friends</h3>
           <v-list jest="friends-list">
+            <v-list-item class="selectall" @click="selectAll()">
+              <v-list-item-content>
+                [ select all ]
+              </v-list-item-content>
+              <v-list-item-action>
+                <v-checkbox
+                  v-model="allSelected"
+                  v-bind:indeterminate="someSelected"
+                  @click.prevent=""
+                />
+              </v-list-item-action>
+            </v-list-item>
             <v-list-item
               v-for="(friend, index) in friends"
               :key="index"
@@ -57,25 +69,59 @@ export default {
     await store.dispatch('loadFriends')
   },
   data: () => ({
-    selected: null,
+    selected: {},
     description: ''
   }),
   computed: {
     friends() {
       return sortFriends(this.$store.getters.friends)
+    },
+    someSelected() {
+      if (Object.keys(this.selected).length === 0) {
+        return false
+      } else {
+        const firstValue = Object.values(this.selected)[0]
+        let same = true
+        Object.values(this.selected).forEach(function(value) {
+          if (value !== firstValue) {
+            same = false
+          }
+        })
+        return !same
+      }
+    },
+    allSelected() {
+      if (Object.keys(this.selected).length === 0) {
+        return true
+      } else {
+        let same = true
+        Object.values(this.selected).forEach(function(value) {
+          if (value !== true) {
+            same = false
+          }
+        })
+        return same
+      }
     }
   },
   methods: {
+    selectAll() {
+      const selected = {}
+      for (const friend of this.$store.getters.friends) {
+        selected[friend.uid] = !this.allSelected
+      }
+      this.selected = selected
+    },
     getSelected() {
-      if (this.selected === null) {
-        this.selected = this.selectAllFriends()
+      if (Object.keys(this.selected).length === 0) {
+        this.selected = this.selectNoFriends()
       }
       return this.selected
     },
-    selectAllFriends() {
+    selectNoFriends() {
       const selected = {}
       for (const friend of this.$store.getters.friends) {
-        selected[friend.uid] = true
+        selected[friend.uid] = false
       }
       return selected
     },

@@ -67,6 +67,7 @@ describe('up/_activity/index.vue', () => {
     mountedCard.setData({
       description: 'Let\'s play!'
     })
+    mountedCard.vm.selectAll()
     mountedCard.vm.showUp()
     expect(postedData).toEqual({
       activity: ['play'],
@@ -88,6 +89,7 @@ describe('up/_activity/index.vue', () => {
     mountedCard.setData({
       description: 'Let\'s play!'
     })
+    mountedCard.vm.selectAll()
     mountedCard.vm.showUp()
     expect(postedData).toEqual({
       activity: ['play', 'out'],
