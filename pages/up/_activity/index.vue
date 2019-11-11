@@ -15,7 +15,7 @@
               <v-list-item-action>
                 <v-checkbox
                   v-model="allSelected"
-                  v-bind:indeterminate="someSelected"
+                  :indeterminate="someSelected"
                   @click.prevent=""
                 />
               </v-list-item-action>
@@ -47,12 +47,18 @@
           </h2>
         </v-card-text>
         <v-card-actions>
-          <v-btn color="primary" text nuxt to="/">
-            No...
+          <v-btn color="primary" text nuxt @click="$router.go(-1)">
+            Go Back
           </v-btn>
           <v-spacer />
-          <v-btn color="primary" text nuxt @click="showUp()">
-            Yes!
+          <v-btn
+            color="primary"
+            :disabled="!showUpEnabled"
+            rounded
+            nuxt
+            @click="showUp()"
+          >
+            Show up
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -75,6 +81,12 @@ export default {
   computed: {
     friends() {
       return sortFriends(this.$store.getters.friends)
+    },
+    showUpEnabled() {
+      const vm = this
+      return Object.keys(this.selected).reduce(function(sum, key) {
+        return sum || vm.selected[key]
+      }, false)
     },
     someSelected() {
       if (Object.keys(this.selected).length === 0) {

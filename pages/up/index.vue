@@ -33,8 +33,14 @@
             Go Back
           </v-btn>
           <v-spacer />
-          <v-btn color="primary" text nuxt :to="'/up/' + activityArray()">
-            Next
+          <v-btn
+            color="primary"
+            :disabled="!selectFriendEnabled"
+            rounded
+            nuxt
+            @click="selectFriends()"
+          >
+            Select Friends
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -57,9 +63,20 @@ export default {
   computed: {
     activities() {
       return activitiesList
+    },
+    selectFriendEnabled() {
+      return this.activityArray().length > 0
     }
   },
   methods: {
+    selectFriends() {
+      if (this.activityArray() !== '') {
+        this.$nuxt.$router.push({
+          name: 'up-activity',
+          params: { activity: this.activityArray() }
+        })
+      }
+    },
     selectActivity(activity) {
       this.$log.debug('Selected: ' + activity.title)
       this.selected[activity.id] = !this.selected[activity.id]
