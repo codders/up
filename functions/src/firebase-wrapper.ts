@@ -289,6 +289,24 @@ export const loadInterestRegisterForUser = (uid: string, frienduids: string[]) =
     })
 }
 
+const populateLoadedUpRecords = (query: Promise<admin.firestore.QuerySnapshot>): Promise<up.SavedUpRecordWithName[]> => {
+  return query.then(function(querySnapshot) {
+    const result: Promise<up.SavedUpRecordWithName>[] = []
+    querySnapshot.forEach(function(doc) {
+      const record = doc.data() as up.UpRecord;
+      const savedRecord: up.SavedUpRecord = Object.assign({ id: doc.id }, record);
+      result.push(nameForUser(savedRecord.uid).then(function(name) {
+        return Object.assign({ name }, savedRecord)
+      }));
+    });
+    return Promise.all(result);
+  })
+  .catch(function(error) {
+    console.log("Error fetching whats up: ", error);
+    return [];
+  });
+}
+
 export const loadInvites = (uid: string) => {
   return restrictToCurrentRecords(admin.firestore().collection('users').doc(uid).collection('invites'))
     .get()
@@ -306,29 +324,22 @@ export const loadInvites = (uid: string) => {
       return [];
     })
     .then(function (invites) {
-      const resolvedInvites: PromiseLike<up.SavedUpRequestWithAcceptedFriends[]>[] = []
+      const resolvedInvites: PromiseLike<up.SavedUpRequestWithNameAndAcceptedFriends[]>[] = []
       invites.forEach(function (invite) {
         resolvedInvites.push(
-          admin.firestore().collection('up')
-          .where("parentId", "==", invite.id)
-          .get()
-          .then(function(querySnapshot) {
-            const upRecords: up.UpRecord[] = []
-            querySnapshot.forEach(function(doc) {
-              const record = doc.data() as up.UpRecord;
-              upRecords.push(record)
-            })
-            return upRecords
-          })
+          populateLoadedUpRecords(admin.firestore().collection('up')
+            .where("parentId", "==", invite.id)
+            .get()
+          )
           .then(function(upRecords) {
-            const upRecordPromisesWithFriend: PromiseLike<up.SavedUpRequestWithAcceptedFriends>[] = []
+            const upRecordPromisesWithFriend: PromiseLike<up.SavedUpRequestWithNameAndAcceptedFriends>[] = []
             upRecords.forEach(function(upRecord) {
                upRecordPromisesWithFriend.push(nameForUser(upRecord.inviteduid)
                  .then(function(username) {
                    if (upRecord.isUp) {
-                     return Object.assign({acceptedFriends: [ username ], pendingFriends: []}, invite)
+                     return Object.assign({acceptedFriends: [ username ], pendingFriends: [], name: upRecord.name}, invite)
                    } else {
-                     return Object.assign({acceptedFriends: [], pendingFriends: [ username ]}, invite)
+                     return Object.assign({acceptedFriends: [], pendingFriends: [ username ], name: upRecord.name}, invite)
                    }
                  })
                )
@@ -340,13 +351,16 @@ export const loadInvites = (uid: string) => {
              * invitation (because no friends were interested in the invite)
              */
             if (upRecordsWithFriends.length === 0) {
-              return Promise.all(invite.friends.map(name => nameForUser(name)))
-                .then(function(resolvedNames) {
-                  return [ Object.assign({
-                    pendingFriends: resolvedNames,
-                    acceptedFriends: []
-                  }, invite) ]
-                })
+              return nameForUser(uid).then(function(inviterName) {
+                return Promise.all(invite.friends.map(name => nameForUser(name)))
+                  .then(function(resolvedNames) {
+                    return [ Object.assign({
+                      pendingFriends: resolvedNames,
+                      acceptedFriends: [],
+                      name: inviterName
+                    }, invite) ]
+                  })
+              })
             }
             return Promise.resolve(upRecordsWithFriends)
           })
@@ -355,7 +369,7 @@ export const loadInvites = (uid: string) => {
       return Promise.all(resolvedInvites)
     })
     .then(function(inviteArrays) {
-      const resultingInvites: { [id: string]: up.SavedUpRequestWithAcceptedFriends }= {}
+      const resultingInvites: { [id: string]: up.SavedUpRequestWithNameAndAcceptedFriends }= {}
       inviteArrays.forEach(function(inviteArray) {
         inviteArray.forEach(function(invite) {
           if (resultingInvites[invite.id] === undefined) {
@@ -373,22 +387,10 @@ export const loadInvites = (uid: string) => {
 };
 
 const loadUpByField = (field: string, uid: string) => {
-  return restrictToCurrentRecords(admin.firestore().collection('up'))
+  return populateLoadedUpRecords(
+    restrictToCurrentRecords(admin.firestore().collection('up'))
     .where(field, "==", uid)
-    .get()
-    .then(function(querySnapshot) {
-      const result: up.SavedUpRecord[] = []
-      querySnapshot.forEach(function(doc) {
-        const record = doc.data() as up.UpRecord;
-        const savedRecord: up.SavedUpRecord = Object.assign({ id: doc.id }, record);
-        result.push(savedRecord);
-      });
-      return result;
-    })
-    .catch(function(error) {
-      console.log("Error fetching whats up: ", error);
-      return [];
-    });
+    .get())
 }
 
 export const respondToUp = (thisUserUid: string, upRecordId: string, isUp: boolean) => {

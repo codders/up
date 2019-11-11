@@ -6,20 +6,21 @@ export const filterInterests = function(proposedActivities: string[], interested
 
 export const getUpRecordsForRequest = function(
     request: up.UpRequestWithParent,
+    requesterName: string,
     interestedFriends: { [friendUid:string] : up.InterestRegister }
   )
 {
-  const result: up.UpRecord[] = [];
+  const result: up.UpRecordWithName[] = [];
   request.friends.forEach(function(inviteduid) {
     if (interestedFriends[inviteduid] !== undefined) {
       const filteredInterests = filterInterests(request.activity, interestedFriends[inviteduid].activity)
       if (filteredInterests.length === 0) {
         return;
       }
-      const record: up.UpRecord = {
+      const record: up.UpRecordWithName = {
         activity: filteredInterests,
         description: request.description,
-        name: request.name,
+        name: requesterName,
         uid: request.uid,
         parentId: request.parentId,
         isUp: false,
@@ -35,6 +36,6 @@ export const getUpRecordsForRequest = function(
   return result;
 }
 
-export const findMatches = function(whatsUp: up.UpRecord[]) {
+export const findMatches = function(whatsUp: up.UpRecordWithName[]) {
   return whatsUp;
 }

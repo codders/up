@@ -41,7 +41,7 @@ const notifyUser: (arg0: string, arg1: any) => Promise<any> = function(target: s
   })
 };
 
-export const sendShowUpNotification: (arg0: up.UpRecord) => Promise<any> = function(record: up.UpRecord) {
+export const sendShowUpNotification: (arg0: up.UpRecordWithName) => Promise<any> = function(record: up.UpRecordWithName) {
   console.log('Sending show up notification to user ' + record.inviteduid + ': ', record);
   return notifyUser(record.inviteduid, {
     messageType: "SHOW_UP",

@@ -28,11 +28,11 @@ describe("up record generation logic", () => {
       {
         activity: [ 'play' ],
         description: 'fish',
-        name: 'somename',
         parentId: 'abd',
         uid: 'abc',
         friends: [ 'def' ]
       },
+      'Username',
       {
         'def': { uid: 'def', activity: [ 'play', 'move' ] }
       }
@@ -44,11 +44,11 @@ describe("up record generation logic", () => {
       {
         activity: [ 'play' ],
         description: 'fish',
-        name: 'somename',
         parentId: 'abd',
         uid: 'abc',
         friends: [ 'def' ]
       },
+      'Username',
       {
         'def': { uid: 'def', activity: [ 'eat' ] }
       }

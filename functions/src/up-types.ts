@@ -10,7 +10,6 @@ declare namespace up {
     activity: string[]
     inviteduid: string
     description: string
-    name: string
     uid: string
     parentId: string
     timestamp: {
@@ -20,14 +19,21 @@ declare namespace up {
     isUp: boolean
   }
 
+  interface UpRecordWithName extends UpRecord {
+    name: string
+  }
+
   interface SavedUpRecord extends UpRecord {
     id: string
+  }
+
+  interface SavedUpRecordWithName extends SavedUpRecord {
+    name: string
   }
 
   interface UpRequest {
     activity: string[]
     description: string
-    name: string
     friends: string[]
   }
 
@@ -36,9 +42,10 @@ declare namespace up {
     uid: string
   }
 
-  interface SavedUpRequestWithAcceptedFriends extends SavedUpRequest {
+  interface SavedUpRequestWithNameAndAcceptedFriends extends SavedUpRequest {
     acceptedFriends: string[],
-    pendingFriends: string[]
+    pendingFriends: string[],
+    name: string
   }
 
   interface UpRequestWithParent extends UpRequest {

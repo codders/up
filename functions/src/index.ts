@@ -146,7 +146,6 @@ app.post('/saveRecord', (request: express.Request, response: express.Response) =
   nameForUser(request.user.uid).then(function(userName) {
     const parentUpRecord = {
       activity: record.activity,
-      name: userName,
       description: record.description,
       friends: record.friends
     }
@@ -163,12 +162,14 @@ app.post('/saveRecord', (request: express.Request, response: express.Response) =
           parentId: parentRecordId,
           uid: request.user.uid
         }),
+        userName,
         interestRegister
       );
       console.log('Saving data: ', upRecords);
       const promises: PromiseLike<String>[] = [];
-      upRecords.forEach(function(upRecord: up.UpRecord) {
-        promises.push(saveUp(upRecord).then(writeResult => {
+      upRecords.forEach(function(upRecord: up.UpRecordWithName) {
+        const { name, ...upRecordWithoutName } = upRecord
+        promises.push(saveUp(upRecordWithoutName).then(writeResult => {
           return sendShowUpNotification(upRecord);
         }));
       });
