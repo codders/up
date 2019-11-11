@@ -42,9 +42,6 @@
             v-model="description"
             style="color: black; background-color: white"
           />
-          <h2>
-            Show up?
-          </h2>
         </v-card-text>
         <v-card-actions>
           <v-btn color="primary" text nuxt @click="$router.go(-1)">
