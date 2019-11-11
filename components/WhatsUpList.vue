@@ -4,7 +4,7 @@
       <p>Nothing's happening right now... Be the first to show up!</p>
     </div>
     <div v-if="whatsUp.length > 0" jest="something-up">
-      <h2>Here's what's up right now...</h2>
+      <h3>Here's what's up right now...</h3>
       <v-list two-line>
         <whats-up
           v-for="invitation in whatsUp"

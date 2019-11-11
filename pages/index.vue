@@ -2,7 +2,7 @@
   <v-layout column justify-center align-center>
     <v-flex xs12 sm8 md6>
       <v-card>
-        <v-card-title class="headline">
+        <v-card-title jest="headline">
           {{ greetingString }}
         </v-card-title>
         <v-card-text v-if="!$store.getters.activeUser">

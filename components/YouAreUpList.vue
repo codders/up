@@ -1,7 +1,7 @@
 <template>
   <div v-if="youreUp.length === 0" jest="nothing-up" />
   <div v-else jest="something-up">
-    <h2>Here are your current requests...</h2>
+    <h3>Here are your current requests...</h3>
     <v-flex>
       <v-list two-line jest="you-are-up-list">
         <you-are-up
