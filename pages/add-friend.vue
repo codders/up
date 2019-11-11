@@ -27,10 +27,10 @@
             </p>
           </div>
           <h3>Add from Directory</h3>
-          <div v-if="$data.directoryEntries.length > 0">
+          <div v-if="sortedFriends.length > 0">
             <v-list jest="directory-listing">
               <directory-entry
-                v-for="entry in $data.directoryEntries"
+                v-for="entry in sortedFriends"
                 :key="entry.uid"
                 :name="entry.name"
                 :uid="entry.uid"
@@ -62,6 +62,7 @@ div.flex input {
 
 <script>
 import DirectoryEntry from '@/components/DirectoryEntry'
+import { sortFriends } from '@/model/friends'
 
 export default {
   components: {
@@ -86,6 +87,11 @@ export default {
       .catch(error => {
         return { directoryEntries: error }
       })
+  },
+  computed: {
+    sortedFriends() {
+      return sortFriends(this.directoryEntries)
+    }
   },
   data() {
     return {

@@ -16,6 +16,12 @@ export const friendByUid = function(friends, uid) {
   return undefined
 }
 
+export const sortFriends = function(friends) {
+  return friends.concat().sort((a, b) => {
+    return a.name.localeCompare(b.name, 'en', { sensitivity: 'base' })
+  })
+}
+
 export const getNameForFriend = function(directoryFriends, uid) {
   for (const id in directoryFriends) {
     if (directoryFriends[id].uid === uid) {

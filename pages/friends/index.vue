@@ -47,13 +47,15 @@
 </template>
 
 <script>
+import { sortFriends } from '@/model/friends'
+
 export default {
   async fetch({ store, params }) {
     await store.dispatch('loadFriends')
   },
   computed: {
     friends() {
-      return this.$store.getters.friends
+      return sortFriends(this.$store.getters.friends)
     },
     friendCount() {
       if (this.$store.getters.friends !== undefined) {

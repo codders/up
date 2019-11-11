@@ -275,6 +275,7 @@ export const actions = {
         })
       })
       .catch(error => {
+        // eslint-disable-next-line no-console
         console.log(
           'Unable to update subcription to ' + details.uid + ' events',
           error

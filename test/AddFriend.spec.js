@@ -42,5 +42,19 @@ describe('add-friend.vue', () => {
       ]
     })
     expect(mountedForm.findAll('.entry').length).toBe(2)
+  }),
+  test('Entries are sorted by name', () => {
+    const mountedForm = mount(AddFriend, {
+      mocks: Util.mockDataStore({ uid: '123' })
+    })
+    mountedForm.setData({
+      directoryEntries: [
+        { uid: 'abc', name: 'Zach' },
+        { uid: 'def', name: 'Arthur' }
+      ]
+    })
+    expect(mountedForm.findAll('.entry').length).toBe(2)
+    expect(mountedForm.find('.entry').find('.v-list-item__title').text()).toBe('Arthur')
   })
+
 })

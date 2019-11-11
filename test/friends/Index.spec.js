@@ -29,5 +29,17 @@ describe('friends.vue', () => {
     expect(mountedForm.contains('[jest="friends-list"]')).toBe(true)
     expect(mountedForm.findAll(".friend").length).toBe(2)
     expect(mountedForm.find(".friend .name").text()).toBe('Arthur')
+  }),
+  test('Friend list should be sorted', () => {
+    const friendList = [
+      { uid: 'vRHbWPYcJdVbv33kopy4fNWDgwg1', name: 'Zach' },
+      { uid: 'uurGYXhegkXrW0Jy2rH4l75dxOf1', name: 'Arthur' }
+    ]
+    const mountedForm = mount(Friends, {
+      mocks: Util.mockDataStore({ uid: '123', friends: friendList })
+    })
+    expect(mountedForm.contains('[jest="friends-list"]')).toBe(true)
+    expect(mountedForm.findAll(".friend").length).toBe(2)
+    expect(mountedForm.find(".friend .name").text()).toBe('Arthur')
   })
 })

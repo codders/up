@@ -1,6 +1,6 @@
 <template>
   <v-list-item class="entry" @click="routeToFriend(uid)">
-    <v-list-item-content @click="routeToFriend(uid)">
+    <v-list-item-content>
       <v-list-item-title>{{ name }}</v-list-item-title>
     </v-list-item-content>
     <v-list-item-action

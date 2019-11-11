@@ -41,6 +41,18 @@ describe('up/_activity/index.vue', () => {
     expect(mountedCard.find(".friend .name").text()).not.toBe('')
     expect(mountedCard.find(".headline").text()).toBe('Move, Relax or Go out')
   }),
+  test('Shows the friend list sorted', () => {
+    const friendList = [
+      { uid: 'vRHbWPYcJdVbv33kopy4fNWDgwg1', name: 'Zach' },
+      { uid: 'uurGYXhegkXrW0Jy2rH4l75dxOf1', name: 'Arthur' }
+    ]
+    const mountedCard = mount(Index, {
+      mocks: Util.mockDataStore({ uid: '123', friends: friendList, routeParams: { activity: 'move-relax-out' }})
+    })
+    expect(mountedCard.contains('[jest="friends-list"]')).toBe(true)
+    expect(mountedCard.findAll(".friend").length).toBe(2)
+    expect(mountedCard.find(".friend .name").text()).toBe('Arthur')
+  }),
   test('Submits data to server', () => {
     let postedData = null
     const friends = Util.friendList(2)
