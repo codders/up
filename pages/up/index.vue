@@ -50,7 +50,7 @@ export default {
   data: () => {
     const selected = {}
     for (const id in activitiesList) {
-      selected[activitiesList[id].id] = true
+      selected[activitiesList[id].id] = false
     }
     return { selected }
   },
