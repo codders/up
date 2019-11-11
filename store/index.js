@@ -104,7 +104,12 @@ export const mutations = {
   updateFriendNotificationSubscription(state, details) {
     const friend = state.friends.find(item => item.uid === details.frienduid)
     if (friend !== undefined) {
-      friend.subscription = details.subscription
+      Object.keys(details.subscription).forEach(function(activity) {
+        if (friend.subscription === undefined) {
+          friend.subscription = {}
+        }
+        friend.subscription[activity] = details.subscription[activity]
+      })
     }
   },
   deleteFriend(state, frienduid) {
