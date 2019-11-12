@@ -26,6 +26,9 @@
               class="friend"
               @click="selectFriend(friend)"
             >
+              <v-list-item-avatar>
+                <v-img :src="friend.photoURL" />
+              </v-list-item-avatar>
               <v-list-item-title class="name">
                 {{ friend.name }}
               </v-list-item-title>

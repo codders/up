@@ -12,8 +12,7 @@
             width="80"
             height="80"
             max-width="80"
-          >
-          </v-img>
+          />
         </v-row>
         <p class="name">
           <b>Name:</b>
