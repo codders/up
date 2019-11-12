@@ -80,12 +80,12 @@ module.exports = {
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: true,
+      light: true,
       themes: {
-        dark: {
-          primary: colors.blue.darken2,
-          accent: colors.blue.base,
-          secondary: colors.amber.darken3,
+        light: {
+          primary: colors.deepPurple.base,
+          accent: colors.cyan.base,
+          secondary: colors.blue.base,
           info: colors.teal.lighten1,
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,

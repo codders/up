@@ -41,10 +41,7 @@
             </v-list-item>
           </v-list>
           <h3>Provide some details (optional)</h3>
-          <textarea
-            v-model="description"
-            style="color: black; background-color: white"
-          />
+          <input v-model="description" />
         </v-card-text>
         <v-card-actions>
           <v-btn color="primary" text nuxt @click="$router.go(-1)">
@@ -65,6 +62,13 @@
     </v-flex>
   </v-layout>
 </template>
+
+<style>
+div.v-card input {
+  border: 1px;
+  border-style: inset;
+}
+</style>
 
 <script>
 import { activityArrayToString } from '@/model/activity'

@@ -32,7 +32,7 @@
         </div>
       </template>
     </v-navigation-drawer>
-    <v-app-bar :clipped-left="false" dense fixed app>
+    <v-app-bar color="deep-purple" dark dense fixed app>
       <v-app-bar-nav-icon
         v-if="$store.getters.activeUser"
         @click="drawer = !drawer"
