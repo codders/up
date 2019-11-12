@@ -33,6 +33,7 @@
               <directory-entry
                 v-for="entry in sortedFriends"
                 :key="entry.uid"
+                :photoURL="entry.photoURL"
                 :name="entry.name"
                 :uid="entry.uid"
               />

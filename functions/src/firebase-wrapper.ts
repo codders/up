@@ -163,14 +163,17 @@ const restrictToCurrentRecords = (query: admin.firestore.CollectionReference) =>
   return query.where("timestamp", ">", dawn)
 }
 
-export const nameForUser = (uid: string): Promise<string> => {
+export const profileForUser = (uid: string): Promise<up.ProfileDetails> => {
   return admin.firestore().collection('users')
     .doc(uid)
     .get().then(function(userDoc) {
       if (userDoc.exists) {
         const userDocData = userDoc.data()
         if (userDocData !== undefined) {
-          return userDocData.name
+          return {
+            name: userDocData.name,
+            photoURL: userDocData.photoURL
+          }
         } else {
           throw new Error('User data doc undefined for user: ' + uid)
         }
@@ -178,9 +181,12 @@ export const nameForUser = (uid: string): Promise<string> => {
         throw new Error('Unable to load user doc for user: ' + uid)
       }
     })
-    .catch(function(error) {
-      console.log('Unable to load name record for user: ', error)
-    })
+}
+
+export const nameForUser = (uid: string): Promise<string> => {
+  return profileForUser(uid).then(function(profile) {
+    return profile.name
+  })
 }
 
 export const lookupUserByEmail = (email: string): Promise<up.UserRecord> => {
@@ -443,14 +449,19 @@ export const loadUp = (uid: string) => {
   return loadUpByField("inviteduid", uid)
 };
 
-const resolveNames = (friends: up.FriendRecord[]) => {
+const resolveNamesAndPhotos = (friends: up.FriendRecord[]) => {
   const entries: up.DirectoryEntry[] = []
   const promises: PromiseLike<void | up.DirectoryEntry>[] = []
   friends.forEach(function(friend) {
     promises.push(
-      nameForUser(friend.uid).then(function(name) {
-        if (name !== undefined) {
-          entries.push(Object.assign({ name }, friend))
+      profileForUser(friend.uid).then(function(profile) {
+        if (profile.name !== undefined) {
+          entries.push(Object.assign(
+            {
+              name: profile.name,
+              photoURL: profile.photoURL
+            }, friend)
+          )
         }
       })
     )
@@ -463,7 +474,7 @@ const resolveNames = (friends: up.FriendRecord[]) => {
 export const loadFriends = (uid: string) => {
   console.log('Loading friends for user', uid)
   return loadFriendRecords(uid).then(function(frienduids: up.FriendRecord[]) {
-    return resolveNames(frienduids)
+    return resolveNamesAndPhotos(frienduids)
   })
 };
 
@@ -491,6 +502,6 @@ export const loadDirectory = (uid: string) => {
         uniqueFriends.push(friendrecord)
       }
     })
-    return resolveNames(uniqueFriends)
+    return resolveNamesAndPhotos(uniqueFriends)
   })
 };

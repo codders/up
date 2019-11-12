@@ -68,8 +68,14 @@ declare namespace up {
     name: string
   }
 
+  interface ProfileDetails {
+    name: string,
+    photoURL: string
+  }
+
   interface FriendRecord {
-    uid: string
+    uid: string,
+    photoURL?: string,
     subscription: { [id: string]: boolean }
   }
 

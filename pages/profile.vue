@@ -5,10 +5,17 @@
         Your Profile
       </v-card-title>
       <v-card-text>
-        <p v-if="avatarUrl !== undefined" class="profile-image">
-          <img :src="avatarUrl" />
-        </p>
-        <p>
+        <v-row align="center" justify="center">
+          <v-img
+            v-if="avatarUrl !== undefined"
+            :src="avatarUrl"
+            width="80"
+            height="80"
+            max-width="80"
+          >
+          </v-img>
+        </v-row>
+        <p class="name">
           <b>Name:</b>
           <input v-model="name" jest="name" />
         </p>
@@ -33,12 +40,8 @@
 </template>
 
 <style>
-p.profile-image {
-  text-align: center;
-}
-
-p.profile-image img {
-  width: 6rem;
+p.name {
+  padding-top: 1rem;
 }
 
 div.v-card div input {

@@ -14,6 +14,9 @@
                 class="friend"
                 @click="routeToFriend(friend)"
               >
+                <v-list-item-avatar>
+                  <v-img :src="friend.photoURL"></v-img>
+                </v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title class="name">
                     {{ friend.name }}

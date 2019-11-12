@@ -1,5 +1,8 @@
 <template>
   <v-list-item class="entry" @click="routeToFriend(uid)">
+    <v-list-item-avatar>
+      <v-img :src="photoURL"></v-img>
+    </v-list-item-avatar>
     <v-list-item-content>
       <v-list-item-title>{{ name }}</v-list-item-title>
     </v-list-item-content>
@@ -32,6 +35,10 @@ export default {
     uid: {
       type: String,
       default: ''
+    },
+    photoURL: {
+      type: String,
+      default: undefined
     }
   },
   computed: {
