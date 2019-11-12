@@ -2,7 +2,7 @@
   <v-list-item class="up" @click="routeToItem(whatsupid)">
     <v-list-item-content>
       <v-list-item-title>
-        {{ name }} wants to
+        {{ getTime }} - {{ name }} wants to
         {{ getTitleForActivity(activity) }}
       </v-list-item-title>
       <v-list-item-subtitle v-if="!isEmpty(description)">
@@ -56,6 +56,16 @@ export default {
     whatsupid: {
       type: String,
       default: undefined
+    },
+    timestamp: {
+      type: Number,
+      default: undefined
+    }
+  },
+  computed: {
+    getTime() {
+      const date = new Date(this.timestamp * 1000)
+      return date.getHours() + 'h' + (date.getMinutes() + '').padStart(2, '0')
     }
   },
   methods: {

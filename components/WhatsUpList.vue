@@ -15,6 +15,7 @@
           :activity="invitation.activity"
           :description="invitation.description"
           :is-up="invitation.isUp"
+          :timestamp="invitation.timestamp._seconds"
           @showUp="showUp(invitation.id)"
           @cancelUp="cancelUp(invitation.id)"
         />

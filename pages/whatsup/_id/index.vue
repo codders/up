@@ -11,6 +11,7 @@
           <p v-if="whatsUpItem().description !== undefined">
             {{ whatsUpItem().description }}
           </p>
+          <p>Received at {{ getTime() }}</p>
           <div v-if="whatsUpItem().isUp !== true">
             <p>You have not yet accepted this invitation</p>
             <v-btn color="primary" rounded @click="showUp(whatsUpItem().id)">
@@ -53,6 +54,10 @@ export default {
       return this.$store.getters.whatsUp.find(
         item => item.id === this.$route.params.id
       )
+    },
+    getTime() {
+      const date = new Date(this.whatsUpItem().timestamp._seconds * 1000)
+      return date.getHours() + 'h' + (date.getMinutes() + '').padStart(2, '0')
     },
     getTitleForActivity(item) {
       return activityArrayToString(item.activity)
