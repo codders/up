@@ -92,3 +92,4 @@ sw.*
 
 # Vapid key data
 **/vapid-key.ts
+**/smtp-credentials.ts

@@ -22,6 +22,7 @@ import { findMatches,
          getUpRecordsForRequest } from './up-logic';
 import { sendShowUpNotification,
          sendUpMatchNotification } from './notification';
+import { sendEmail } from './emailer'
 
 const express = require('express')
 const cookieParser = require('cookie-parser')();
