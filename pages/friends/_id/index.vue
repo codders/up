@@ -6,6 +6,15 @@
           <p>{{ friend().name }}</p>
         </v-card-title>
         <v-card-text>
+          <v-row class="mb-4" align="center" justify="center">
+            <v-img
+              v-if="friend().photoURL !== undefined"
+              :src="friend().photoURL"
+              width="80"
+              height="80"
+              max-width="80"
+            />
+          </v-row>
           <h3>Notification subscriptions for {{ friend().name }}</h3>
           <v-list two-line jest="activities-list">
             <v-list-item
