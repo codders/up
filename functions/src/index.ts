@@ -22,7 +22,7 @@ import { findMatches,
          getUpRecordsForRequest } from './up-logic';
 import { sendShowUpNotification,
          sendUpMatchNotification } from './notification';
-import { sendEmail } from './emailer'
+import { sendInvitationEmail } from './emailer'
 
 const express = require('express')
 const cookieParser = require('cookie-parser')();
@@ -259,6 +259,33 @@ app.post('/addFriendByEmail', (request: express.Request, response: express.Respo
     response.status(404).send({
       code: 'NOT_FOUND',
       message: 'Unable to find friend record ' + err
+    })
+  })
+});
+
+app.post('/inviteFriendByEmail', (request: express.Request, response: express.Response) => {
+  const email = Object.assign({}, request.body).email;
+  console.log('Inviting friend by email: ', email);
+  lookupUserByEmail(email).then(friend => {
+    console.log('email exists in system - not sending invite')
+    response.status(409).send({
+      code: 'ALREADY_EXISTS',
+      message: 'Email address matches existing user'
+    })
+  })
+  .catch(err => {
+    console.log('Email not found in system - sending invitation', err)
+    return sendInvitationEmail(email).then(result => {
+      console.log('Email sent')
+      response.status(201).send({
+        message: 'Invitation sent'
+      })
+    })
+    .catch(inviteerr => {
+      console.log('Error sending invitation', inviteerr)
+      response.status(500).send({
+        message: 'Unable to send invitation'
+      })
     })
   })
 });

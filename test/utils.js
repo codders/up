@@ -24,7 +24,7 @@ export const friendList = function(friendCount) {
   return result
 }
 
-const dataStore = function({ uid, friends, profile, dispatcher, whatsUp }) {
+const dataStore = function({ uid, friends, profile, dispatcher, dispatcherPromises, whatsUp }) {
   const user = (uid === null ? null : { uid: uid })
   return {
     state: {
@@ -38,6 +38,9 @@ const dataStore = function({ uid, friends, profile, dispatcher, whatsUp }) {
     dispatch: (method, args) => {
       if (dispatcher !== undefined) {
         dispatcher.push({ method: method, payload: args })
+        if (dispatcherPromises !== undefined && dispatcherPromises[method] !== undefined) {
+          return dispatcherPromises[method]
+        }
       }
     },
     getters: {
@@ -48,8 +51,8 @@ const dataStore = function({ uid, friends, profile, dispatcher, whatsUp }) {
   }
 }
 
-const mockDataStore = function({ uid, friends, profile, dispatcher, router, routeParams, axios, whatsUp }) {
-  return mockWithStore({ store: dataStore({ uid: uid, profile: profile, friends: friends, dispatcher: dispatcher, whatsUp: whatsUp }), router: router, routeParams: routeParams, axios: axios })
+const mockDataStore = function({ uid, friends, profile, dispatcher, dispatcherPromises, router, routeParams, axios, whatsUp }) {
+  return mockWithStore({ store: dataStore({ uid, profile, friends, dispatcher, dispatcherPromises, whatsUp }), router, routeParams, axios })
 }
 
 const mockWithStore = function({ store, router, routeParams, axios }) {

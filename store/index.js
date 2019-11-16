@@ -125,9 +125,9 @@ export const actions = {
   },
 
   userChanged({ commit, state, dispatch }, { user, idToken }) {
+    commit('setIdToken', idToken)
     if (state.user === undefined || state.user.uid !== user.uid) {
       commit('setUser', user)
-      commit('setIdToken', idToken)
       console.log('Loggedin', { user, idToken }) // eslint-disable-line no-console
       return dispatch('loadProfile')
     }
@@ -219,6 +219,17 @@ export const actions = {
       }
     }).then(response => {
       commit('addFriend', response.data)
+    })
+  },
+
+  inviteFriendByEmail({ dispatch, state, commit }, email) {
+    return axios({
+      method: 'post',
+      url: BASE_URL + '/inviteFriendByEmail',
+      data: { email },
+      headers: {
+        Authorization: 'Bearer ' + state.idToken
+      }
     })
   },
 

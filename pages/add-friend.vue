@@ -17,9 +17,31 @@
               color="primary"
               rounded
               :disabled="!inputEnabled"
-              @click="addFriendByEmail(email)"
+              @click="addFriendByEmail()"
             >
               Add Friend
+            </v-btn>
+          </div>
+          <div v-if="showInvite">
+            <p>
+              This e-mail address does not match an existing user<br />
+              Would you like to send an invite to them?
+            </p>
+            <v-btn
+              color="primary"
+              rounded
+              :disabled="!sendInviteEnabled"
+              @click="sendInvite()"
+            >
+              Send Invite
+            </v-btn>
+            <v-btn
+              color="primary"
+              rounded
+              :disabled="!sendInviteEnabled"
+              @click="editAddress()"
+            >
+              Edit address
             </v-btn>
           </div>
           <div v-if="addFriendError !== null">
@@ -95,6 +117,8 @@ export default {
       directoryEntries: [],
       email: '',
       inputEnabled: true,
+      showInvite: false,
+      sendInviteEnabled: true,
       addFriendError: null
     }
   },
@@ -104,7 +128,7 @@ export default {
     }
   },
   methods: {
-    addFriendByEmail(email) {
+    addFriendByEmail() {
       this.addFriendError = null
       this.inputEnabled = false
       this.$store
@@ -115,16 +139,39 @@ export default {
           this.$nuxt.$router.replace('/friends')
         })
         .catch(error => {
-          console.log('Error: ', error) // eslint-disable-line no-console
           if (
             error.response.data !== undefined &&
             error.response.data.code === 'NOT_FOUND'
           ) {
-            this.addFriendError = 'No user with this e-mail address exists'
+            this.showInvite = true
           } else {
             this.addFriendError = error.message
+            this.inputEnabled = true
           }
+        })
+    },
+    editAddress() {
+      this.showInvite = false
+      this.inputEnabled = true
+      this.addFriendError = null
+    },
+    sendInvite() {
+      this.sendInviteEnabled = false
+      this.$store
+        .dispatch('inviteFriendByEmail', this.email)
+        .then(() => {
+          this.showInvite = false
           this.inputEnabled = true
+          this.email = ''
+          this.sendInviteEnabled = true
+          this.addFriendError = null
+        })
+        .catch(error => {
+          console.log('Error: ', error) // eslint-disable-line no-console
+          this.showInvite = false
+          this.sendInviteEnabled = true
+          this.inputEnabled = true
+          this.addFriendError = null
         })
     }
   }

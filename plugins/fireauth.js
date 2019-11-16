@@ -6,11 +6,9 @@ export default context => {
   return new Promise((resolve, reject) => {
     const updateUser = user => {
       if (user != null) {
-        console.log('Getting ID Token') // eslint-disable-line no-console
         user
           .getIdToken()
           .then(function(idToken) {
-            console.log('IdToken is now', idToken) // eslint-disable-line no-console
             store
               .dispatch('userChanged', { user, idToken })
               .then(() => resolve())
