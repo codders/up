@@ -1,18 +1,8 @@
 export default function({ store, redirect, route }) {
-  if (store.state.user != null && route.name === 'login') {
-    redirect('/home')
+  if (route.name === 'invite-id') {
+    return
   }
-  if (store.state.user == null && isUserRoute(route)) {
-    redirect('/login')
-  }
-}
-
-function isUserRoute(route) {
-  if (
-    route.matched.some(
-      record => record.path === '/home' || record.path === '/profile'
-    )
-  ) {
-    return true
+  if (!store.state.user.uid && route.name !== 'index') {
+    redirect('/')
   }
 }

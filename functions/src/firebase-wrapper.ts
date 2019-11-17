@@ -19,12 +19,18 @@ export const validateFirebaseIdToken = (req: express.Request, res: express.Respo
 
   if ((!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) &&
       !(req.cookies && req.cookies.__session)) {
-    console.error('No Firebase ID token was passed as a Bearer token in the Authorization header.',
-        'Make sure you authorize your request by providing the following HTTP header:',
-        'Authorization: Bearer <Firebase ID Token>',
-        'or by passing a "__session" cookie.');
-    res.status(403).send('Unauthorized');
-    return;
+    if (req.path.startsWith('/invite/')) {
+      console.log('Skipping auth for invite route')
+      next()
+      return;
+    } else {
+      console.error('No Firebase ID token was passed as a Bearer token in the Authorization header.',
+          'Make sure you authorize your request by providing the following HTTP header:',
+          'Authorization: Bearer <Firebase ID Token>',
+          'or by passing a "__session" cookie.');
+      res.status(403).send('Unauthorized');
+      return;
+    }
   }
 
   let idToken;
@@ -127,6 +133,52 @@ export const saveInviteRecordForUser = (userId: string, record: up.UpRequest) =>
     });
 };
 
+export const addFriendRecord = (uid: string, frienduid: string) => {
+  const friendRecord = {
+    created_at: admin.firestore.FieldValue.serverTimestamp(),
+    created_by: uid,
+    id: frienduid,
+    uid: frienduid
+  }
+  return admin.firestore().collection('users').doc(uid).collection('friends').doc(frienduid).set(friendRecord)
+}
+
+export const createSignupInvitation = (userId: string, invitedemail: string) => {
+  const savedRecord = {
+    email: invitedemail,
+    inviter: userId,
+    timestamp: admin.firestore.FieldValue.serverTimestamp()
+  }
+  return admin.firestore().collection('signup-invitations').add(savedRecord)
+    .then(function(doc) {
+      return doc.id;
+    })
+    .catch(function(error) {
+      console.error('Unable to save signup invitation record', error);
+      return "error";
+    })
+}
+
+export const acceptSignupInvitation = (uid: string, invite: up.SavedSignupInviteWithName) => {
+  return addFriendRecord(uid, invite.inviter).then(friendRecord => {
+    return addFriendRecord(invite.inviter, uid)
+  }).then(friendRecord => {
+    return admin.firestore().collection('signup-invitations').doc(invite.id).update({ accepted: true })
+  })
+}
+
+export const loadSignupInvitation = (inviteId: string) => {
+  return admin.firestore().collection('signup-invitations').doc(inviteId).get()
+    .then(function(doc) {
+      if (doc.exists) {
+        const data = doc.data() as up.SignupInvite
+        return Object.assign({ id: inviteId }, data)
+      } else {
+        throw new Error('No such invite: ' + inviteId)
+      }
+    })
+}
+
 export const deleteUpRecordsByInvite = (recordId: string, requesterId: string) => {
   /* TODO: There is no reason here to wait for the first query to complete
    * before executing the second. This should be two Promise.alls
@@ -209,16 +261,6 @@ export const lookupUserByEmail = (email: string): Promise<up.UserRecord> => {
         }
       }
     })
-}
-
-export const addFriendRecord = (uid: string, frienduid: string) => {
-  const friendRecord = {
-    created_at: admin.firestore.FieldValue.serverTimestamp(),
-    created_by: uid,
-    id: frienduid,
-    uid: frienduid
-  }
-  return admin.firestore().collection('users').doc(uid).collection('friends').doc(frienduid).set(friendRecord)
 }
 
 export const setSubscriptionStatusForFriend = (uid: string, friendUid: string, activityUpdate: { [id: string]: string }) => {
@@ -463,6 +505,8 @@ const resolveNamesAndPhotos = (friends: up.FriendRecord[]) => {
             }, friend)
           )
         }
+      }).catch(function(err) {
+        console.log('Unable to load profile for ' + friend.uid, err)
       })
     )
   })

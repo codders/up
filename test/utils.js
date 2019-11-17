@@ -25,12 +25,12 @@ export const friendList = function(friendCount) {
 }
 
 const dataStore = function({ uid, friends, profile, dispatcher, dispatcherPromises, whatsUp }) {
-  const user = (uid === null ? null : { uid: uid })
+  const user = (uid === undefined ? null : { uid: uid })
   return {
     state: {
       friends: (friends == null ? [] : friends),
       loadedFriends: false,
-      profile: profile,
+      profile: (profile == null ? {} : profile),
       whatsUp: {
         data: (whatsUp == null ? [] : whatsUp)
       }

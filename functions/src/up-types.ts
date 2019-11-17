@@ -79,8 +79,21 @@ declare namespace up {
     subscription: { [id: string]: boolean }
   }
 
-
   interface FriendRecordWithName extends FriendRecord {
     name: string
   }
+
+  interface SignupInvite {
+      email: string,
+      inviter: string
+  }
+
+  interface SavedSignupInvite extends SignupInvite {
+    id: string
+  }
+
+  interface SavedSignupInviteWithName extends SavedSignupInvite {
+    inviterName: string
+  }
+
 }

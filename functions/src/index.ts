@@ -10,6 +10,9 @@ import { validateFirebaseIdToken,
          updateProfile,
          loadFriends,
          lookupUserByEmail,
+         createSignupInvitation,
+         loadSignupInvitation,
+         acceptSignupInvitation,
          loadInterestRegisterForUser,
          addFriendRecord,
          setSubscriptionStatusForFriend,
@@ -275,18 +278,62 @@ app.post('/inviteFriendByEmail', (request: express.Request, response: express.Re
   })
   .catch(err => {
     console.log('Email not found in system - sending invitation', err)
-    return sendInvitationEmail(email).then(result => {
-      console.log('Email sent')
-      response.status(201).send({
-        message: 'Invitation sent'
+    return nameForUser(request.user.uid).then(name => {
+      createSignupInvitation(request.user.uid, email)
+      .then(inviteid => {
+        sendInvitationEmail(email, inviteid, name).then(result => {
+          console.log('Email sent')
+          response.status(201).send({
+            message: 'Invitation sent'
+          })
+        })
+        .catch(inviteerr => {
+          console.log('Error sending invitation', inviteerr)
+          response.status(500).send({
+            message: 'Unable to send invitation'
+          })
+        })
+      })
+      .catch(error => {
+        console.log('Unable to create signup invite record', error)
+        response.status(500).send({
+          message: 'Unable to create signup invite record'
+        })
       })
     })
-    .catch(inviteerr => {
-      console.log('Error sending invitation', inviteerr)
-      response.status(500).send({
-        message: 'Unable to send invitation'
+  })
+});
+
+app.get('/invite/:id', (request: express.Request, response: express.Response) => {
+  console.log('Loading invite ' + request.params.id + ' user is', request.user)
+  loadSignupInvitation(request.params.id).then(invite => {
+    return nameForUser(invite.inviter).then(name => {
+      response.status(200).send(Object.assign({ inviterName: name}, invite))
+    })
+  })
+  .catch(err => {
+    console.log('Unable to load invite', err)
+    response.status(404).send({ message: 'no such invite' })
+  })
+});
+
+app.post('/invite/:id', (request: express.Request, response: express.Response) => {
+  console.log('Accepting invite ' + request.params.id + ' user is', request.user)
+  if (request.user === undefined || request.user.uid === undefined) {
+    response.status(403).send({ message: 'You need to log in to accept and invite'})
+    return
+  }
+  loadSignupInvitation(request.params.id).then(invite => {
+    return nameForUser(invite.inviter).then(name => {
+      const inviteWithName = Object.assign({ inviterName: name }, invite)
+      return acceptSignupInvitation(request.user.uid, inviteWithName).then(result => {
+        response.status(201).send(Object.assign({ accepted: true }, inviteWithName))
       })
     })
+  })
+  .catch(err => {
+    console.log('Unable to accept invite', err)
+    response.status(404).send({ message: 'no such invite' })
   })
 });
 

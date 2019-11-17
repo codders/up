@@ -14,10 +14,11 @@ declare namespace express {
       [key: string]: any
     },
     method: string,
+    path: string,
     params: any
   }
   interface Response {
     status: (code: number) => Response
-    send: (message: { [key: string]: any } | string) => void 
+    send: (message: { [key: string]: any } | string) => void
   }
 }

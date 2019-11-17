@@ -122,6 +122,10 @@ module.exports = {
     ]
   },
 
+  generate: {
+    fallback: true
+  },
+
   /*
   ** Build configuration
   */
