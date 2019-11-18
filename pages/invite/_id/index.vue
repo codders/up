@@ -27,6 +27,22 @@
 <script>
 import LoginForm from '~/components/LoginForm.vue'
 
+function postInviteAcceptance(axios, idToken, inviteId) {
+  return axios({
+    method: 'post',
+    url:
+      'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/invite/' +
+      inviteId,
+    data: {
+      accept: true
+    },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + idToken
+    }
+  })
+}
+
 export default {
   components: {
     LoginForm
@@ -45,27 +61,21 @@ export default {
       .then(function(response) {
         if (
           store.getters.activeUser !== null &&
-          store.state.profile.email === response.email
+          store.getters.activeUser.email === response.email
         ) {
-          return $axios({
-            method: 'post',
-            url:
-              'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/invite/' +
-              params.id,
-            data: {
-              accept: true
-            },
-            headers: Object.assign(
-              { 'Content-Type': 'application/json' },
-              headers
-            )
-          })
+          return postInviteAcceptance($axios, store.state.idToken, params.id)
             .then(function(response) {
               return response.data
             })
             .catch(function(err) {
               console.log('Unable to accept invite', err) // eslint-disable-line no-console
             })
+        } else {
+          // esline-disable-next-line no-console
+          console.log(
+            'not yet logged in - not sending invite',
+            store.getters.activeUser
+          )
         }
         return response
       })
@@ -81,6 +91,33 @@ export default {
       accepted: false
     }
   },
+  computed: {
+    emailAddressMatches() {
+      return (
+        this.$store.getters.activeUser === null ||
+        this.email === this.$store.getters.activeUser.email
+      )
+    },
+    loggedIn() {
+      return this.$store.getters.activeUser !== null
+    }
+  },
+  watch: {
+    loggedIn(newValue, oldValue) {
+      const vm = this
+      console.log('Logged In changed from ' + oldValue + ' to ' + newValue) // eslint-disable-line no-console
+      if (oldValue === false && newValue === true) {
+        postInviteAcceptance(
+          this.$axios,
+          this.$store.state.idToken,
+          this.$route.params.id
+        ).then(function(result) {
+          console.log('Accepted invite') // eslint-disable-line no-console
+          vm.$nuxt.$router.replace('/')
+        })
+      }
+    }
+  },
   beforeMount() {
     if (this.inviterName === null) {
       this.$nuxt.$router.replace('/invite/unknown_invite')
@@ -88,14 +125,6 @@ export default {
     }
     if (this.accepted === true) {
       this.$nuxt.$router.replace('/')
-    }
-  },
-  computed: {
-    emailAddressMatches() {
-      return (
-        this.$store.getters.activeUser === null ||
-        this.email === this.$store.state.profile.email
-      )
     }
   }
 }
