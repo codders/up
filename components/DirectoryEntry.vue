@@ -15,7 +15,11 @@
         <v-icon>delete</v-icon>
       </v-btn>
     </v-list-item-action>
-    <v-list-item-action v-else class="add_action" @click="addFriend(uid, name)">
+    <v-list-item-action
+      v-else
+      class="add_action"
+      @click="addFriend(uid, name, photoURL)"
+    >
       <v-btn icon>
         <v-icon>add</v-icon>
       </v-btn>
@@ -56,8 +60,8 @@ export default {
         })
       }
     },
-    addFriend(uid, name) {
-      this.$store.dispatch('addFriend', { uid, name })
+    addFriend(uid, name, photoURL) {
+      this.$store.dispatch('addFriend', { uid, name, photoURL })
     },
     deleteFriend(uid) {
       this.$store.dispatch('deleteFriend', uid)

@@ -65,7 +65,8 @@ declare namespace up {
 
   interface UserRecord {
     id: string,
-    name: string
+    name: string,
+    photoURL?: string
   }
 
   interface ProfileDetails {

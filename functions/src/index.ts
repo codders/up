@@ -247,7 +247,8 @@ app.post('/addFriendByEmail', (request: express.Request, response: express.Respo
       console.log('Got friend add result', writeResults);
       response.status(201).send({
         uid: friend.id,
-        name: friend.name
+        name: friend.name,
+        photoURL: friend.photoURL
       })
     })
     .catch(err => {
