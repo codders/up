@@ -6,17 +6,20 @@
           Sign In with
         </h2>
         <v-row class="login-buttons spread">
-          <v-btn
-            class="signin mr-2"
-            color="primary"
-            @click.native="googleSignUp"
-          >
-            Google
-          </v-btn>
-          <v-spacer />
-          <v-btn class="signin" color="primary" @click.native="showEmailForm">
-            E-Mail
-          </v-btn>
+          <v-col class="text-center">
+            <v-btn
+              class="signin mr-2"
+              color="primary"
+              @click.native="googleSignUp"
+            >
+              Google
+            </v-btn>
+          </v-col>
+          <v-col class="text-center">
+            <v-btn class="signin" color="primary" @click.native="showEmailForm">
+              E-Mail
+            </v-btn>
+          </v-col>
         </v-row>
       </div>
       <v-container v-if="showEmailLoginForm">
