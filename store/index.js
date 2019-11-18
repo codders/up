@@ -115,7 +115,27 @@ export const actions = {
     return auth.signInWithRedirect(GoogleProvider)
   },
 
-  signOut({ commit, dispatch }) {
+  signInWithEmail({ commit }, payload) {
+    return auth
+      .signInWithEmailAndPassword(payload.email, payload.password)
+      .then(function(result) {
+        console.log('Result', result)
+      })
+  },
+
+  signUpWithEmail({ commit, dispatch }, payload) {
+    return auth
+      .createUserWithEmailAndPassword(payload.email, payload.password)
+      .then(function(result) {
+        console.log('Create result', result)
+        return result.user.getIdToken().then(function(idToken) {
+          commit('setIdToken', idToken)
+          return dispatch('updateProfile', { name: payload.name })
+        })
+      })
+  },
+
+  signOut({ commit }) {
     auth
       .signOut()
       .then(() => {
@@ -297,7 +317,7 @@ export const actions = {
           profileUpdate.email = state.user.email
           changed = true
         }
-        if (response.data.photoURL == null) {
+        if (response.data.photoURL == null && state.user.photoURL !== null) {
           profileUpdate.photoURL = state.user.photoURL
           changed = true
         }

@@ -7,7 +7,7 @@
       <v-card-text>
         <v-row align="center" justify="center">
           <v-img
-            v-if="avatarUrl !== undefined"
+            v-if="avatarUrl !== null && avatarUrl !== undefined"
             :src="avatarUrl"
             width="80"
             height="80"

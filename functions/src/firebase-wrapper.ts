@@ -482,8 +482,10 @@ export const updateProfile = (uid: string, profile: { [id:string]: string }) => 
     updated_at: admin.firestore.FieldValue.serverTimestamp(),
     updated_by: uid
   }, profile)
-  return admin.firestore().collection('users').doc(uid).update(profileUpdate).then(writeResult => {
-    return loadProfile(uid)
+  return loadProfile(uid).then(loadedProfile => {
+    return admin.firestore().collection('users').doc(uid).update(profileUpdate).then(writeResult => {
+      return Object.assign(loadedProfile, profileUpdate)
+    })
   })
 }
 
