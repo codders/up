@@ -60,7 +60,13 @@ describe('up/_activity/index.vue', () => {
       mocks: Util.mockDataStore({ uid: '123', friends: friends, routeParams: { activity: 'play' }, axios: (request) => {
         postedData = request.data
         return new Promise(function(rs,rj) {
-          rs('Success!')
+          rs(
+            { message: 'added',
+              data: {
+                upRequest: {}
+              }
+            }
+          )
         })
       }})
     })
@@ -82,7 +88,13 @@ describe('up/_activity/index.vue', () => {
       mocks: Util.mockDataStore({ uid: '123', friends: friends, routeParams: { activity: 'play-out' }, axios: (request) => {
         postedData = request.data
         return new Promise(function(rs,rj) {
-          rs('Success!')
+          rs(
+            { message: 'added',
+              data: {
+                upRequest: {}
+              }
+            }
+          )
         })
       }})
     })
