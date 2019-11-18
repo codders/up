@@ -24,7 +24,8 @@
     "node-fetch": "^2.6.0",
     "nuxt": "^2.10.2",
     "nuxt-log": "^0.1.0",
-    "nuxt-validate": "^1.0.1"
+    "nuxt-validate": "^1.0.1",
+    "vue-spinner": "^1.0.3"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.7.1",

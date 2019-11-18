@@ -48,6 +48,7 @@ describe('WhatsUpList.vue', () => {
       }),
       localVue
     })
+    mountedIndex.setData({ loading: false })
     expect(mountedIndex.contains('[jest="nothing-up"]')).toBe(true)
   }),
   test('Does not show something if only I am up', () => {

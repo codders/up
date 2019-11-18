@@ -32,6 +32,7 @@ describe('YouAreUpList.vue', () => {
       }),
       localVue
     })
+    mountedIndex.setData({ loading: false })
     expect(mountedIndex.contains('[jest="something-up"]')).toBe(true)
     expect(mountedIndex.find('[jest="something-up"]').findAll('you-are-up-stub').length).toBe(1)
   }),
@@ -47,6 +48,7 @@ describe('YouAreUpList.vue', () => {
       }),
       localVue
     })
+    mountedIndex.setData({ loading: false })
     expect(mountedIndex.contains('[jest="nothing-up"]')).toBe(true)
   }),
   test('Shows nothing when only someone else is up', () => {
@@ -72,6 +74,7 @@ describe('YouAreUpList.vue', () => {
       }),
       localVue
     })
+    mountedIndex.setData({ loading: false })
     expect(mountedIndex.contains('[jest="nothing-up"]')).toBe(true)
   })
 })
