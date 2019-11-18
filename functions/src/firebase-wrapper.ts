@@ -355,6 +355,42 @@ const populateLoadedUpRecords = (query: Promise<admin.firestore.QuerySnapshot>):
   });
 }
 
+export const populateInviteRecord = (uid: string, invite: up.SavedUpRequest) => {
+  return populateLoadedUpRecords(admin.firestore().collection('up')
+    .where("parentId", "==", invite.id)
+    .get()
+  )
+  .then(function(upRecords) {
+    const replies: [string,boolean][] = []
+    upRecords.forEach(function(upRecord) {
+       replies.push([upRecord.inviteduid, !!upRecord.isUp])
+    })
+    /**
+     * Handle the case here where no up records were created by the
+     * invitation (because no friends were interested in the invite)
+     */
+    const replyUids = replies.map(item => item[0])
+    invite.friends.forEach(function(frienduid) {
+      if (!replyUids.includes(frienduid)) {
+        replies.push([frienduid, false])
+      }
+    })
+    return Promise.all(replies.map(item => {
+      return nameForUser(item[0]).then(function(invitedName) {
+        return [invitedName, item[1]]
+      })
+    }))
+  }).then(function(resolvedReplies) {
+    return nameForUser(uid).then(function (inviterName) {
+      return Object.assign({
+        pendingFriends: resolvedReplies.filter(item => !item[1]).map(item => item[0]),
+        acceptedFriends: resolvedReplies.filter(item => item[1]).map(item => item[0]),
+        name: inviterName
+      }, invite)
+    })
+  })
+}
+
 export const loadInvites = (uid: string) => {
   return restrictToCurrentRecords(admin.firestore().collection('users').doc(uid).collection('invites'))
     .get()
@@ -369,68 +405,10 @@ export const loadInvites = (uid: string) => {
     })
     .catch(function(error) {
       console.log("Error fetching whats up: ", error);
-      return [];
+      return <up.SavedUpRequest[]>[];
     })
     .then(function (invites) {
-      const resolvedInvites: PromiseLike<up.SavedUpRequestWithNameAndAcceptedFriends[]>[] = []
-      invites.forEach(function (invite) {
-        resolvedInvites.push(
-          populateLoadedUpRecords(admin.firestore().collection('up')
-            .where("parentId", "==", invite.id)
-            .get()
-          )
-          .then(function(upRecords) {
-            const upRecordPromisesWithFriend: PromiseLike<up.SavedUpRequestWithNameAndAcceptedFriends>[] = []
-            upRecords.forEach(function(upRecord) {
-               upRecordPromisesWithFriend.push(nameForUser(upRecord.inviteduid)
-                 .then(function(username) {
-                   if (upRecord.isUp) {
-                     return Object.assign({acceptedFriends: [ username ], pendingFriends: [], name: upRecord.name}, invite)
-                   } else {
-                     return Object.assign({acceptedFriends: [], pendingFriends: [ username ], name: upRecord.name}, invite)
-                   }
-                 })
-               )
-            })
-            return Promise.all(upRecordPromisesWithFriend)
-          }).then(function(upRecordsWithFriends) {
-            /**
-             * Handle the case here where no up records were created by the
-             * invitation (because no friends were interested in the invite)
-             */
-            if (upRecordsWithFriends.length === 0) {
-              return nameForUser(uid).then(function(inviterName) {
-                return Promise.all(invite.friends.map(name => nameForUser(name)))
-                  .then(function(resolvedNames) {
-                    return [ Object.assign({
-                      pendingFriends: resolvedNames,
-                      acceptedFriends: [],
-                      name: inviterName
-                    }, invite) ]
-                  })
-              })
-            }
-            return Promise.resolve(upRecordsWithFriends)
-          })
-        )
-      })
-      return Promise.all(resolvedInvites)
-    })
-    .then(function(inviteArrays) {
-      const resultingInvites: { [id: string]: up.SavedUpRequestWithNameAndAcceptedFriends }= {}
-      inviteArrays.forEach(function(inviteArray) {
-        inviteArray.forEach(function(invite) {
-          if (resultingInvites[invite.id] === undefined) {
-            resultingInvites[invite.id] = invite
-          } else {
-            resultingInvites[invite.id].acceptedFriends = resultingInvites[invite.id].acceptedFriends.concat(invite.acceptedFriends)
-            resultingInvites[invite.id].pendingFriends = resultingInvites[invite.id].pendingFriends.concat(invite.pendingFriends)
-          }
-        })
-      })
-      return Object.keys(resultingInvites).map(function(key) {
-        return resultingInvites[key]
-      })
+      return Promise.all(invites.map(invite => populateInviteRecord(uid, invite)))
     })
 };
 

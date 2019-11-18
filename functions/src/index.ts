@@ -19,6 +19,7 @@ import { validateFirebaseIdToken,
          deleteFriendByUid,
          nameForUser,
          respondToUp,
+         populateInviteRecord,
          saveInviteRecordForUser,
          saveSubscription } from './firebase-wrapper';
 import { findMatches,
@@ -170,12 +171,12 @@ app.delete('/friends/:id', (request: express.Request, response: express.Response
 app.post('/saveRecord', (request: express.Request, response: express.Response) => {
   const record = Object.assign({}, request.body);
   nameForUser(request.user.uid).then(function(userName) {
-    const parentUpRecord = {
+    const parentUpRequest: up.UpRequest = {
       activity: record.activity,
       description: record.description,
       friends: record.friends
     }
-    return Promise.all([saveInviteRecordForUser(request.user.uid, parentUpRecord),
+    return Promise.all([saveInviteRecordForUser(request.user.uid, parentUpRequest),
     loadInterestRegisterForUser(request.user.uid, record.friends)]).then(function(results) {
       console.log('Loaded interest register', results)
       Object.values(results[1]).forEach(function(friend) {
@@ -183,11 +184,12 @@ app.post('/saveRecord', (request: express.Request, response: express.Response) =
       })
       const parentRecordId: string = results[0]
       const interestRegister: { [uid: string]: up.InterestRegister } = results[1]
+      const upRequest = Object.assign(parentUpRequest, {
+        id: parentRecordId,
+        uid: request.user.uid
+      })
       const upRecords = getUpRecordsForRequest(
-        Object.assign(parentUpRecord, {
-          parentId: parentRecordId,
-          uid: request.user.uid
-        }),
+        upRequest,
         userName,
         interestRegister
       );
@@ -201,10 +203,13 @@ app.post('/saveRecord', (request: express.Request, response: express.Response) =
       });
       Promise.all(promises).then(writeResults => {
         console.log('Got write results', writeResults);
-        response.status(201).send({
-          success: true,
-          message: 'You are up!'
-        });
+        return populateInviteRecord(request.user.uid, upRequest).then(function(invite) {
+          response.status(201).send({
+            success: true,
+            message: 'You are up!',
+            upRequest: invite
+          })
+        })
       })
       .catch(err => {
         console.log('Error writing record', err);

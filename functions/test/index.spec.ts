@@ -28,7 +28,7 @@ describe("up record generation logic", () => {
       {
         activity: [ 'play' ],
         description: 'fish',
-        parentId: 'abd',
+        id: 'abd',
         uid: 'abc',
         friends: [ 'def' ]
       },
@@ -44,7 +44,7 @@ describe("up record generation logic", () => {
       {
         activity: [ 'play' ],
         description: 'fish',
-        parentId: 'abd',
+        id: 'abd',
         uid: 'abc',
         friends: [ 'def' ]
       },

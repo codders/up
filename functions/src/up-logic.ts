@@ -5,7 +5,7 @@ export const filterInterests = function(proposedActivities: string[], interested
 }
 
 export const getUpRecordsForRequest = function(
-    request: up.UpRequestWithParent,
+    request: up.SavedUpRequest,
     requesterName: string,
     interestedFriends: { [friendUid:string] : up.InterestRegister }
   )
@@ -22,7 +22,7 @@ export const getUpRecordsForRequest = function(
         description: request.description,
         name: requesterName,
         uid: request.uid,
-        parentId: request.parentId,
+        parentId: request.id,
         isUp: false,
         timestamp: {
           _seconds: 0,

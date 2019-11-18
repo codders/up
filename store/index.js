@@ -193,6 +193,10 @@ export const actions = {
       })
   },
 
+  addUpRecord({ commit }, payload) {
+    commit('mergeWhatsUpRecords', [payload])
+  },
+
   loadFriends({ commit, state }) {
     if (state.loadedFriends) {
       return Promise.resolve(state.friends)

@@ -48,11 +48,6 @@ declare namespace up {
     name: string
   }
 
-  interface UpRequestWithParent extends UpRequest {
-    parentId: string,
-    uid: string
-  }
-
   interface DirectoryEntry {
     uid: string
     name: string

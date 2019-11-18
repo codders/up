@@ -171,7 +171,10 @@ export default {
         },
         url:
           'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/saveRecord'
-      }).then(this.$nuxt.$router.replace({ path: '/' }))
+      }).then(function(response) {
+        vm.$store.dispatch('addUpRecord', response.data.upRequest)
+        vm.$nuxt.$router.replace({ path: '/' })
+      })
     }
   }
 }
