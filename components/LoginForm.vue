@@ -188,7 +188,7 @@ export default {
     },
     emailSignUp() {
       const log = this.$log
-      this.signUpError = null
+      this.signInError = null
       this.$store
         .dispatch('signUpWithEmail', {
           email: this.formEmail,
@@ -200,6 +200,17 @@ export default {
         })
         .catch(e => {
           log.error('Email sign-up failed', e)
+          if (e.code === 'auth/weak-password') {
+            this.signInError = 'Password too short / weak'
+          } else if (e.code === 'auth/email-already-in-use') {
+            this.signInError = 'Email already in use - try signing in'
+          } else if (e.code === 'auth/invalid-email') {
+            this.signInError = 'Invalid e-mail address'
+          } else if (e.code === 'auth/operation-not-allowed') {
+            this.signInError = 'Unable to create email/password account'
+          } else {
+            this.signInError = 'Unable to sign up at this time'
+          }
         })
     },
     emailSignUpShow() {

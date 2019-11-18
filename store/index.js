@@ -309,7 +309,7 @@ export const actions = {
       .then(response => {
         let changed = false
         const profileUpdate = {}
-        if (response.data.name == null) {
+        if (response.data.name == null && state.user.displayName !== null) {
           profileUpdate.name = state.user.displayName
           changed = true
         }
