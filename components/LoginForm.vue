@@ -5,7 +5,7 @@
         <h2 class="title mb-2">
           Sign In with
         </h2>
-        <div class="login-buttons spread">
+        <v-row class="login-buttons spread">
           <v-btn
             class="signin mr-2"
             color="primary"
@@ -17,76 +17,84 @@
           <v-btn class="signin" color="primary" @click.native="showEmailForm">
             E-Mail
           </v-btn>
-        </div>
+        </v-row>
       </div>
-      <div v-if="showEmailLoginForm">
-        <h2 class="title mb-2">{{ formTitle }} with E-Mail</h2>
-        <div class="email-login-form spread">
-          <div class="mr-2">
+      <v-container v-if="showEmailLoginForm">
+        <v-row>
+          <v-col>
+            <h2 class="title mb-2">{{ formTitle }} with E-Mail</h2>
+          </v-col>
+        </v-row>
+        <v-row class="spread">
+          <v-col>
             <p><b>E-Mail</b></p>
             <input v-model="formEmail" placeholder="email@example.com" />
-          </div>
-          <v-spacer />
-          <div>
+          </v-col>
+          <v-col v-if="showSignUpForm">
+            <p><b>Name</b></p>
+            <input v-model="formName" placeholder="Your Name" />
+          </v-col>
+        </v-row>
+        <v-row class="email-signup-form spread">
+          <v-col>
             <p><b>Password</b></p>
             <input
               v-model="formPassword"
               type="password"
               placeholder="password"
             />
-          </div>
-        </div>
-        <div v-if="showSignUpForm" class="email-signup-form spread">
-          <div class="mr-2">
-            <p><b>Name</b></p>
-            <input v-model="formName" placeholder="Your Name" />
-          </div>
-          <v-spacer />
-          <div>
+          </v-col>
+          <v-col v-if="showSignUpForm">
             <p><b>Confirm Password</b></p>
             <input
               v-model="formConfirmPassword"
               type="password"
               placeholder="confirm password"
             />
-          </div>
-        </div>
-        <div v-if="signInError !== null">
-          <p style="color: red;">
-            {{ signInError }}
-          </p>
-        </div>
-        <div class="spread mt-2">
-          <v-btn
-            v-if="!showSignUpForm"
-            class="mr-2"
-            :disabled="!signInEnabled"
-            color="primary"
-            @click.native="emailSignIn"
-          >
-            Sign In
-          </v-btn>
-          <v-btn
-            v-if="!showSignUpForm"
-            color="primary"
-            @click.native="emailSignUpShow"
-          >
-            Sign Up
-          </v-btn>
-          <v-btn
-            v-else
-            color="primary"
-            :disabled="!signUpEnabled"
-            @click.native="emailSignUp"
-          >
-            Sign Up
-          </v-btn>
-          <v-spacer />
-          <v-btn @click.native="cancelEmailSignIn">
-            Cancel
-          </v-btn>
-        </div>
-      </div>
+          </v-col>
+        </v-row>
+        <v-row v-if="signInError !== null">
+          <v-col>
+            <p style="color: red;">
+              {{ signInError }}
+            </p>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col v-if="!showSignUpForm">
+            <v-btn
+              class="mr-2"
+              :disabled="!signInEnabled"
+              color="primary"
+              @click.native="emailSignIn"
+            >
+              Sign In
+            </v-btn>
+          </v-col>
+          <v-col>
+            <v-btn
+              v-if="!showSignUpForm"
+              color="primary"
+              @click.native="emailSignUpShow"
+            >
+              Sign Up
+            </v-btn>
+            <v-btn
+              v-else
+              color="primary"
+              :disabled="!signUpEnabled"
+              @click.native="emailSignUp"
+            >
+              Sign Up
+            </v-btn>
+          </v-col>
+          <v-col>
+            <v-btn @click.native="cancelEmailSignIn">
+              Cancel
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-container>
     </v-flex>
   </v-layout>
 </template>
@@ -94,10 +102,6 @@
 <style>
 h2.title {
   text-align: center;
-}
-
-div.spread {
-  display: flex;
 }
 
 div.spread input {
