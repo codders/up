@@ -49,22 +49,16 @@ export default {
     }
   },
   computed: {
-    displayName() {
-      if (this.$store.state.profile != null) {
-        return this.$store.state.profile.name
-      } else {
-        return null
-      }
-    },
     pushSupport() {
       return 'serviceWorker' in navigator && 'PushManager' in window
     },
     greetingString() {
-      let greeting = 'Welcome to Up'
-      if (this.displayName != null) {
-        greeting = greeting + ', ' + this.displayName
+      const greeting = 'Welcome to Up'
+      if (this.$store.state.profile.name != null) {
+        return greeting + ', ' + this.$store.state.profile.name
+      } else {
+        return greeting
       }
-      return greeting
     }
   },
   created() {
@@ -127,13 +121,6 @@ export default {
       })
   },
   methods: {
-    greetingText() {
-      let greetingString = 'Welcome to Up'
-      if (this.displayName != null) {
-        greetingString = greetingString + ', ' + this.displayName
-      }
-      return greetingString
-    },
     askPermission() {
       this.$log.debug('Asking for permission')
       return new Promise(function(resolve, reject) {

@@ -42,6 +42,7 @@ export const mutations = {
   setUser(state, payload) {
     if (payload === null) {
       state.user = Object.assign({}, emptyUser)
+      state.profile = {}
     } else {
       state.user.email = payload.email
       state.user.displayName = payload.displayName
