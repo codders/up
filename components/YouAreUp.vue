@@ -26,28 +26,28 @@ export default {
       type: Array,
       default: () => {
         return []
-      }
+      },
     },
     acceptedFriends: {
       type: Array,
       default: () => {
         return []
-      }
+      },
     },
     description: {
       type: String,
-      default: undefined
+      default: undefined,
     },
     id: {
       type: String,
-      default: undefined
-    }
+      default: undefined,
+    },
   },
   methods: {
     routeToItem(id) {
       this.$nuxt.$router.push({
         name: 'youreup-id',
-        params: { id }
+        params: { id },
       })
     },
     isEmpty(str) {
@@ -65,7 +65,7 @@ export default {
     },
     cancelUpRequest(id) {
       this.$store.dispatch('deleteUp', id)
-    }
-  }
+    },
+  },
 }
 </script>

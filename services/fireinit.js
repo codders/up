@@ -8,7 +8,7 @@ const config = {
   databaseURL: 'https://up-now-a6da8.firebaseio.com',
   projectId: 'up-now-a6da8',
   storageBucket: 'up-now-a6da8.appspot.com',
-  messagingSenderId: '884424894711'
+  messagingSenderId: '884424894711',
 }
 
 if (!firebase.apps.length) {

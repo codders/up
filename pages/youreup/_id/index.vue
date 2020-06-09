@@ -13,7 +13,7 @@
           <div
             v-if="
               youreUpItem().acceptedFriends === undefined ||
-                youreUpItem().acceptedFriends.length === 0
+              youreUpItem().acceptedFriends.length === 0
             "
           >
             <p>Nobody has accepted your invitation so far</p>
@@ -32,7 +32,7 @@
           <div
             v-if="
               youreUpItem().pendingFriends !== undefined &&
-                youreUpItem().pendingFriends.length !== 0
+              youreUpItem().pendingFriends.length !== 0
             "
           >
             Replies are still pending from
@@ -72,7 +72,7 @@ export default {
   methods: {
     youreUpItem() {
       return this.$store.getters.whatsUp.find(
-        item => item.id === this.$route.params.id
+        (item) => item.id === this.$route.params.id
       )
     },
     getTitleForActivity(item) {
@@ -81,7 +81,7 @@ export default {
     deleteUp(id) {
       this.$store.dispatch('deleteUp', id)
       this.$nuxt.$router.replace('/')
-    }
-  }
+    },
+  },
 }
 </script>

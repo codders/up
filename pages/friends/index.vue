@@ -66,12 +66,12 @@ export default {
       } else {
         return 0
       }
-    }
+    },
   },
   methods: {
     goAddFriend() {
       this.$nuxt.$router.push({
-        name: 'add-friend'
+        name: 'add-friend',
       })
     },
     deleteFriend(key) {
@@ -81,10 +81,10 @@ export default {
     routeToFriend(friend) {
       this.$nuxt.$router.push({
         name: 'friends-id',
-        params: { id: friend.uid }
+        params: { id: friend.uid },
       })
-    }
-  }
+    },
+  },
 }
 </script>
 

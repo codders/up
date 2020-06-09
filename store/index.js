@@ -11,7 +11,7 @@ const emptyUser = {
   email: null,
   displayName: null,
   uid: null,
-  photoURL: null
+  photoURL: null,
 }
 
 export const state = () => ({
@@ -19,7 +19,7 @@ export const state = () => ({
   friends: [],
   loadedFriends: false,
   whatsUp: [],
-  profile: {}
+  profile: {},
 })
 
 export const getters = {
@@ -30,12 +30,12 @@ export const getters = {
       return null
     }
   },
-  friends: state => {
+  friends: (state) => {
     return state.friends
   },
-  whatsUp: state => {
+  whatsUp: (state) => {
     return state.whatsUp
-  }
+  },
 }
 
 export const mutations = {
@@ -56,9 +56,9 @@ export const mutations = {
     state.idToken = payload
   },
   mergeWhatsUpRecords(state, records) {
-    records.forEach(function(whatsUpRecord) {
+    records.forEach(function (whatsUpRecord) {
       const index = state.whatsUp.findIndex(
-        item => item.id === whatsUpRecord.id
+        (item) => item.id === whatsUpRecord.id
       )
       if (index !== -1) {
         state.whatsUp.splice(index, 1, whatsUpRecord)
@@ -68,22 +68,22 @@ export const mutations = {
     })
   },
   deleteWhatsUp(state, id) {
-    const index = state.whatsUp.findIndex(item => item.id === id)
+    const index = state.whatsUp.findIndex((item) => item.id === id)
     if (index !== -1) {
       state.whatsUp.splice(index, 1)
     }
   },
   addFriend(state, friend) {
-    const index = state.friends.findIndex(item => item.uid === friend.uid)
+    const index = state.friends.findIndex((item) => item.uid === friend.uid)
     if (index !== -1) {
       state.friends.splice(index, 1)
     }
     state.friends.push(friend)
   },
   updateFriendNotificationSubscription(state, details) {
-    const friend = state.friends.find(item => item.uid === details.frienduid)
+    const friend = state.friends.find((item) => item.uid === details.frienduid)
     if (friend !== undefined) {
-      Object.keys(details.subscription).forEach(function(activity) {
+      Object.keys(details.subscription).forEach(function (activity) {
         if (friend.subscription === undefined) {
           friend.subscription = {}
         }
@@ -92,21 +92,21 @@ export const mutations = {
     }
   },
   deleteFriend(state, frienduid) {
-    const index = state.friends.findIndex(item => item.uid === frienduid)
+    const index = state.friends.findIndex((item) => item.uid === frienduid)
     if (index !== -1) {
       state.friends.splice(index, 1)
     }
   },
   updateFriendsList(state, friends) {
     state.friends.splice(0, state.friends.length)
-    friends.forEach(function(friend) {
+    friends.forEach(function (friend) {
       state.friends.push(friend)
     })
     state.loadedFriends = true
   },
   updateProfile(state, profile) {
     state.profile = profile
-  }
+  },
 }
 
 const BASE_URL = 'https://europe-west1-up-now-a6da8.cloudfunctions.net/app'
@@ -119,7 +119,7 @@ export const actions = {
   signInWithEmail({ commit }, payload) {
     return auth
       .signInWithEmailAndPassword(payload.email, payload.password)
-      .then(function(result) {
+      .then(function (result) {
         console.log('Result', result)
       })
   },
@@ -127,9 +127,9 @@ export const actions = {
   signUpWithEmail({ commit, dispatch }, payload) {
     return auth
       .createUserWithEmailAndPassword(payload.email, payload.password)
-      .then(function(result) {
+      .then(function (result) {
         console.log('Create result', result)
-        return result.user.getIdToken().then(function(idToken) {
+        return result.user.getIdToken().then(function (idToken) {
           commit('setIdToken', idToken)
           return dispatch('updateProfile', { name: payload.name })
         })
@@ -142,7 +142,7 @@ export const actions = {
       .then(() => {
         commit('setUser', null)
       })
-      .catch(err => console.log(err)) // eslint-disable-line no-console
+      .catch((err) => console.log(err)) // eslint-disable-line no-console
   },
 
   userChanged({ commit, state, dispatch }, { user, idToken }) {
@@ -165,13 +165,13 @@ export const actions = {
       url: BASE_URL + '/up/' + id,
       data: { isUp },
       headers: {
-        Authorization: 'Bearer ' + state.idToken
-      }
+        Authorization: 'Bearer ' + state.idToken,
+      },
     })
-      .then(response => {
+      .then((response) => {
         commit('mergeWhatsUpRecords', response.data)
       })
-      .catch(error => {
+      .catch((error) => {
         console.log('Unable to respond to up id ' + id, error) // eslint-disable-line no-console
       })
   },
@@ -181,14 +181,14 @@ export const actions = {
       method: 'DELETE',
       headers: {
         Authorization: 'Bearer ' + state.idToken,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      url: BASE_URL + '/up/' + id
+      url: BASE_URL + '/up/' + id,
     })
-      .then(response => {
+      .then((response) => {
         commit('deleteWhatsUp', id)
       })
-      .catch(error => {
+      .catch((error) => {
         console.log('Delete failed, not removing element', error) // eslint-disable-line no-console
       })
   },
@@ -205,14 +205,14 @@ export const actions = {
       method: 'GET',
       headers: {
         Authorization: 'Bearer ' + state.idToken,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      url: BASE_URL + '/friends'
+      url: BASE_URL + '/friends',
     })
-      .then(response => {
+      .then((response) => {
         commit('updateFriendsList', response.data)
       })
-      .catch(error => {
+      .catch((error) => {
         console.log('Unable to load friends list', error) // eslint-disable-line no-console
       })
   },
@@ -223,13 +223,13 @@ export const actions = {
       url: BASE_URL + '/friends',
       data: friend,
       headers: {
-        Authorization: 'Bearer ' + state.idToken
-      }
+        Authorization: 'Bearer ' + state.idToken,
+      },
     })
-      .then(response => {
+      .then((response) => {
         commit('addFriend', friend)
       })
-      .catch(error => {
+      .catch((error) => {
         console.log('Unable to respond to add friend', error) // eslint-disable-line no-console
       })
   },
@@ -240,9 +240,9 @@ export const actions = {
       url: BASE_URL + '/addFriendByEmail',
       data: { email },
       headers: {
-        Authorization: 'Bearer ' + state.idToken
-      }
-    }).then(response => {
+        Authorization: 'Bearer ' + state.idToken,
+      },
+    }).then((response) => {
       commit('addFriend', response.data)
     })
   },
@@ -253,8 +253,8 @@ export const actions = {
       url: BASE_URL + '/inviteFriendByEmail',
       data: { email },
       headers: {
-        Authorization: 'Bearer ' + state.idToken
-      }
+        Authorization: 'Bearer ' + state.idToken,
+      },
     })
   },
 
@@ -263,14 +263,14 @@ export const actions = {
       method: 'DELETE',
       headers: {
         Authorization: 'Bearer ' + state.idToken,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      url: BASE_URL + '/friends/' + friendUid
+      url: BASE_URL + '/friends/' + friendUid,
     })
-      .then(response => {
+      .then((response) => {
         commit('deleteFriend', response.data.uid)
       })
-      .catch(error => {
+      .catch((error) => {
         console.log('Unable to delete friend', error) // eslint-disable-line no-console
       })
   },
@@ -284,16 +284,16 @@ export const actions = {
       data: postData,
       headers: {
         Authorization: 'Bearer ' + state.idToken,
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     })
-      .then(response => {
+      .then((response) => {
         commit('updateFriendNotificationSubscription', {
           frienduid: details.uid,
-          subscription: response.data
+          subscription: response.data,
         })
       })
-      .catch(error => {
+      .catch((error) => {
         // eslint-disable-next-line no-console
         console.log(
           'Unable to update subcription to ' + details.uid + ' events',
@@ -308,10 +308,10 @@ export const actions = {
       url: BASE_URL + '/profile',
       headers: {
         Authorization: 'Bearer ' + state.idToken,
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     })
-      .then(response => {
+      .then((response) => {
         let changed = false
         const profileUpdate = {}
         if (response.data.name == null && state.user.displayName !== null) {
@@ -333,7 +333,7 @@ export const actions = {
           return Promise.resolve(response.data)
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.log('Unable to load profile', error) // eslint-disable-line no-console
       })
   },
@@ -345,15 +345,15 @@ export const actions = {
       data: profileUpdate,
       headers: {
         Authorization: 'Bearer ' + state.idToken,
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     })
-      .then(postResponse => {
+      .then((postResponse) => {
         commit('updateProfile', profileUpdate)
         return postResponse.data
       })
-      .catch(error => {
+      .catch((error) => {
         console.log('Unable to update profile', error) // eslint-disable-line no-console
       })
-  }
+  },
 }

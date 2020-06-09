@@ -66,14 +66,14 @@ export default {
     },
     selectFriendEnabled() {
       return this.activityArray().length > 0
-    }
+    },
   },
   methods: {
     selectFriends() {
       if (this.activityArray() !== '') {
         this.$nuxt.$router.push({
           name: 'up-activity',
-          params: { activity: this.activityArray() }
+          params: { activity: this.activityArray() },
         })
       }
     },
@@ -84,14 +84,14 @@ export default {
     activityArray() {
       const selectedActivities = []
       const vm = this
-      Object.keys(this.selected).map(function(key, index) {
+      Object.keys(this.selected).map(function (key, index) {
         if (vm.selected[key]) {
           selectedActivities.push(key)
         }
       })
       return selectedActivities.join('-')
-    }
-  }
+    },
+  },
 }
 </script>
 

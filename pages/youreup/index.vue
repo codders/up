@@ -25,7 +25,7 @@ import YouAreUpList from '~/components/YouAreUpList.vue'
 
 export default {
   components: {
-    YouAreUpList
-  }
+    YouAreUpList,
+  },
 }
 </script>

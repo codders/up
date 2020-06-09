@@ -25,7 +25,7 @@ import WhatsUpList from '~/components/WhatsUpList.vue'
 
 export default {
   components: {
-    WhatsUpList
-  }
+    WhatsUpList,
+  },
 }
 </script>

@@ -58,7 +58,7 @@ export default {
   },
   data() {
     const friend = this.$store.getters.friends.find(
-      item => item.uid === this.$route.params.id
+      (item) => item.uid === this.$route.params.id
     )
     if (friend === undefined) {
       return { selected: [] }
@@ -78,7 +78,7 @@ export default {
   computed: {
     activities() {
       return activitiesList
-    }
+    },
   },
   beforeMount() {
     if (this.friend() === undefined) {
@@ -92,7 +92,7 @@ export default {
       this.$store.dispatch('updateFriendNotificationSubscription', {
         uid: this.friend().uid,
         activity: activity.id,
-        subscribe: this.selected[activity.id]
+        subscribe: this.selected[activity.id],
       })
     },
     friend() {
@@ -102,7 +102,7 @@ export default {
         }
       }
       return undefined
-    }
-  }
+    },
+  },
 }
 </script>

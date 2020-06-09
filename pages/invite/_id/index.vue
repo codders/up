@@ -34,18 +34,18 @@ function postInviteAcceptance(axios, idToken, inviteId) {
       'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/invite/' +
       inviteId,
     data: {
-      accept: true
+      accept: true,
     },
     headers: {
       'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + idToken
-    }
+      Authorization: 'Bearer ' + idToken,
+    },
   })
 }
 
 export default {
   components: {
-    LoginForm
+    LoginForm,
   },
   asyncData({ $axios, params, store }) {
     const headers = {}
@@ -58,16 +58,16 @@ export default {
           params.id,
         { headers }
       )
-      .then(function(response) {
+      .then(function (response) {
         if (
           store.getters.activeUser !== null &&
           store.getters.activeUser.email === response.email
         ) {
           return postInviteAcceptance($axios, store.state.idToken, params.id)
-            .then(function(response) {
+            .then(function (response) {
               return response.data
             })
-            .catch(function(err) {
+            .catch(function (err) {
               console.log('Unable to accept invite', err) // eslint-disable-line no-console
             })
         } else {
@@ -79,7 +79,7 @@ export default {
         }
         return response
       })
-      .catch(function(err) {
+      .catch(function (err) {
         console.log('Unable to load invite', err) // eslint-disable-line no-console
         return {}
       })
@@ -88,7 +88,7 @@ export default {
     return {
       inviterName: null,
       email: null,
-      accepted: false
+      accepted: false,
     }
   },
   computed: {
@@ -100,7 +100,7 @@ export default {
     },
     loggedIn() {
       return this.$store.getters.activeUser !== null
-    }
+    },
   },
   watch: {
     loggedIn(newValue, oldValue) {
@@ -111,12 +111,12 @@ export default {
           this.$axios,
           this.$store.state.idToken,
           this.$route.params.id
-        ).then(function(result) {
+        ).then(function (result) {
           console.log('Accepted invite') // eslint-disable-line no-console
           vm.$nuxt.$router.replace('/')
         })
       }
-    }
+    },
   },
   beforeMount() {
     if (this.inviterName === null) {
@@ -126,6 +126,6 @@ export default {
     if (this.accepted === true) {
       this.$nuxt.$router.replace('/')
     }
-  }
+  },
 }
 </script>

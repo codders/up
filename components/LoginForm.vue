@@ -127,7 +127,7 @@ export default {
       showLoginButtons: true,
       showEmailLoginForm: false,
       showSignUpForm: false,
-      signInError: null
+      signInError: null,
     }
   },
   computed: {
@@ -149,7 +149,7 @@ export default {
       } else {
         return 'Sign In'
       }
-    }
+    },
   },
   methods: {
     showEmailForm() {
@@ -172,12 +172,12 @@ export default {
       this.$store
         .dispatch('signInWithEmail', {
           email: this.formEmail,
-          password: this.formPassword
+          password: this.formPassword,
         })
         .then(() => {
           this.cancelEmailSignIn()
         })
-        .catch(e => {
+        .catch((e) => {
           log.error('E-mail sign-in failed', e)
           if (e.code === 'auth/user-not-found') {
             this.signInError =
@@ -200,12 +200,12 @@ export default {
         .dispatch('signUpWithEmail', {
           email: this.formEmail,
           password: this.formPassword,
-          name: this.formName
+          name: this.formName,
         })
         .then(() => {
           this.cancelEmailSignIn()
         })
-        .catch(e => {
+        .catch((e) => {
           log.error('Email sign-up failed', e)
           if (e.code === 'auth/weak-password') {
             this.signInError = 'Password too short / weak'
@@ -227,20 +227,19 @@ export default {
       const log = this.$log
       this.$store
         .dispatch('signInWithGoogle')
-        .then(result => {
+        .then((result) => {
           log.debug('inside then statement on login')
           log.debug('result: ', result)
         })
-        .catch(e => {
+        .catch((e) => {
           log.error(e.message)
         })
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style lang="css">
 .signIn {
-
 }
 </style>

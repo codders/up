@@ -79,27 +79,27 @@ h3 {
 </style>
 
 <script>
+import { vapidKey } from '@/model/vapid-key'
 import LoginForm from '~/components/LoginForm.vue'
 import WhatsUpList from '~/components/WhatsUpList.vue'
 import YouAreUpList from '~/components/YouAreUpList.vue'
-import { vapidKey } from '@/model/vapid-key'
 
 function urlBase64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
   const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/')
   const rawData = window.atob(base64)
-  return Uint8Array.from([...rawData].map(char => char.charCodeAt(0)))
+  return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)))
 }
 
 export default {
   components: {
     LoginForm,
     YouAreUpList,
-    WhatsUpList
+    WhatsUpList,
   },
   data() {
     return {
-      showParagraph: { q1: false, q2: false }
+      showParagraph: { q1: false, q2: false },
     }
   },
   computed: {
@@ -113,13 +113,13 @@ export default {
       } else {
         return greeting
       }
-    }
+    },
   },
   created() {
     const vm = this
     this.$log.debug('Page is loaded')
     this.askPermission()
-      .then(result => {
+      .then((result) => {
         this.$log.debug('Got permission result', result)
         if (result !== 'granted') {
           this.$log.info(
@@ -130,7 +130,7 @@ export default {
         if ('serviceWorker' in navigator) {
           return navigator.serviceWorker
             .getRegistrations()
-            .then(registrations => {
+            .then((registrations) => {
               this.$log.debug(
                 'service worker registrations: ' + registrations.length
               )
@@ -138,7 +138,7 @@ export default {
                 this.$log.debug('Service Worker:', worker)
                 const subscribeOptions = {
                   userVisibleOnly: true,
-                  applicationServerKey: urlBase64ToUint8Array(vapidKey.pub)
+                  applicationServerKey: urlBase64ToUint8Array(vapidKey.pub),
                 }
                 return worker.pushManager.subscribe(subscribeOptions)
               }
@@ -148,7 +148,7 @@ export default {
             })
         }
       })
-      .then(function(pushSubscription) {
+      .then(function (pushSubscription) {
         // eslint-disable-next-line no-console
         console.log(
           'Received PushSubscription: ',
@@ -158,14 +158,14 @@ export default {
           method: 'POST',
           headers: {
             Authorization: 'Bearer ' + vm.$store.state.idToken,
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
           data: JSON.stringify(pushSubscription),
           url:
-            'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/saveSubscription'
+            'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/saveSubscription',
         })
       })
-      .catch(error => {
+      .catch((error) => {
         if (error) {
           this.$log.error(
             'Error asking for permission or subscribing to notification',
@@ -180,8 +180,8 @@ export default {
     },
     askPermission() {
       this.$log.debug('Asking for permission')
-      return new Promise(function(resolve, reject) {
-        const permissionResult = Notification.requestPermission(function(
+      return new Promise(function (resolve, reject) {
+        const permissionResult = Notification.requestPermission(function (
           result
         ) {
           resolve(result)
@@ -190,13 +190,13 @@ export default {
         if (permissionResult) {
           permissionResult.then(resolve, reject)
         }
-      }).then(function(permissionResult) {
+      }).then(function (permissionResult) {
         if (permissionResult !== 'granted') {
           throw new Error("We weren't granted permission.")
         }
         return permissionResult
       })
-    }
-  }
+    },
+  },
 }
 </script>

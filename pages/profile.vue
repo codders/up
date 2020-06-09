@@ -62,14 +62,14 @@ export default {
     },
     emptyName() {
       return this.name.length === 0
-    }
+    },
   },
   methods: {
     saveProfile() {
       this.$store.dispatch('updateProfile', { name: this.name }).then(() => {
         this.$nuxt.$router.replace('/')
       })
-    }
-  }
+    },
+  },
 }
 </script>

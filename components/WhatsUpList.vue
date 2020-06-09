@@ -43,7 +43,7 @@ import WhatsUp from '~/components/WhatsUp.vue'
 export default {
   components: {
     WhatsUp,
-    PulseLoader
+    PulseLoader,
   },
   data() {
     return { loading: false }
@@ -55,7 +55,7 @@ export default {
         return []
       }
       return whatsUpData.filter(
-        item => item.uid !== this.$store.getters.activeUser.uid
+        (item) => item.uid !== this.$store.getters.activeUser.uid
       )
     },
     youreUp() {
@@ -64,9 +64,9 @@ export default {
         return []
       }
       return whatsUpData.filter(
-        item => item.uid === this.$store.getters.activeUser.uid
+        (item) => item.uid === this.$store.getters.activeUser.uid
       )
-    }
+    },
   },
   mounted() {
     const vm = this
@@ -76,15 +76,15 @@ export default {
         'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/whatsUp',
         {
           headers: {
-            Authorization: 'Bearer ' + this.$store.state.idToken
-          }
+            Authorization: 'Bearer ' + this.$store.state.idToken,
+          },
         }
       )
-      .then(response => {
+      .then((response) => {
         vm.$store.commit('mergeWhatsUpRecords', response)
         vm.loading = false
       })
-      .catch(error => {
+      .catch((error) => {
         vm.$log.error('Unable to load whatsapp data', error)
         vm.loading = false
       })
@@ -95,7 +95,7 @@ export default {
     },
     cancelUp(id) {
       this.$store.dispatch('changeUp', { id, isUp: false })
-    }
-  }
+    },
+  },
 }
 </script>

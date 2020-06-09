@@ -80,7 +80,7 @@ export default {
   },
   data: () => ({
     selected: {},
-    description: ''
+    description: '',
   }),
   computed: {
     friends() {
@@ -88,7 +88,7 @@ export default {
     },
     showUpEnabled() {
       const vm = this
-      return Object.keys(this.selected).reduce(function(sum, key) {
+      return Object.keys(this.selected).reduce(function (sum, key) {
         return sum || vm.selected[key]
       }, false)
     },
@@ -98,7 +98,7 @@ export default {
       } else {
         const firstValue = Object.values(this.selected)[0]
         let same = true
-        Object.values(this.selected).forEach(function(value) {
+        Object.values(this.selected).forEach(function (value) {
           if (value !== firstValue) {
             same = false
           }
@@ -111,14 +111,14 @@ export default {
         return true
       } else {
         let same = true
-        Object.values(this.selected).forEach(function(value) {
+        Object.values(this.selected).forEach(function (value) {
           if (value !== true) {
             same = false
           }
         })
         return same
       }
-    }
+    },
   },
   methods: {
     selectAll() {
@@ -150,7 +150,7 @@ export default {
     showUp() {
       const selectedFriends = []
       const vm = this
-      Object.keys(this.$data.selected).map(function(friendId) {
+      Object.keys(this.$data.selected).map(function (friendId) {
         if (vm.$data.selected[friendId]) {
           selectedFriends.push(friendId)
         }
@@ -162,20 +162,20 @@ export default {
       this.$axios({
         method: 'POST',
         headers: {
-          Authorization: 'Bearer ' + this.$store.state.idToken
+          Authorization: 'Bearer ' + this.$store.state.idToken,
         },
         data: {
           activity: this.$route.params.activity.split('-'),
           description: this.$data.description,
-          friends: selectedFriends
+          friends: selectedFriends,
         },
         url:
-          'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/saveRecord'
-      }).then(function(response) {
+          'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/saveRecord',
+      }).then(function (response) {
         vm.$store.dispatch('addUpRecord', response.data.upRequest)
         vm.$nuxt.$router.replace({ path: '/' })
       })
-    }
-  }
+    },
+  },
 }
 </script>

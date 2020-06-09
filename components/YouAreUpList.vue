@@ -35,7 +35,7 @@ import YouAreUp from '~/components/YouAreUp.vue'
 export default {
   components: {
     YouAreUp,
-    PulseLoader
+    PulseLoader,
   },
   data() {
     return { loading: false }
@@ -47,9 +47,9 @@ export default {
         return []
       }
       return whatsUp.filter(
-        item => item.uid === this.$store.getters.activeUser.uid
+        (item) => item.uid === this.$store.getters.activeUser.uid
       )
-    }
+    },
   },
   mounted() {
     const vm = this
@@ -57,17 +57,17 @@ export default {
     this.$axios
       .$get('https://europe-west1-up-now-a6da8.cloudfunctions.net/app/myUp', {
         headers: {
-          Authorization: 'Bearer ' + this.$store.state.idToken
-        }
+          Authorization: 'Bearer ' + this.$store.state.idToken,
+        },
       })
-      .then(response => {
+      .then((response) => {
         vm.loading = false
         vm.$store.commit('mergeWhatsUpRecords', response)
       })
-      .catch(error => {
+      .catch((error) => {
         vm.loading = false
         vm.$log.error('Unable to load my up data', error)
       })
-  }
+  },
 }
 </script>

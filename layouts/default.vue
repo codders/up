@@ -62,27 +62,27 @@ export default {
         {
           icon: 'apps',
           title: 'Welcome',
-          to: '/'
+          to: '/',
         },
         {
           icon: 'accessibility_new',
           title: 'Show up',
-          to: '/up'
+          to: '/up',
         },
         {
           icon: 'group',
           title: 'Friends',
-          to: '/friends'
+          to: '/friends',
         },
         {
           icon: 'face',
           title: 'Profile',
-          to: '/profile'
-        }
+          to: '/profile',
+        },
       ],
       right: true,
       rightDrawer: false,
-      title: 'Up'
+      title: 'Up',
     }
   },
   methods: {
@@ -90,7 +90,7 @@ export default {
       this.$store.dispatch('signOut').then(() => {
         this.$nuxt.$router.replace('/')
       })
-    }
-  }
+    },
+  },
 }
 </script>

@@ -1,4 +1,4 @@
-export default function({ store, redirect, route }) {
+export default function ({ store, redirect, route }) {
   if (route.name === 'invite-id') {
     return
   }

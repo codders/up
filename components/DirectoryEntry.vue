@@ -34,29 +34,29 @@ export default {
   props: {
     name: {
       type: String,
-      default: ''
+      default: '',
     },
     uid: {
       type: String,
-      default: ''
+      default: '',
     },
     photoURL: {
       type: String,
-      default: undefined
-    }
+      default: undefined,
+    },
   },
   computed: {
     isFriend() {
       const friend = friendByUid(this.$store.getters.friends, this.uid)
       return friend !== undefined
-    }
+    },
   },
   methods: {
     routeToFriend(uid) {
       if (friendByUid(this.$store.getters.friends, uid) !== undefined) {
         this.$nuxt.$router.push({
           name: 'friends-id',
-          params: { id: uid }
+          params: { id: uid },
         })
       }
     },
@@ -65,7 +65,7 @@ export default {
     },
     deleteFriend(uid) {
       this.$store.dispatch('deleteFriend', uid)
-    }
-  }
+    },
+  },
 }
 </script>

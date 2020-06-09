@@ -35,38 +35,38 @@ export default {
       type: Array,
       default: () => {
         return []
-      }
+      },
     },
     name: {
       type: String,
-      default: undefined
+      default: undefined,
     },
     uid: {
       type: String,
-      default: undefined
+      default: undefined,
     },
     description: {
       type: String,
-      default: undefined
+      default: undefined,
     },
     isUp: {
       type: Boolean,
-      default: false
+      default: false,
     },
     whatsupid: {
       type: String,
-      default: undefined
+      default: undefined,
     },
     timestamp: {
       type: Number,
-      default: undefined
-    }
+      default: undefined,
+    },
   },
   computed: {
     getTime() {
       const date = new Date(this.timestamp * 1000)
       return date.getHours() + 'h' + (date.getMinutes() + '').padStart(2, '0')
-    }
+    },
   },
   methods: {
     isEmpty(str) {
@@ -78,9 +78,9 @@ export default {
     routeToItem(id) {
       this.$nuxt.$router.push({
         name: 'whatsup-id',
-        params: { id }
+        params: { id },
       })
-    }
-  }
+    },
+  },
 }
 </script>

@@ -90,7 +90,7 @@ import { sortFriends } from '@/model/friends'
 
 export default {
   components: {
-    DirectoryEntry
+    DirectoryEntry,
   },
   async fetch({ store, params }) {
     await store.dispatch('loadFriends')
@@ -101,14 +101,14 @@ export default {
         'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/directory',
         {
           headers: {
-            Authorization: 'Bearer ' + store.state.idToken
-          }
+            Authorization: 'Bearer ' + store.state.idToken,
+          },
         }
       )
-      .then(response => {
+      .then((response) => {
         return { directoryEntries: response }
       })
-      .catch(error => {
+      .catch((error) => {
         return { directoryEntries: error }
       })
   },
@@ -119,13 +119,13 @@ export default {
       inputEnabled: true,
       showInvite: false,
       sendInviteEnabled: true,
-      addFriendError: null
+      addFriendError: null,
     }
   },
   computed: {
     sortedFriends() {
       return sortFriends(this.directoryEntries)
-    }
+    },
   },
   methods: {
     addFriendByEmail() {
@@ -138,7 +138,7 @@ export default {
           this.email = ''
           this.$nuxt.$router.replace('/friends')
         })
-        .catch(error => {
+        .catch((error) => {
           if (
             error.response.data !== undefined &&
             error.response.data.code === 'NOT_FOUND'
@@ -166,14 +166,14 @@ export default {
           this.sendInviteEnabled = true
           this.addFriendError = null
         })
-        .catch(error => {
+        .catch((error) => {
           console.log('Error: ', error) // eslint-disable-line no-console
           this.showInvite = false
           this.sendInviteEnabled = true
           this.inputEnabled = true
           this.addFriendError = null
         })
-    }
-  }
+    },
+  },
 }
 </script>

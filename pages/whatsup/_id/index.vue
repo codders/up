@@ -52,7 +52,7 @@ export default {
   methods: {
     whatsUpItem() {
       return this.$store.getters.whatsUp.find(
-        item => item.id === this.$route.params.id
+        (item) => item.id === this.$route.params.id
       )
     },
     getTime() {
@@ -67,7 +67,7 @@ export default {
     },
     cancelUp(id) {
       this.$store.dispatch('changeUp', { id, isUp: false })
-    }
-  }
+    },
+  },
 }
 </script>
