@@ -21,7 +21,7 @@
     "cors": "^2.8.5",
     "escape-html": "^1.0.3",
     "express": "^4.17.3",
-    "firebase-admin": "^7.0.0",
+    "firebase-admin": "^11.4.1",
     "firebase-functions": "^3.3.0",
     "mustache": "^3.1.0",
     "web-push": "^3.3.3"
