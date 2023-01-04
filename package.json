@@ -17,7 +17,7 @@
     "@nuxtjs/axios": "^5.11.0",
     "@nuxtjs/pwa": "^2.6.0",
     "cross-env": "^7.0.2",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "firebase": "^7.15.2",
     "firebase-mock": "^2.3.2",
     "flush-promises": "^1.0.2",
