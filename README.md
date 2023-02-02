@@ -1,68 +1,117 @@
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+
 # up
+
+> Play with friends
+
+## Setup
+
+Create project with nuxt: https://nuxtjs.org/
+Vuetify, Jest, SPA
 
 ## Build Setup
 
-```bash
+``` bash
 # install dependencies
 $ npm install
 
 # serve with hot reload at localhost:3000
 $ npm run dev
-
-# build for production and launch server
-$ npm run build
-$ npm run start
-
-# generate static project
-$ npm run generate
 ```
 
-For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).
+For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).
 
-## Special Directories
+## Deployment Setup
 
-You can create the following extra directories, some of which have special behaviors. Only `pages` is required; you can delete them if you don't want to use their functionality.
+Login to firebase with
 
-### `assets`
+``` bash
+  firebase login
+```
 
-The assets directory contains your uncompiled assets such as Stylus or Sass files, images, or fonts.
+and initialise the project with
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/assets).
+``` bash
+  firebase init
+```
 
-### `components`
+You will want to enable the database, storage and hosting modules. There will be a lot of questions, but the defaults are fine here, except that you should set the *public* folder to 'dist'.
 
-The components directory contains your Vue.js components. Components make up the different parts of your page and can be reused and imported into your pages, layouts and even other components.
+You can then deploy your site with
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/components).
+``` bash
+  npm run build
+  firebase deploy
+```
 
-### `layouts`
+or alternatively
 
-Layouts are a great help when you want to change the look and feel of your Nuxt app, whether you want to include a sidebar or have distinct layouts for mobile and desktop.
+``` bash
+  npm run fdeploy
+```
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/layouts).
+Additional configuration for push notifications and e-mail sending is described below. If you haven't created the associated configuration files `vapid-key.ts`, `vapid-key.js` and `smtp-credentials.ts`, your build / deploy my fail with an error.
 
-### `pages`
+## Test Firebase on localhost
 
-This directory contains your application views and routes. Nuxt will read all the `*.vue` files inside this directory and setup Vue Router automatically.
+To run the Firebase server locally:
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/get-started/routing).
+``` bash
+  npm run build
+  firebase serve
+```
 
-### `plugins`
+## Nuxt Firebase Auth setup
 
-The plugins directory contains JavaScript plugins that you want to run before instantiating the root Vue.js Application. This is the place to add Vue plugins and to inject functions or constants. Every time you need to use `Vue.use()`, you should create a file in `plugins/` and add its path to plugins in `nuxt.config.js`.
+As described here: https://www.davidroyer.me/blog/nuxtjs-firebase-auth/ (plus some linting)
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/plugins).
+## Push notifications
 
-### `static`
+There is support for push notifications in the application. You will need to generate the Application Server Keys, as described here: https://developers.google.com/web/fundamentals/push-notifications/subscribing-a-user
 
-This directory contains your static files. Each file inside this directory is mapped to `/`.
+When you have your Vapid Key, you will need to create a file `./functions/src/vapid-key.ts` with the following content:
 
-Example: `/static/robots.txt` is mapped as `/robots.txt`.
+``` typescript
+export const vapidKey: vapid.Key = {
+  pub: '[YOUR PUBLIC KEY]',
+  secret: '[YOUR PRIVATE KEY]'
+}
+```
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/static).
+and on the client side, a corresponding file with just the public part that the client can use at `./model/vapid-key.js`:
 
-### `store`
+``` javascript
+export const vapidKey = {
+  pub: '[YOUR PUBLIC KEY]'
+}
+```
 
-This directory contains your Vuex store files. Creating a file in this directory automatically activates Vuex.
+## Email sending functionality
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/store).
+The server sends emails to users to enable features like non-push notifications and invitations. The current implementation uses AWS SES. You will need to generate API keys for an IAM user with permission for `SendEmail` and `SendRawEmail`, and include the details in a file in `./functions/src/smtp-credentials.ts`:
+
+``` typescript
+export const smtpCredentials = {
+  accessKeyId: '[YOUR ACCESS KEY ID]',
+  secretAccessKey: '[YOUR SECRET ACCESS KEY]',
+  region: '[YOUR AWS REGION]'
+}
+```
+
+## Troubleshooting
+
+### Startup errors in dev
+
+If you have trouble running the development server, it might be that there are not enough kernel watches available. You might see an 'ENOSPC' error from Node when you run `npm run dev`. In this case:
+
+``` bash
+sudo sysctl fs.inotify.max_user_watches=524288
+```
+
+### User login errors on mobile / web
+
+If you are unable to login to up, check in the browser console what errors you see.
+
+If you see `xsrfmanager undefined reference`, try disabling extensions like Ad Block or HTTPS Everywhere.
+
+If login is failing silently and just returning you to the landing page, check that you have third-party cookies enabled in your browser security / privacy settings.
