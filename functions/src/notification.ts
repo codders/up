@@ -1,6 +1,7 @@
 import { loadSubscription } from './firebase-wrapper';
 import { setVapidDetails, sendNotification } from 'web-push';
 import { vapidKey } from './vapid-key';
+import * as up from './up-types';
 
 setVapidDetails(
   'mailto: arthur.taylor@gmail.com',

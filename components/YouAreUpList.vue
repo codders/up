@@ -31,6 +31,7 @@ div.v-spinner {
 <script>
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import YouAreUp from '~/components/YouAreUp.vue'
+import { API_BASE_URL } from '@/model/api'
 
 export default {
   components: {
@@ -55,7 +56,7 @@ export default {
     const vm = this
     this.loading = true
     this.$axios
-      .$get('https://europe-west1-up-now-a6da8.cloudfunctions.net/app/myUp', {
+      .$get(API_BASE_URL + '/myUp', {
         headers: {
           Authorization: 'Bearer ' + this.$store.state.idToken,
         },

@@ -39,6 +39,7 @@ div.v-spinner {
 <script>
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import WhatsUp from '~/components/WhatsUp.vue'
+import { API_BASE_URL } from '@/model/api'
 
 export default {
   components: {
@@ -73,7 +74,7 @@ export default {
     this.loading = true
     this.$axios
       .$get(
-        'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/whatsUp',
+        API_BASE_URL + '/whatsUp',
         {
           headers: {
             Authorization: 'Bearer ' + this.$store.state.idToken,

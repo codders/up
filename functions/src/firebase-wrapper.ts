@@ -1,4 +1,5 @@
-import './up-types';
+import * as up from './up-types';
+import * as express from './express-types'
 import * as admin from 'firebase-admin';
 
 admin.initializeApp({

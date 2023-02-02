@@ -1,5 +1,6 @@
-import './express-types';
+import * as expressTypes from './express-types';
 import * as functions from 'firebase-functions';
+import * as up from './up-types';
 import { validateFirebaseIdToken,
          saveUp,
          loadUp,
@@ -30,13 +31,19 @@ import { sendInvitationEmail } from './emailer'
 
 const express = require('express')
 const cookieParser = require('cookie-parser')();
-const cors = require('cors')({origin: true});
+const cors = require('cors');
 const app = express();
 
+const corsOptions = {
+  origin: "https://up.codders.io"
+};
+
 app.use(validateFirebaseIdToken);
-app.use(cors);
+app.use(cors(corsOptions));
 app.use(cookieParser);
-app.delete('/up/:id', (request: express.Request, response: express.Response) => {
+app.options('*', cors(corsOptions));
+
+app.delete('/up/:id', (request: expressTypes.Request, response: expressTypes.Response) => {
   console.log('Deleting up record ' + request.params.id + ' at ' + request.user.email + '\'s request');
   deleteUpRecordsByInvite(request.params.id, request.user.uid).then(writeResult => {
     response.status(200).send({ id: request.params.id })
@@ -46,7 +53,7 @@ app.delete('/up/:id', (request: express.Request, response: express.Response) => 
     response.status(500).send({ error: err })
   })
 });
-app.post('/up/:id', (request: express.Request, response: express.Response) => {
+app.post('/up/:id', (request: expressTypes.Request, response: expressTypes.Response) => {
   console.log('Got post body', request.body);
   console.log('Responding to what\'s up ' + request.params.id + ' for ' + request.user.email + ':' + request.user.uid);
   respondToUp(request.user.uid, request.params.id, request.body.isUp).then(result => {
@@ -79,7 +86,7 @@ app.post('/up/:id', (request: express.Request, response: express.Response) => {
     response.status(500).send({ error: err })
   })
 });
-app.get('/profile', (request: express.Request, response: express.Response) => {
+app.get('/profile', (request: expressTypes.Request, response: expressTypes.Response) => {
   console.log('Loading profile for user ' + request.user.uid)
   loadProfile(request.user.uid).then(profile => {
     response.status(200).send(profile)
@@ -89,7 +96,7 @@ app.get('/profile', (request: express.Request, response: express.Response) => {
     response.status(201).send({ id: request.user.uid })
   })
 });
-app.post('/profile', (request: express.Request, response: express.Response) => {
+app.post('/profile', (request: expressTypes.Request, response: expressTypes.Response) => {
   console.log('Updating profile for user ' + request.user.uid)
   updateProfile(request.user.uid, Object.assign({}, request.body)).then(profile => {
     response.status(201).send(profile)
@@ -99,7 +106,7 @@ app.post('/profile', (request: express.Request, response: express.Response) => {
     response.status(500).send({ message: 'Error updating profile' })
   })
 });
-app.get('/myUp', (request: express.Request, response: express.Response) => {
+app.get('/myUp', (request: expressTypes.Request, response: expressTypes.Response) => {
   console.log('Checking what ' + request.user.email + ':' + request.user.uid + ' is up for');
   loadInvites(request.user.uid).then(whatsUp => {
     response.status(200).send(whatsUp);
@@ -108,7 +115,7 @@ app.get('/myUp', (request: express.Request, response: express.Response) => {
     console.log('Unable to work out what\'s up', err);
   });
 });
-app.get('/whatsUp', (request: express.Request, response: express.Response) => {
+app.get('/whatsUp', (request: expressTypes.Request, response: expressTypes.Response) => {
   console.log('Checking what\'s up for ' + request.user.email + ':' + request.user.uid);
   loadUp(request.user.uid).then(whatsUp => {
     response.status(200).send(findMatches(whatsUp));
@@ -117,7 +124,7 @@ app.get('/whatsUp', (request: express.Request, response: express.Response) => {
     console.log('Unable to work out what\'s up', err);
   });
 });
-app.get('/directory', (request: express.Request, response: express.Response) => {
+app.get('/directory', (request: expressTypes.Request, response: expressTypes.Response) => {
   loadDirectory(request.user.uid).then(directory => {
     response.status(200).send(directory);
   })
@@ -125,7 +132,7 @@ app.get('/directory', (request: express.Request, response: express.Response) => 
     console.log('Unable to fetch the directory');
   });
 });
-app.get('/friends', (request: express.Request, response: express.Response) => {
+app.get('/friends', (request: expressTypes.Request, response: expressTypes.Response) => {
   loadFriends(request.user.uid).then(friends => {
     response.status(200).send(friends);
   })
@@ -133,7 +140,7 @@ app.get('/friends', (request: express.Request, response: express.Response) => {
     console.log('Unable to fetch the list of friends');
   });
 });
-app.post('/friends', (request: express.Request, response: express.Response) => {
+app.post('/friends', (request: expressTypes.Request, response: expressTypes.Response) => {
   const friend = Object.assign({}, request.body);
   addFriendRecord(request.user.uid, friend.uid).then(writeResult => {
     response.status(201).send({
@@ -145,7 +152,7 @@ app.post('/friends', (request: express.Request, response: express.Response) => {
     console.log('Unable to add friend');
   });
 });
-app.post('/friends/:id/subscriptions', (request: express.Request, response: express.Response) => {
+app.post('/friends/:id/subscriptions', (request: expressTypes.Request, response: expressTypes.Response) => {
   const activityUpdate = Object.assign({}, request.body);
   setSubscriptionStatusForFriend(
     request.user.uid,
@@ -158,7 +165,7 @@ app.post('/friends/:id/subscriptions', (request: express.Request, response: expr
     console.log('Unable to update subscription information for friend')
   })
 });
-app.delete('/friends/:id', (request: express.Request, response: express.Response) => {
+app.delete('/friends/:id', (request: expressTypes.Request, response: expressTypes.Response) => {
   console.log('Deleting friend ' + request.params.id + ' for ' + request.user.uid);
   deleteFriendByUid(request.user.uid, request.params.id).then(writeResult => {
     response.status(200).send({ uid: request.params.id })
@@ -168,7 +175,7 @@ app.delete('/friends/:id', (request: express.Request, response: express.Response
     response.status(500).send({ error: err })
   })
 });
-app.post('/saveRecord', (request: express.Request, response: express.Response) => {
+app.post('/saveRecord', (request: expressTypes.Request, response: expressTypes.Response) => {
   const record = Object.assign({}, request.body);
   nameForUser(request.user.uid).then(function(userName) {
     const parentUpRequest: up.UpRequest = {
@@ -229,7 +236,7 @@ app.post('/saveRecord', (request: express.Request, response: express.Response) =
   })
 });
 
-app.post('/saveSubscription', (request: express.Request, response: express.Response) => {
+app.post('/saveSubscription', (request: expressTypes.Request, response: expressTypes.Response) => {
   const subscription = Object.assign({}, request.body);
   console.log('Saving subscription: ', subscription);
   saveSubscription(subscription, request.user.uid).then(writeResults => {
@@ -244,7 +251,7 @@ app.post('/saveSubscription', (request: express.Request, response: express.Respo
   })
 });
 
-app.post('/addFriendByEmail', (request: express.Request, response: express.Response) => {
+app.post('/addFriendByEmail', (request: expressTypes.Request, response: expressTypes.Response) => {
   const email = Object.assign({}, request.body).email;
   console.log('Adding friend by email: ', email);
   lookupUserByEmail(email).then(friend => {
@@ -272,7 +279,7 @@ app.post('/addFriendByEmail', (request: express.Request, response: express.Respo
   })
 });
 
-app.post('/inviteFriendByEmail', (request: express.Request, response: express.Response) => {
+app.post('/inviteFriendByEmail', (request: expressTypes.Request, response: expressTypes.Response) => {
   const email = Object.assign({}, request.body).email;
   console.log('Inviting friend by email: ', email);
   lookupUserByEmail(email).then(friend => {
@@ -310,7 +317,7 @@ app.post('/inviteFriendByEmail', (request: express.Request, response: express.Re
   })
 });
 
-app.get('/invite/:id', (request: express.Request, response: express.Response) => {
+app.get('/invite/:id', (request: expressTypes.Request, response: expressTypes.Response) => {
   console.log('Loading invite ' + request.params.id + ' user is', request.user)
   loadSignupInvitation(request.params.id).then(invite => {
     return nameForUser(invite.inviter).then(name => {
@@ -323,7 +330,7 @@ app.get('/invite/:id', (request: express.Request, response: express.Response) =>
   })
 });
 
-app.post('/invite/:id', (request: express.Request, response: express.Response) => {
+app.post('/invite/:id', (request: expressTypes.Request, response: expressTypes.Response) => {
   console.log('Accepting invite ' + request.params.id + ' user is', request.user)
   if (request.user === undefined || request.user.uid === undefined) {
     response.status(403).send({ message: 'You need to log in to accept and invite'})

@@ -1,4 +1,4 @@
-import './up-types';
+import * as up from './up-types';
 
 export const filterInterests = function(proposedActivities: string[], interestedActivities: string[]) {
   return proposedActivities.filter(item => interestedActivities.includes(item))

@@ -26,12 +26,13 @@
 
 <script>
 import LoginForm from '~/components/LoginForm.vue'
+import { API_BASE_URL } from '@/model/api'
 
 function postInviteAcceptance(axios, idToken, inviteId) {
   return axios({
     method: 'post',
     url:
-      'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/invite/' +
+      API_BASE_URL + '/invite/' +
       inviteId,
     data: {
       accept: true,
@@ -54,7 +55,7 @@ export default {
     }
     return $axios
       .$get(
-        'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/invite/' +
+        API_BASE_URL + '/invite/' +
           params.id,
         { headers }
       )

@@ -67,12 +67,14 @@
 div.v-card input {
   border: 1px;
   border-style: inset;
+  color: white;
 }
 </style>
 
 <script>
 import { activityArrayToString } from '@/model/activity'
 import { sortFriends } from '@/model/friends'
+import { API_BASE_URL } from '@/model/api'
 
 export default {
   async fetch({ store, params }) {
@@ -170,7 +172,7 @@ export default {
           friends: selectedFriends,
         },
         url:
-          'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/saveRecord',
+          API_BASE_URL + '/saveRecord',
       }).then(function (response) {
         vm.$store.dispatch('addUpRecord', response.data.upRequest)
         vm.$nuxt.$router.replace({ path: '/' })

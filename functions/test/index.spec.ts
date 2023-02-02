@@ -2,7 +2,6 @@ import 'firebase-functions-test';
 
 import { findMatches,
          getUpRecordsForRequest } from '../src/up-logic';
-import '../src/up-types';
 
 describe("matching logic", () => {
   it("should not return empty", () => {

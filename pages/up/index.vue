@@ -23,7 +23,7 @@
                 </v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-action>
-                <v-checkbox v-model="selected[activity.id]" @click.prevent="" />
+                <v-checkbox v-model="selected[activity.id]" @click="selectActivity(activity)" />
               </v-list-item-action>
             </v-list-item>
           </v-list>

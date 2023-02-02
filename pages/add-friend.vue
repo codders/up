@@ -87,6 +87,7 @@ div.flex input {
 <script>
 import DirectoryEntry from '@/components/DirectoryEntry'
 import { sortFriends } from '@/model/friends'
+import { API_BASE_URL } from '@/model/api'
 
 export default {
   components: {
@@ -98,7 +99,7 @@ export default {
   asyncData({ $axios, store }) {
     return $axios
       .$get(
-        'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/directory',
+        API_BASE_URL + '/directory',
         {
           headers: {
             Authorization: 'Bearer ' + store.state.idToken,

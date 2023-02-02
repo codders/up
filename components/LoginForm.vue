@@ -45,6 +45,7 @@
               v-model="formPassword"
               type="password"
               placeholder="password"
+              v-on:keyup.enter="emailSignIn"
             />
           </v-col>
           <v-col v-if="showSignUpForm">
@@ -53,6 +54,7 @@
               v-model="formConfirmPassword"
               type="password"
               placeholder="confirm password"
+              v-on:keyup.enter="emailSignUp"
             />
           </v-col>
         </v-row>
@@ -113,6 +115,10 @@ div.spread input {
 
 div.spread p {
   margin-bottom: 0px;
+}
+
+div.v-card input {
+  color: white;
 }
 </style>
 
@@ -225,6 +231,8 @@ export default {
     },
     googleSignUp() {
       const log = this.$log
+      log.debug("Signing in with google...")
+      this.$emit('login-process-started')
       this.$store
         .dispatch('signInWithGoogle')
         .then((result) => {
@@ -238,8 +246,3 @@ export default {
   },
 }
 </script>
-
-<style lang="css">
-.signIn {
-}
-</style>

@@ -39,11 +39,11 @@
       />
       <v-toolbar-title v-text="title" />
     </v-app-bar>
-    <v-content>
+    <v-main>
       <v-container>
         <nuxt />
       </v-container>
-    </v-content>
+    </v-main>
     <v-footer app>
       <span>
         Created by Arthur Taylor &mdash;
@@ -88,7 +88,9 @@ export default {
   methods: {
     signOut() {
       this.$store.dispatch('signOut').then(() => {
-        this.$nuxt.$router.replace('/')
+        if (this.$route.path !== '/') {
+          this.$nuxt.$router.replace('/')
+        }
       })
     },
   },

@@ -1,69 +1,72 @@
 <template>
   <v-layout column justify-center align-center>
     <v-flex xs12 sm8 md6>
-      <v-card>
-        <v-card-title jest="headline">
-          {{ greetingString }}
-        </v-card-title>
-        <v-card-text v-if="!$store.getters.activeUser">
-          <v-row>
-            <v-col class="info-text">
-              <p>
-                Sign in to start sending and receiving notifications from your
-                friends of opportunities to meet up and hang out!
-              </p>
-            </v-col>
-          </v-row>
-          <login-form />
-          <v-row>
-            <v-col class="info-text">
-              <h2>Privacy FAQ</h2>
-              <h3 @click="toggle('q1')">
-                What happens with my data?
-              </h3>
-              <div v-if="showParagraph.q1">
+      <pulse-loader :loading="loading" color="#b3d4fc"></pulse-loader>
+      <div v-if="!loading">
+        <v-card>
+          <v-card-title jest="headline">
+            {{ greetingString }}
+          </v-card-title>
+          <v-card-text v-if="!$store.getters.activeUser">
+            <v-row>
+              <v-col class="info-text">
                 <p>
-                  <em>Up</em> uses your login data to identify you to the system
-                  and to other users.
+                  Sign in to start sending and receiving notifications from your
+                  friends of opportunities to meet up and hang out!
                 </p>
-                <p>
-                  <b>If you login with Google</b> an app-specific ID will be
-                  generated that will be used to identify you in <em>Up</em>'s
-                  database. Your <b>e-mail address</b>, <b>name</b> and
-                  <b>profile photo URL</b> will be copied to the <em>Up</em>
-                  database.
+              </v-col>
+            </v-row>
+            <login-form />
+            <v-row>
+              <v-col class="info-text">
+                <h2>Privacy FAQ</h2>
+                <h3 @click="toggle('q1')">
+                  What happens with my data?
+                </h3>
+                <div v-if="showParagraph.q1">
+                  <p>
+                    <em>Up</em> uses your login data to identify you to the system
+                    and to other users.
+                  </p>
+                  <p>
+                    <b>If you login with Google</b> an app-specific ID will be
+                    generated that will be used to identify you in <em>Up</em>'s
+                    database. Your <b>e-mail address</b>, <b>name</b> and
+                    <b>profile photo URL</b> will be copied to the <em>Up</em>
+                    database.
+                  </p>
+                  <p>
+                    <b>If you login with e-mail</b>, you will be asked to supply
+                    your <b>e-mail address</b>, <b>name</b>, and a <b>password</b>
+                    that will be used to create your profile. An app-specific ID
+                    will be generated that will be used to identify you in
+                    <em>Up</em>'s database.
+                  </p>
+                </div>
+                <h3 @click="toggle('q2')">
+                  What will other users know about me?
+                </h3>
+                <p v-if="showParagraph.q2">
+                  To support the app's functionality, your <b>name</b> will be
+                  made visible to other users who add you by e-mail address, and
+                  to their friends.
                 </p>
-                <p>
-                  <b>If you login with e-mail</b>, you will be asked to supply
-                  your <b>e-mail address</b>, <b>name</b>, and a <b>password</b>
-                  that will be used to create your profile. An app-specific ID
-                  will be generated that will be used to identify you in
-                  <em>Up</em>'s database.
-                </p>
-              </div>
-              <h3 @click="toggle('q2')">
-                What will other users know about me?
-              </h3>
-              <p v-if="showParagraph.q2">
-                To support the app's functionality, your <b>name</b> will be
-                made visible to other users who add you by e-mail address, and
-                to their friends.
-              </p>
-            </v-col>
-          </v-row>
-        </v-card-text>
-        <v-card-text v-else>
-          <whats-up-list />
-          <you-are-up-list />
-          <v-btn color="primary" rounded nuxt to="/up">
-            Show Up
-          </v-btn>
-          <div v-if="$store.getters.activeUser" jest="logged-in-div" />
-          <div v-if="!pushSupport">
-            <p>Sorry, your user agent does not support notifications :(</p>
-          </div>
-        </v-card-text>
-      </v-card>
+              </v-col>
+            </v-row>
+          </v-card-text>
+          <v-card-text v-else>
+            <whats-up-list />
+            <you-are-up-list />
+            <v-btn color="primary" rounded nuxt to="/up">
+              Show Up
+            </v-btn>
+            <div v-if="$store.getters.activeUser" jest="logged-in-div" />
+            <div v-if="!pushSupport">
+              <p>Sorry, your user agent does not support notifications :(</p>
+            </div>
+          </v-card-text>
+        </v-card>
+      </div>
     </v-flex>
   </v-layout>
 </template>
@@ -79,10 +82,12 @@ h3 {
 </style>
 
 <script>
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import { vapidKey } from '@/model/vapid-key'
 import LoginForm from '~/components/LoginForm.vue'
 import WhatsUpList from '~/components/WhatsUpList.vue'
 import YouAreUpList from '~/components/YouAreUpList.vue'
+import { API_BASE_URL } from '@/model/api'
 
 function urlBase64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
@@ -96,10 +101,12 @@ export default {
     LoginForm,
     YouAreUpList,
     WhatsUpList,
+    PulseLoader,
   },
   data() {
     return {
       showParagraph: { q1: false, q2: false },
+      loading: true
     }
   },
   computed: {
@@ -117,7 +124,20 @@ export default {
   },
   created() {
     const vm = this
-    this.$log.debug('Page is loaded')
+    this.$fire.auth.getRedirectResult().then((result) => {
+      if (result.user !== null) {
+        return result.user.auth.currentUser.getIdToken().then((token) => {
+          return this.$store.dispatch("userChanged", { user: result.user, idToken: token })
+        })
+      } else {
+        return Promise.resolve()
+      }
+    }).then(() => {
+      this.loading = false
+    })
+    this.$nuxt.$on('login-process-started', () => {
+      this.loading = true;
+    })
     this.askPermission()
       .then((result) => {
         this.$log.debug('Got permission result', result)
@@ -162,7 +182,7 @@ export default {
           },
           data: JSON.stringify(pushSubscription),
           url:
-            'https://europe-west1-up-now-a6da8.cloudfunctions.net/app/saveSubscription',
+            API_BASE_URL + '/saveSubscription',
         })
       })
       .catch((error) => {

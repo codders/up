@@ -1,6 +1,5 @@
 import axios from 'axios'
-
-import { auth, GoogleProvider } from '@/services/fireinit.js'
+import { API_BASE_URL } from '~/model/api'
 
 /* Plugin appears to cause problems with strict mode
    Disabling strict mode here */
@@ -23,7 +22,7 @@ export const state = () => ({
 })
 
 export const getters = {
-  activeUser: (state, getters) => {
+  activeUser: (state, _getters) => {
     if (state.user.uid !== null) {
       return state.user
     } else {
@@ -109,27 +108,29 @@ export const mutations = {
   },
 }
 
-const BASE_URL = 'https://europe-west1-up-now-a6da8.cloudfunctions.net/app'
-
 export const actions = {
-  signInWithGoogle({ commit }) {
-    return auth.signInWithRedirect(GoogleProvider)
+  signInWithGoogle(_ctx) {
+    const provider = new this.$fireModule.auth.GoogleAuthProvider();
+    return this.$fire.auth.signInWithRedirect(provider);
   },
 
-  signInWithEmail({ commit }, payload) {
-    return auth
-      .signInWithEmailAndPassword(payload.email, payload.password)
+  signInWithEmail({ dispatch }, payload) {
+    return this.$fire.auth.signInWithEmailAndPassword(payload.email, payload.password)
       .then(function (result) {
         console.log('Result', result)
+        return result.user.auth.currentUser.getIdToken().then(function (idToken) {
+          return dispatch('userChanged', { user: result.user, idToken: idToken }).then(() => {
+            dispatch('updateProfile', { name: payload.name })
+          })
+        })
       })
   },
 
   signUpWithEmail({ commit, dispatch }, payload) {
-    return auth
-      .createUserWithEmailAndPassword(payload.email, payload.password)
+    return this.$fire.auth.createUserWithEmailAndPassword(payload.email, payload.password)
       .then(function (result) {
         console.log('Create result', result)
-        return result.user.getIdToken().then(function (idToken) {
+        return result.user.auth.currentUser.getIdToken().then(function (idToken) {
           commit('setIdToken', idToken)
           return dispatch('updateProfile', { name: payload.name })
         })
@@ -137,7 +138,7 @@ export const actions = {
   },
 
   signOut({ commit }) {
-    auth
+    this.$fire.auth
       .signOut()
       .then(() => {
         commit('setUser', null)
@@ -145,7 +146,8 @@ export const actions = {
       .catch((err) => console.log(err)) // eslint-disable-line no-console
   },
 
-  userChanged({ commit, state, dispatch }, { user, idToken }) {
+  userChanged({ commit, state, dispatch }, {user, idToken}) {
+    console.log('Got User Changed event', { user, idToken }) // eslint-disable-line no-console
     commit('setIdToken', idToken)
     if (state.user === undefined || state.user.uid !== user.uid) {
       commit('setUser', user)
@@ -154,7 +156,7 @@ export const actions = {
     }
   },
 
-  clearUser({ commit, dispatch }) {
+  clearUser({ commit }) {
     commit('setUser', null)
     commit('setIdToken', null)
   },
@@ -162,7 +164,7 @@ export const actions = {
   changeUp({ commit, state }, { id, isUp }) {
     axios({
       method: 'post',
-      url: BASE_URL + '/up/' + id,
+      url: API_BASE_URL + '/up/' + id,
       data: { isUp },
       headers: {
         Authorization: 'Bearer ' + state.idToken,
@@ -183,7 +185,7 @@ export const actions = {
         Authorization: 'Bearer ' + state.idToken,
         'Content-Type': 'application/json',
       },
-      url: BASE_URL + '/up/' + id,
+      url: API_BASE_URL + '/up/' + id,
     })
       .then((response) => {
         commit('deleteWhatsUp', id)
@@ -207,7 +209,7 @@ export const actions = {
         Authorization: 'Bearer ' + state.idToken,
         'Content-Type': 'application/json',
       },
-      url: BASE_URL + '/friends',
+      url: API_BASE_URL + '/friends',
     })
       .then((response) => {
         commit('updateFriendsList', response.data)
@@ -220,7 +222,7 @@ export const actions = {
   addFriend({ dispatch, state, commit }, friend) {
     axios({
       method: 'post',
-      url: BASE_URL + '/friends',
+      url: API_BASE_URL + '/friends',
       data: friend,
       headers: {
         Authorization: 'Bearer ' + state.idToken,
@@ -237,7 +239,7 @@ export const actions = {
   addFriendByEmail({ dispatch, state, commit }, email) {
     return axios({
       method: 'post',
-      url: BASE_URL + '/addFriendByEmail',
+      url: API_BASE_URL + '/addFriendByEmail',
       data: { email },
       headers: {
         Authorization: 'Bearer ' + state.idToken,
@@ -250,7 +252,7 @@ export const actions = {
   inviteFriendByEmail({ dispatch, state, commit }, email) {
     return axios({
       method: 'post',
-      url: BASE_URL + '/inviteFriendByEmail',
+      url: API_BASE_URL + '/inviteFriendByEmail',
       data: { email },
       headers: {
         Authorization: 'Bearer ' + state.idToken,
@@ -265,7 +267,7 @@ export const actions = {
         Authorization: 'Bearer ' + state.idToken,
         'Content-Type': 'application/json',
       },
-      url: BASE_URL + '/friends/' + friendUid,
+      url: API_BASE_URL + '/friends/' + friendUid,
     })
       .then((response) => {
         commit('deleteFriend', response.data.uid)
@@ -280,7 +282,7 @@ export const actions = {
     postData[details.activity] = details.subscribe
     return axios({
       method: 'post',
-      url: BASE_URL + '/friends/' + details.uid + '/subscriptions',
+      url: API_BASE_URL + '/friends/' + details.uid + '/subscriptions',
       data: postData,
       headers: {
         Authorization: 'Bearer ' + state.idToken,
@@ -305,7 +307,7 @@ export const actions = {
   loadProfile({ state, commit, dispatch }) {
     return axios({
       method: 'get',
-      url: BASE_URL + '/profile',
+      url: API_BASE_URL + '/profile',
       headers: {
         Authorization: 'Bearer ' + state.idToken,
         'Content-Type': 'application/json',
@@ -341,7 +343,7 @@ export const actions = {
   updateProfile({ state, commit }, profileUpdate) {
     return axios({
       method: 'post',
-      url: BASE_URL + '/profile',
+      url: API_BASE_URL + '/profile',
       data: profileUpdate,
       headers: {
         Authorization: 'Bearer ' + state.idToken,

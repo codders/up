@@ -45,6 +45,7 @@ p.name {
 
 div.v-card div input {
   border-style: inset;
+  color: white;
 }
 </style>
 
