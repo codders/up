@@ -63,7 +63,7 @@ export default {
       '@nuxtjs/firebase',
       {
         config: {
-          apiKey: 'AIzaSyAKjfV-PFotzvI9a3UHTLfnkITGpb-3G4Q',
+          apiKey: process.env.FIREBASE_API_KEY,
           authDomain: 'up-now-a6da8.firebaseapp.com',
           databaseURL: 'https://up-now-a6da8.firebaseio.com',
           projectId: 'up-now-a6da8',
