@@ -71,7 +71,7 @@ export default {
           projectId: 'up-now-a6da8',
           storageBucket: 'up-now-a6da8.appspot.com',
           messagingSenderId: '884424894711',
-          appId: 'up-now-a6da8',
+          appId: process.env.FIREBASE_APP_ID,
         },
         services: {
           auth: true,

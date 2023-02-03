@@ -1,12 +1,12 @@
-import { loadSubscription } from './firebase-wrapper';
-import { setVapidDetails, sendNotification } from 'web-push';
+import { loadSubscription, deleteSubscription } from './firebase-wrapper';
+import * as webPush from 'web-push';
 import { vapidKey } from './vapid-key';
 import * as up from './up-types';
 
 let loaded = false;
 
 const setupWebpush = function() {
-  setVapidDetails(
+  webPush.setVapidDetails(
     'mailto: arthur.taylor@gmail.com',
     vapidKey.pub,
     vapidKey.secret.value()
@@ -21,23 +21,26 @@ const notifyUser: (arg0: string, arg1: any) => Promise<any> = function(target: s
   }
   return loadSubscription(target).then(subscription => {
     console.log('Loaded subscription: ', subscription);
-    return sendNotification(subscription, JSON.stringify(message))
+    return webPush.sendNotification(subscription, JSON.stringify(message))
     .catch(err => {
-      if (err.statusCode === 410) {
-        console.log('Need to delete subscription');
-        return {
-          success: false,
-          uid: target,
-          message: 'Subscription expired (410)'
-        };
-      } else {
-        console.log('Subscription is no longer valid: ', err);
-        return {
-          success: false,
-          uid: target,
-          message: 'Subscription is no longer valid: ' + err
+      console.log('Need to delete subscription');
+      return deleteSubscription(target).then((deleteResult) => {
+        console.log('Subscription deleted', deleteResult);
+        if (err.statusCode === 410) {
+          return {
+            success: false,
+            uid: target,
+            message: 'Subscription expired (410)'
+          };
+        } else {
+          console.log('Subscription is no longer valid: ', err);
+          return {
+            success: false,
+            uid: target,
+            message: 'Subscription is no longer valid: ' + err
+          }
         }
-      }
+      })
     });
   })
   .catch(err => {

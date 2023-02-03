@@ -35,7 +35,7 @@
               <v-list-item-action>
                 <v-checkbox
                   v-model="getSelected()[friend.uid]"
-                  @click.prevent=""
+                  @click="selectFriend(friend)"
                 />
               </v-list-item-action>
             </v-list-item>

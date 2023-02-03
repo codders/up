@@ -5,6 +5,6 @@ import * as vapid from './vapid-key.d'
 const secret = defineString('VAPID_PRIVATE_KEY');
 
 export const vapidKey: vapid.Key = {
-  pub: 'BLQkBvZj9rYZswcC2TWNn_3A296pI-qoShVTohIwE8Nq8H_lJIehIDTUjCaoGeVoNfopM6KFyiNKd-7YLNnnpuc',
+  pub: 'BEKqi0e5QHLlVr6jcMMFwIgCY0-5K_ro-0K9rHGR515s6s6ULSGmgZdR4a3Rr6djy_Wrx9NcjXIE7toeiKtmVx0',
   secret: secret
 }

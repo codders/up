@@ -63,6 +63,21 @@ export const validateFirebaseIdToken = (req: express.Request, res: express.Respo
     });
 };
 
+export const deleteSubscription: (arg0: string) => Promise<boolean> = (uid: string) => {
+  console.log("Deleting subscription for user", uid)
+  return admin.firestore().collection('users').doc(uid)
+    .update({
+      subscription: admin.firestore.FieldValue.delete()
+    })
+    .catch(function(error) {
+      console.error('Unable to delete subscription record for user ' + uid, error);
+      return false;
+    })
+    .then(() => {
+      return true;
+    });
+}
+
 export const saveSubscription = (subscription: any, uid: string) => {
   console.log('Saving subscription for user', uid)
   return admin.firestore().collection('users').doc(uid)
