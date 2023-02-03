@@ -3,14 +3,22 @@ import { setVapidDetails, sendNotification } from 'web-push';
 import { vapidKey } from './vapid-key';
 import * as up from './up-types';
 
-setVapidDetails(
-  'mailto: arthur.taylor@gmail.com',
-  vapidKey.pub,
-  vapidKey.secret
-);
+let loaded = false;
+
+const setupWebpush = function() {
+  setVapidDetails(
+    'mailto: arthur.taylor@gmail.com',
+    vapidKey.pub,
+    vapidKey.secret.value()
+  );
+  loaded = true;
+}
 
 const notifyUser: (arg0: string, arg1: any) => Promise<any> = function(target: string, message: any) {
   console.log('Sending notification to user ' + target + ' of type ' + message.messageType + ': ', message);
+  if (!loaded) {
+    setupWebpush();
+  }
   return loadSubscription(target).then(subscription => {
     console.log('Loaded subscription: ', subscription);
     return sendNotification(subscription, JSON.stringify(message))

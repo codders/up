@@ -3,12 +3,21 @@ import * as Moustache from 'mustache';
 const AWS = require('aws-sdk')
 const escape = require('escape-html')
 
-AWS.config.update(smtpCredentials)
-
 interface EmailTemplate {
   Html: string,
   Text: string,
   Subject: string
+}
+
+let awsConfigured = false;
+
+const setupAws = function() {
+  AWS.config.update({
+    accessKeyId: smtpCredentials.accessKeyId.value(),
+    secretAccessKey: smtpCredentials.secretAccessKey.value(),
+    region: smtpCredentials.region
+  });
+  awsConfigured = true;
 }
 
 const templates = {
@@ -20,7 +29,7 @@ const templates = {
     <h3>What's 'Up'?</h3>
     <p>Up is an app / social network to make it easy for people to meet up
     spontaneously</p>
-    <p>Visit <a href="https://up.talkingcode.co.uk/invite/{{inviteid}}">https://up.talkingcode.co.uk/invite/{{inviteid}}</a> to find out more!</p>
+    <p>Visit <a href="https://up.codders.io/invite/{{inviteid}}">https://up.codders.io/invite/{{inviteid}}</a> to find out more!</p>
     </div>`,
     Text: `Join Up!
     {{friendname}} has invited you to join their 'Up' network
@@ -28,12 +37,15 @@ const templates = {
     What's up?
     Up is an app / social network to make it easy for people to meet up spontaneously
 
-    Visit https://up.talkingcode.co.uk/invite/{{inviteid}} to find out more!`
+    Visit https://up.codders.io/invite/{{inviteid}} to find out more!`
   }
 }
 
 const sendEmail: (arg0: string, arg1: EmailTemplate, arg2: {[id:string]: string}) => Promise<any> = function(target: string, template: EmailTemplate, templateData: {[id:string]: string}) {
   console.log('Sending mail to ' + target)
+  if (!awsConfigured) {
+    setupAws()
+  }
   return new AWS.SES({ apiVersion: '2010-12-01' }).sendEmail({
     Destination: {
       ToAddresses: [
@@ -59,9 +71,9 @@ const sendEmail: (arg0: string, arg1: EmailTemplate, arg2: {[id:string]: string}
         Data: Moustache.render(template.Subject, templateData)
       }
     },
-    Source: 'notifications@up.talkingcode.co.uk',
+    Source: 'notifications@up.codders.io',
     ReplyToAddresses: [
-      'no-reply@up.talkingcode.co.uk'
+      'no-reply@up.codders.io'
     ]
   }).promise()
 }

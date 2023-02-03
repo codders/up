@@ -1,9 +1,7 @@
-const accessKeyId = process.env.SMTP_ACCESS_KEY_ID
-const secretAccessKey = process.env.SMTP_SECRET_ACCESS_KEY
+import { defineString } from 'firebase-functions/params';
 
-if (accessKeyId === undefined || secretAccessKey === undefined) {
-  throw("SMTP credentials not set! Check firebase environment setup")
-}
+const accessKeyId = defineString('SMTP_ACCESS_KEY_ID');
+const secretAccessKey = defineString('SMTP_SECRET_ACCESS_KEY');
 
 export const smtpCredentials = {
   accessKeyId: accessKeyId,
