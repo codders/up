@@ -25,7 +25,8 @@
     "vue": "^2.7.10",
     "vue-server-renderer": "^2.7.10",
     "vue-template-compiler": "^2.7.10",
-    "vuetify": "^2.6.10"
+    "vuetify": "^2.6.10",
+    "vuex-persistedstate": "^3.2.1"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.19.1",
@@ -47,7 +48,7 @@
     "jest-environment-jsdom": "^29.1.2",
     "prettier": "^2.7.1",
     "ts-jest": "^29.0.3",
-    "vue-jest": "^4.0.1",
+    "vue-jest": "^3.0.4",
     "vue-spinner": "^1.0.4"
   }
 }
