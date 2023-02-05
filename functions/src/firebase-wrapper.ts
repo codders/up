@@ -13,7 +13,7 @@ export const sendMessage = (token: string, data: any, notification: any) => {
     data: data || {},
     notification: notification || {},
     android: {
-      notification: Object.assign({ click_action: "https://up.codders.io" }, notification),
+      notification: Object.assign({ click_action: "https://up.codders.io" }, notification)
     },
     webpush: {
       notification: notification,
