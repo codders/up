@@ -91,3 +91,6 @@ sw.*
 
 # Firebase deploy cache
 .firebase/
+
+# Firebase config variables
+static/swenv.js

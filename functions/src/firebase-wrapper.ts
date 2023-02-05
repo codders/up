@@ -7,6 +7,15 @@ admin.initializeApp({
   databaseURL: "https://up-now-a6da8.firebaseio.com"
 });
 
+export const sendMessage = (token: string, data: any, notification: any) => {
+  const payload = {
+    token: token,
+    data: data || {},
+    notification: notification || {}
+  }
+  return admin.messaging().send(payload)
+}
+
 // Express middleware that validates Firebase ID Tokens passed in the Authorization HTTP header.
 // The Firebase ID token needs to be passed as a Bearer token in the Authorization HTTP header like this:
 // `Authorization: Bearer <Firebase ID Token>`.
@@ -91,21 +100,23 @@ export const saveSubscription = (subscription: any, uid: string) => {
 };
 
 interface PushSubscription {
-    endpoint: string;
-    keys: {
-        p256dh: string;
-        auth: string;
-    };
+  fcmToken: string
 }
 
-export const loadSubscription: (arg0: string) => Promise<PushSubscription> = (uid: string) => {
+export const loadSubscription: (arg0: string) => Promise<string> = (uid: string) => {
   console.log('Loading subscription for user', uid)
   return admin.firestore().collection('users').doc(uid)
     .get().then(function(doc) {
       if (doc.exists) {
         const data = doc.data();
         if (data !== undefined && 'subscription' in data) {
-          return data.subscription as PushSubscription;
+          const subscription = data.subscription as PushSubscription;
+          if (subscription.fcmToken === undefined) {
+            throw new Error(
+              'Invalid subscription format for user ' + uid
+              + ': ' + JSON.stringify(data))
+          }
+          return subscription.fcmToken;
         } else {
           console.log('No subscription recorded for user ' + uid, data);
           throw new Error('No subscription information for user ' + uid);

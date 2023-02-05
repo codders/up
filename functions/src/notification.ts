@@ -1,29 +1,16 @@
-import { loadSubscription, deleteSubscription } from './firebase-wrapper';
-import * as webPush from 'web-push';
-import { vapidKey } from './vapid-key';
+import { loadSubscription, deleteSubscription, sendMessage } from './firebase-wrapper';
 import * as up from './up-types';
-
-let loaded = false;
-
-const setupWebpush = function() {
-  webPush.setVapidDetails(
-    'mailto: arthur.taylor@gmail.com',
-    vapidKey.pub,
-    vapidKey.secret.value()
-  );
-  loaded = true;
-}
 
 const notifyUser: (arg0: string, arg1: any) => Promise<any> = function(target: string, message: any) {
   console.log('Sending notification to user ' + target + ' of type ' + message.messageType + ': ', message);
-  if (!loaded) {
-    setupWebpush();
-  }
-  return loadSubscription(target).then(subscription => {
-    console.log('Loaded subscription: ', subscription);
-    return webPush.sendNotification(subscription, JSON.stringify(message))
+  return loadSubscription(target).then(token => {
+    console.log('Loaded fcmToken: ', token);
+    return sendMessage(token, message, {
+      title: "Something's up!",
+      body: "Check in the app to see what just happened"
+    })
     .catch(err => {
-      console.log('Need to delete subscription');
+      console.log('Error sending message - need to delete subscription');
       return deleteSubscription(target).then((deleteResult) => {
         console.log('Subscription deleted', deleteResult);
         if (err.statusCode === 410) {

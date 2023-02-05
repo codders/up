@@ -83,7 +83,6 @@ h3 {
 
 <script>
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
-import { vapidKey } from '@/model/vapid-key'
 import LoginForm from '~/components/LoginForm.vue'
 import WhatsUpList from '~/components/WhatsUpList.vue'
 import YouAreUpList from '~/components/YouAreUpList.vue'
@@ -124,6 +123,7 @@ export default {
   },
   created() {
     const vm = this
+    const fire = this.$fire
     this.$fire.auth.getRedirectResult().then((result) => {
       if (result.user !== null) {
         return result.user.auth.currentUser.getIdToken().then((token) => {
@@ -147,42 +147,27 @@ export default {
           )
           throw new Error('Notifications are blocked')
         }
-        if ('serviceWorker' in navigator) {
-          return navigator.serviceWorker
-            .getRegistrations()
-            .then((registrations) => {
-              this.$log.debug(
-                'service worker registrations: ' + registrations.length
-              )
-              for (const worker of registrations) {
-                this.$log.debug('Service Worker:', worker)
-                const subscribeOptions = {
-                  userVisibleOnly: true,
-                  applicationServerKey: urlBase64ToUint8Array(vapidKey.pub),
-                }
-                return worker.pushManager.subscribe(subscribeOptions)
-              }
-              throw new Error(
-                'No Service worker found - unable to register subscription'
-              )
-            })
-        }
+        return this.$fire.messaging.getToken({ vapidKey: process.env.VAPID_PUBLIC_KEY })
       })
       .then(function (pushSubscription) {
         // eslint-disable-next-line no-console
-        console.log(
-          'Received PushSubscription: ',
-          JSON.stringify(pushSubscription)
-        )
+        const jsonPayload = JSON.stringify({ fcmToken: pushSubscription })
+        console.log('Received PushSubscription: ', jsonPayload)
         return vm.$axios({
           method: 'POST',
           headers: {
             Authorization: 'Bearer ' + vm.$store.state.idToken,
             'Content-Type': 'application/json',
           },
-          data: JSON.stringify(pushSubscription),
+          data: jsonPayload,
           url:
             API_BASE_URL + '/saveSubscription',
+        })
+      })
+      .then(function (subscriptionSaved) {
+        console.log("Setting up foreground message processing")
+        fire.messaging.onMessage((payload) => {
+          console.log("Got message in Foreground", payload)
         })
       })
       .catch((error) => {

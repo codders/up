@@ -76,6 +76,7 @@ export default {
         services: {
           auth: true,
           firestore: true,
+          messaging: true
         }
       }
     ]
@@ -107,6 +108,11 @@ export default {
     enablePersistence: {
       synchronizeTabs: true
     },
+  },
+
+  // Firebase messaging config
+  messaging: {
+    createServiceWorker: false
   },
 
   proxy: {
