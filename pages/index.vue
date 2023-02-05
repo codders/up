@@ -2,6 +2,7 @@
   <v-layout column justify-center align-center>
     <v-flex xs12 sm8 md6>
       <pulse-loader :loading="loading" color="#b3d4fc"></pulse-loader>
+      <notification-popup :visible="notificationVisible"></notification-popup>
       <div v-if="!loading">
         <v-card>
           <v-card-title jest="headline">
@@ -86,6 +87,7 @@ import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import LoginForm from '~/components/LoginForm.vue'
 import WhatsUpList from '~/components/WhatsUpList.vue'
 import YouAreUpList from '~/components/YouAreUpList.vue'
+import NotificationPopup from '~/components/NotificationPopup.vue'
 
 export default {
   components: {
@@ -97,7 +99,8 @@ export default {
   data() {
     return {
       showParagraph: { q1: false, q2: false },
-      loading: true
+      loading: true,
+      notificationVisible: false
     }
   },
   computed: {

@@ -87,6 +87,7 @@ export default {
       })
       .catch((error) => {
         vm.$log.error('Unable to load whatsapp data', error)
+        vm.$store.dispatch('signOut')
         vm.loading = false
       })
   },

@@ -19,6 +19,7 @@ export const state = () => ({
   loadedFriends: false,
   whatsUp: [],
   profile: {},
+  notifications: [],
 })
 
 export const getters = {
@@ -36,6 +37,8 @@ export const getters = {
     return state.whatsUp
   },
 }
+
+let notificationId = 0;
 
 export const mutations = {
   setUser(state, payload) {
@@ -78,6 +81,16 @@ export const mutations = {
       state.friends.splice(index, 1)
     }
     state.friends.push(friend)
+  },
+  addNotification(state, payload) {
+    notificationId++
+    state.notifications.push(Object.assign({ id: notificationId }, payload.data))
+  },
+  clearNotification(state, notificationId) {
+    const index = state.notifications.findIndex((item) => item.id === notificationId)
+    if (index !== -1) {
+      state.notifications.splice(index, 1)
+    }
   },
   updateFriendNotificationSubscription(state, details) {
     const friend = state.friends.find((item) => item.uid === details.frienduid)
@@ -142,6 +155,7 @@ export const actions = {
       .signOut()
       .then(() => {
         commit('setUser', null)
+        commit('setIdToken', null)
       })
       .catch((err) => console.log(err)) // eslint-disable-line no-console
   },
@@ -305,7 +319,7 @@ export const actions = {
       })
   },
 
-  refreshSubscription({ dispatch, state }) {
+  refreshSubscription({ dispatch, state, commit }) {
     const fire = this.$fire
     dispatch('askNotificationPermission')
       .then((result) => {
@@ -337,6 +351,7 @@ export const actions = {
         console.log("Setting up foreground message processing")
         fire.messaging.onMessage((payload) => {
           console.log("Got message in Foreground", payload)
+          commit('addNotification', payload)
         })
       })
       .catch((error) => {
