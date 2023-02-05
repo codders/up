@@ -153,6 +153,7 @@ export const actions = {
       commit('setUser', user)
       console.log('Loggedin', { user, idToken }) // eslint-disable-line no-console
       return dispatch('loadProfile')
+        .then(dispatch('refreshSubscription'))
     }
   },
 
@@ -236,7 +237,7 @@ export const actions = {
       })
   },
 
-  addFriendByEmail({ dispatch, state, commit }, email) {
+  addFriendByEmail({ state, commit }, email) {
     return axios({
       method: 'post',
       url: API_BASE_URL + '/addFriendByEmail',
@@ -249,7 +250,7 @@ export const actions = {
     })
   },
 
-  inviteFriendByEmail({ dispatch, state, commit }, email) {
+  inviteFriendByEmail({ state }, email) {
     return axios({
       method: 'post',
       url: API_BASE_URL + '/inviteFriendByEmail',
@@ -302,6 +303,70 @@ export const actions = {
           error
         )
       })
+  },
+
+  refreshSubscription({ dispatch, state }) {
+    const fire = this.$fire
+    dispatch('askNotificationPermission')
+      .then((result) => {
+        console.log('Got permission result', result)
+        if (result !== 'granted') {
+          console.log(
+            'Notifications are blocked for this page. Go to settings to unblock them'
+          )
+          throw new Error('Notifications are blocked')
+        }
+        return fire.messaging.getToken({ vapidKey: process.env.VAPID_PUBLIC_KEY })
+      })
+      .then(function (pushSubscription) {
+        // eslint-disable-next-line no-console
+        const jsonPayload = JSON.stringify({ fcmToken: pushSubscription })
+        console.log('Received PushSubscription: ', jsonPayload)
+        return axios({
+          method: 'POST',
+          headers: {
+            Authorization: 'Bearer ' + state.idToken,
+            'Content-Type': 'application/json',
+          },
+          data: jsonPayload,
+          url:
+            API_BASE_URL + '/saveSubscription',
+        })
+      })
+      .then(function (subscriptionSaved) {
+        console.log("Setting up foreground message processing")
+        fire.messaging.onMessage((payload) => {
+          console.log("Got message in Foreground", payload)
+        })
+      })
+      .catch((error) => {
+        if (error) {
+          console.log(
+            'Error asking for permission or subscribing to notification',
+            error
+          )
+        }
+      })
+  },
+
+  askNotificationPermission() {
+    console.log('Asking for permission')
+    return new Promise(function (resolve, reject) {
+      const permissionResult = Notification.requestPermission(function (
+        result
+      ) {
+        resolve(result)
+      })
+
+      if (permissionResult) {
+        permissionResult.then(resolve, reject)
+      }
+    }).then(function (permissionResult) {
+      if (permissionResult !== 'granted') {
+        throw new Error("We weren't granted permission.")
+      }
+      return permissionResult
+    })
   },
 
   loadProfile({ state, commit, dispatch }) {

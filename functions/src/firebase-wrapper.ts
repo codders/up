@@ -11,7 +11,16 @@ export const sendMessage = (token: string, data: any, notification: any) => {
   const payload = {
     token: token,
     data: data || {},
-    notification: notification || {}
+    notification: notification || {},
+    android: {
+      notification: Object.assign({ click_action: "https://up.codders.io" }, notification),
+    },
+    webpush: {
+      notification: notification,
+      fcm_options: {
+        link: "https://up.codders.io/"
+      }
+    }
   }
   return admin.messaging().send(payload)
 }

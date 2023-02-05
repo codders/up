@@ -86,14 +86,6 @@ import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import LoginForm from '~/components/LoginForm.vue'
 import WhatsUpList from '~/components/WhatsUpList.vue'
 import YouAreUpList from '~/components/YouAreUpList.vue'
-import { API_BASE_URL } from '@/model/api'
-
-function urlBase64ToUint8Array(base64String) {
-  const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/')
-  const rawData = window.atob(base64)
-  return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)))
-}
 
 export default {
   components: {
@@ -122,8 +114,7 @@ export default {
     },
   },
   created() {
-    const vm = this
-    const fire = this.$fire
+    this.loading = true
     this.$fire.auth.getRedirectResult().then((result) => {
       if (result.user !== null) {
         return result.user.auth.currentUser.getIdToken().then((token) => {
@@ -138,69 +129,10 @@ export default {
     this.$nuxt.$on('login-process-started', () => {
       this.loading = true;
     })
-    this.askPermission()
-      .then((result) => {
-        this.$log.debug('Got permission result', result)
-        if (result !== 'granted') {
-          this.$log.info(
-            'Notifications are blocked for this page. Go to settings to unblock them'
-          )
-          throw new Error('Notifications are blocked')
-        }
-        return this.$fire.messaging.getToken({ vapidKey: process.env.VAPID_PUBLIC_KEY })
-      })
-      .then(function (pushSubscription) {
-        // eslint-disable-next-line no-console
-        const jsonPayload = JSON.stringify({ fcmToken: pushSubscription })
-        console.log('Received PushSubscription: ', jsonPayload)
-        return vm.$axios({
-          method: 'POST',
-          headers: {
-            Authorization: 'Bearer ' + vm.$store.state.idToken,
-            'Content-Type': 'application/json',
-          },
-          data: jsonPayload,
-          url:
-            API_BASE_URL + '/saveSubscription',
-        })
-      })
-      .then(function (subscriptionSaved) {
-        console.log("Setting up foreground message processing")
-        fire.messaging.onMessage((payload) => {
-          console.log("Got message in Foreground", payload)
-        })
-      })
-      .catch((error) => {
-        if (error) {
-          this.$log.error(
-            'Error asking for permission or subscribing to notification',
-            error
-          )
-        }
-      })
   },
   methods: {
     toggle(element) {
       this.showParagraph[element] = !this.showParagraph[element]
-    },
-    askPermission() {
-      this.$log.debug('Asking for permission')
-      return new Promise(function (resolve, reject) {
-        const permissionResult = Notification.requestPermission(function (
-          result
-        ) {
-          resolve(result)
-        })
-
-        if (permissionResult) {
-          permissionResult.then(resolve, reject)
-        }
-      }).then(function (permissionResult) {
-        if (permissionResult !== 'granted') {
-          throw new Error("We weren't granted permission.")
-        }
-        return permissionResult
-      })
     },
   },
 }
