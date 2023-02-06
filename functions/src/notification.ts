@@ -1,7 +1,7 @@
 import { loadSubscription, deleteSubscription, sendMessage } from './firebase-wrapper';
 import * as up from './up-types';
 
-const notifyUser: (arg0: string, arg1: any) => Promise<any> = function(target: string, message: any) {
+const notifyUser: (arg0: string, arg1: Record<string, string>) => Promise<any> = function(target: string, message: Record<string,string>) {
   console.log('Sending notification to user ' + target + ' of type ' + message.messageType + ': ', message);
   return loadSubscription(target).then(token => {
     console.log('Loaded fcmToken: ', token);
@@ -54,7 +54,7 @@ export const sendUpMatchNotification: (arg0: string, arg1: up.UpRecord) => Promi
   return notifyUser(record.uid, {
     messageType: "MATCH",
     name: senderName,
-    activity: record.activity,
+    activity: JSON.stringify(record.activity),
     description: record.description
   })
 };
