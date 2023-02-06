@@ -126,7 +126,11 @@ export default {
       } else {
         return Promise.resolve()
       }
-    }).then(() => {
+    })
+    .then(() => {
+      return this.$store.dispatch("establishSession")
+    })
+    .then(() => {
       this.loading = false
     })
     this.$nuxt.$on('login-process-started', () => {

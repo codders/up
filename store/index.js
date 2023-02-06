@@ -164,16 +164,23 @@ export const actions = {
     console.log('Got User Changed event', { user, idToken }) // eslint-disable-line no-console
     commit('setIdToken', idToken)
     if (state.user === undefined || state.user.uid !== user.uid) {
-      commit('setUser', user)
       console.log('Loggedin', { user, idToken }) // eslint-disable-line no-console
-      return dispatch('loadProfile')
-        .then(dispatch('refreshSubscription'))
+      return commit('setUser', user)
     }
   },
 
   clearUser({ commit }) {
     commit('setUser', null)
     commit('setIdToken', null)
+  },
+
+  establishSession({ state, dispatch }) {
+    if (state.user.uid !== null) {
+      return dispatch('loadProfile')
+        .then(dispatch('refreshSubscription'))
+    } else {
+      return Promise.resolve()
+    }
   },
 
   changeUp({ commit, state }, { id, isUp }) {
