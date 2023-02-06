@@ -29,7 +29,7 @@ const templates = {
     <h3>What's 'Up'?</h3>
     <p>Up is an app / social network to make it easy for people to meet up
     spontaneously</p>
-    <p>Visit <a href="https://up.codders.io/invite/{{inviteid}}">https://up.codders.io/invite/{{inviteid}}</a> to find out more!</p>
+    <p>Visit <a href="https://up.codders.io/invite?key={{inviteid}}">https://up.codders.io/invite?key={{inviteid}}</a> to find out more!</p>
     </div>`,
     Text: `Join Up!
     {{friendname}} has invited you to join their 'Up' network
@@ -37,7 +37,7 @@ const templates = {
     What's up?
     Up is an app / social network to make it easy for people to meet up spontaneously
 
-    Visit https://up.codders.io/invite/{{inviteid}} to find out more!`
+    Visit https://up.codders.io/invite?key={{inviteid}} to find out more!`
   }
 }
 

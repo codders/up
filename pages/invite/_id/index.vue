@@ -50,7 +50,7 @@ export default {
   },
   asyncData({ $axios, params, store }) {
     const headers = {}
-    if (store.state.idToken !== null) {
+    if (store.state.idToken !== null && store.state.idToken !== undefined) {
       headers.Authorization = 'Bearer ' + store.state.idToken
     }
     return $axios
