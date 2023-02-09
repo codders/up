@@ -7,17 +7,17 @@ import Index from '@/pages/invite/_id/index.vue'
 
 Vue.use(Vuetify)
 
-config.stubs['nuxt-link'] = '<a><slot /></a>'
-config.stubs['nuxt-child'] = '<br />'
+config.stubs['nuxt-link'] = { template: "<div></div> "}
+config.stubs['nuxt-child'] = { template: '<br />' }
 
 describe('invite/_id/index.vue', () => {
-  test('Renders the invitation when not logged in', () => {
+  test('Renders the invitation when not logged in', async () => {
     const mountedCard = mount(Index, {
       mocks: Util.mockDataStore({
         routeParams: { id: 'abc' }
       })
     })
-    mountedCard.setData({
+    await mountedCard.setData({
       inviterName: 'Arthur',
       email: 'arthur@example.com'
     })

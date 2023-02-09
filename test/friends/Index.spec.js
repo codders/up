@@ -1,22 +1,29 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
-import VeeValidate, { Validator } from 'vee-validate'
-import { mount, config } from '@vue/test-utils'
+import { mount, config, createLocalVue } from '@vue/test-utils'
 import Util from '@/test/utils.js'
 
 import Friends from '@/pages/friends/index.vue'
 
 Vue.use(Vuetify)
-Vue.use(VeeValidate, null)
 
-config.stubs['nuxt-link'] = '<a><slot /></a>'
+const localVue = createLocalVue()
+
+config.stubs['nuxt-link'] = { template: "<div></div> "}
 
 describe('friends.vue', () => {
+  let vuetify
+  beforeEach(() => {
+    vuetify = new Vuetify()
+  })
+
   test('Does not show friends list if list is empty', () => {
     const mountedForm = mount(Friends, {
-      mocks: Util.mockDataStore({ uid: '123' })
+      mocks: Util.mockDataStore({ uid: '123' }),
+      localVue,
+      vuetify
     })
-    expect(mountedForm.contains('[jest="friends-list"]')).toBe(false)
+    expect(mountedForm.find('[jest="friends-list"]').exists()).toBe(false)
   }),
   test('Shows friends list if there are friends', () => {
     const friendList = [
@@ -24,9 +31,11 @@ describe('friends.vue', () => {
       { uid: 'uurGYXhegkXrW0Jy2rH4l75dxOf1', name: 'Bob' }
     ]
     const mountedForm = mount(Friends, {
-      mocks: Util.mockDataStore({ uid: '123', friends: friendList })
+      mocks: Util.mockDataStore({ uid: '123', friends: friendList }),
+      localVue,
+      vuetify
     })
-    expect(mountedForm.contains('[jest="friends-list"]')).toBe(true)
+    expect(mountedForm.find('[jest="friends-list"]').exists()).toBe(true)
     expect(mountedForm.findAll(".friend").length).toBe(2)
     expect(mountedForm.find(".friend .name").text()).toBe('Arthur')
   }),
@@ -36,9 +45,11 @@ describe('friends.vue', () => {
       { uid: 'uurGYXhegkXrW0Jy2rH4l75dxOf1', name: 'Arthur' }
     ]
     const mountedForm = mount(Friends, {
-      mocks: Util.mockDataStore({ uid: '123', friends: friendList })
+      mocks: Util.mockDataStore({ uid: '123', friends: friendList }),
+      localVue,
+      vuetify
     })
-    expect(mountedForm.contains('[jest="friends-list"]')).toBe(true)
+    expect(mountedForm.find('[jest="friends-list"]').exists()).toBe(true)
     expect(mountedForm.findAll(".friend").length).toBe(2)
     expect(mountedForm.find(".friend .name").text()).toBe('Arthur')
   })

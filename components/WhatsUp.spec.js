@@ -1,21 +1,20 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { createLocalVue, shallowMount, config } from '@vue/test-utils'
-import Util from '@/test/utils.js'
 
 import WhatsUp from '@/components/WhatsUp.vue'
 
 Vue.use(Vuetify)
 const localVue = createLocalVue()
 
-config.stubs['router-link'] = '<a><slot /></a>'
+config.stubs['router-link'] = { template: "<div></div> "}
 
 describe('WhatsUp.vue', () => {
-  test('Renders activity details', () => {
+  test('Renders activity details', async () => {
     const mounted = shallowMount(WhatsUp, {
       localVue
     })
-    mounted.setProps({
+    await mounted.setProps({
       activity: ['out', 'move'],
       name: 'Arthur',
       uid: 'abc',
@@ -26,11 +25,11 @@ describe('WhatsUp.vue', () => {
     expect(activityText.text()).toBe("14h57 - Arthur wants to\n      Go out or Move")
     expect(descriptionText.exists()).toBe(false)
   }),
-  test('Renders activity details with description', () => {
+  test('Renders activity details with description', async () => {
     const mounted = shallowMount(WhatsUp, {
       localVue
     })
-    mounted.setProps({
+    await mounted.setProps({
       activity: ['play', 'move'],
       description: 'Play with me!',
       name: 'Arthur',
@@ -42,11 +41,11 @@ describe('WhatsUp.vue', () => {
     expect(activityText.text()).toBe('15h08 - Arthur wants to\n      Play or Move')
     expect(descriptionText.text()).toBe('Play with me!')
   }),
-  test('Renders activity details with description and triple select', () => {
+  test('Renders activity details with description and triple select', async () => {
     const mounted = shallowMount(WhatsUp, {
       localVue
     })
-    mounted.setProps({
+    await mounted.setProps({
       activity: ['play', 'relax', 'move'],
       name: 'Arthur',
       description: 'Play with me!',
@@ -58,11 +57,11 @@ describe('WhatsUp.vue', () => {
     expect(activityText.text()).toBe('12h40 - Arthur wants to\n      Play, Relax or Move')
     expect(descriptionText.text()).toBe('Play with me!')
   }),
-  test('Does not render empty description', () => {
+  test('Does not render empty description', async () => {
     const mounted = shallowMount(WhatsUp, {
       localVue
     })
-    mounted.setProps({
+    await mounted.setProps({
       activity: ['play'],
       name: 'Arthur',
       description: '',

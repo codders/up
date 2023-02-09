@@ -33,7 +33,7 @@ describe('WhatsUpList.vue', () => {
       }),
       localVue
     })
-    expect(mountedIndex.contains('[jest="something-up"]')).toBe(true)
+    expect(mountedIndex.find('[jest="something-up"]').exists()).toBe(true)
     expect(mountedIndex.find('[jest="something-up"]').findAll('whats-up-stub').length).toBe(1)
   }),
   test('Shows nothing is up when there are not things up', () => {
@@ -49,7 +49,7 @@ describe('WhatsUpList.vue', () => {
       localVue
     })
     mountedIndex.setData({ loading: false })
-    expect(mountedIndex.contains('[jest="nothing-up"]')).toBe(true)
+    expect(mountedIndex.find('[jest="nothing-up"]').exists()).toBe(true)
   }),
   test('Does not show something if only I am up', () => {
     const mountedIndex = shallowMount(WhatsUpList, {
@@ -75,7 +75,7 @@ describe('WhatsUpList.vue', () => {
       }),
       localVue
     })
-    expect(mountedIndex.contains('[jest="something-up"]')).toBe(false)
-    expect(mountedIndex.contains('[jest="nothing-up"]')).toBe(false)
+    expect(mountedIndex.find('[jest="something-up"]').exists()).toBe(false)
+    expect(mountedIndex.find('[jest="nothing-up"]').exists()).toBe(false)
   })
 })

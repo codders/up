@@ -1,17 +1,23 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
-import { mount, config } from '@vue/test-utils'
+import { mount, config, createLocalVue } from '@vue/test-utils'
 import Util from '@/test/utils.js'
 
 import Index from '@/pages/whatsup/index.vue'
 
 Vue.use(Vuetify)
 
-config.stubs['router-link'] = '<a><slot /></a>'
-config.stubs['nuxt-link'] = '<a><slot /></a>'
-config.stubs['nuxt-child'] = '<br />'
+const localVue = createLocalVue()
+
+config.stubs['router-link'] = { template: "<div></div> "}
+config.stubs['nuxt-link'] = { template: "<div></div> "}
+config.stubs['nuxt-child'] = { template: '<br />' }
 
 describe('whatsup/index.vue', () => {
+  let vuetify
+  beforeEach(() => {
+    vuetify = new Vuetify()
+  })
   test('Shows a list of whatsup', () => {
     const mountedIndex = mount(Index, {
       mocks: Util.mockDataStore({ uid: '123',
@@ -33,9 +39,11 @@ describe('whatsup/index.vue', () => {
            })
          }
         }
-      })
+      }),
+      localVue,
+      vuetify
     })
-    expect(mountedIndex.contains('[jest="something-up"]')).toBe(true)
+    expect(mountedIndex.find('[jest="something-up"]').exists()).toBe(true)
     expect(mountedIndex.find('[jest="something-up"]').find('div.v-list').findAll('.v-list-item').length).toBe(1)
   })
 })

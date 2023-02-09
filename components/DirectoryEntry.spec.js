@@ -8,15 +8,21 @@ import DirectoryEntry from '@/components/DirectoryEntry.vue'
 Vue.use(Vuetify)
 const localVue = createLocalVue()
 
-config.stubs['nuxt-link'] = '<a><slot /></a>'
+config.stubs['nuxt-link'] = { template: "<div></div> "}
 
 describe('DirectoryEntry.vue', () => {
-  test('Renders friend details', () => {
+  let vuetify
+  beforeEach(() => {
+    vuetify = new Vuetify()
+  })
+
+  test('Renders friend details', async () => {
     const mounted = shallowMount(DirectoryEntry, {
       mocks: Util.mockDataStore({}),
-      localVue
+      localVue,
+      vuetify
     })
-    mounted.setProps({
+    await mounted.setProps({
       uid: 'abc',
       name: 'Arthur'
     })
@@ -27,7 +33,9 @@ describe('DirectoryEntry.vue', () => {
     Vue.config.async = true
     const dispatcher = []
     const mountedForm = mount(DirectoryEntry, {
-      mocks: Util.mockDataStore({ uid: '123', dispatcher: dispatcher })
+      mocks: Util.mockDataStore({ uid: '123', dispatcher: dispatcher }),
+      localVue,
+      vuetify
     })
     await mountedForm.vm.addFriend()
     expect(dispatcher.length).toBe(1)
@@ -38,7 +46,9 @@ describe('DirectoryEntry.vue', () => {
     Vue.config.async = true
     const dispatcher = []
     const mountedForm = mount(DirectoryEntry, {
-      mocks: Util.mockDataStore({ uid: '123', dispatcher: dispatcher })
+      mocks: Util.mockDataStore({ uid: '123', dispatcher: dispatcher }),
+      localVue,
+      vuetify
     })
     await mountedForm.vm.deleteFriend()
     expect(dispatcher.length).toBe(1)
@@ -54,7 +64,8 @@ describe('DirectoryEntry.vue', () => {
           name: 'Arthur'
         }]
       }),
-      localVue
+      localVue,
+      vuetify
     })
     mounted.setProps({
       uid: 'abc',
@@ -73,7 +84,8 @@ describe('DirectoryEntry.vue', () => {
           name: 'Arthur'
         }]
       }),
-      localVue
+      localVue,
+      vuetify
     })
     mounted.setProps({
       uid: 'abc',

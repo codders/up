@@ -1,16 +1,22 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
-import { mount, config } from '@vue/test-utils'
+import { mount, config, createLocalVue } from '@vue/test-utils'
 import Util from '@/test/utils.js'
 
 import Index from '@/pages/whatsup/_id/index.vue'
 
 Vue.use(Vuetify)
 
-config.stubs['nuxt-link'] = '<a><slot /></a>'
-config.stubs['nuxt-child'] = '<br />'
+const localVue = createLocalVue()
+
+config.stubs['nuxt-link'] = { template: "<div></div> "}
+config.stubs['nuxt-child'] = { template: '<br />' }
 
 describe('whatsup/_id/index.vue', () => {
+  let vuetify
+  beforeEach(() => {
+    vuetify = new Vuetify()
+  })
   test('Renders the whatsup item', () => {
     const mountedCard = mount(Index, {
       mocks: Util.mockDataStore({
@@ -28,9 +34,11 @@ describe('whatsup/_id/index.vue', () => {
               }
             }
           ]
-        })
+        }),
+      localVue,
+      vuetify
     })
-    expect(mountedCard.contains('[jest="whats-up-item"]')).toBe(true)
+    expect(mountedCard.find('[jest="whats-up-item"]').exists()).toBe(true)
   }),
   test('Redirects to not found if item does not exist', () => {
     var redirectPath = undefined
@@ -55,7 +63,9 @@ describe('whatsup/_id/index.vue', () => {
               }
             }
           ]
-        })
+        }),
+      localVue,
+      vuetify
     })
     expect(redirectPath).toBe('/whatsup/unknown_item')
   })

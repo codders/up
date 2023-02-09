@@ -1,22 +1,30 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
-import { mount, config } from '@vue/test-utils'
+import { mount, config, createLocalVue } from '@vue/test-utils'
 import Util from '@/test/utils.js'
 
 import Index from '@/pages/up/_activity/index.vue'
 
 Vue.use(Vuetify)
 
-config.stubs['nuxt-link'] = '<a><slot /></a>'
-config.stubs['nuxt-child'] = '<br />'
+const localVue = createLocalVue()
+
+config.stubs['nuxt-link'] = { template: "<div></div> "}
+config.stubs['nuxt-child'] = { template: '<br />' }
 
 describe('up/_activity/index.vue', () => {
+  let vuetify
+  beforeEach(() => {
+    vuetify = new Vuetify()
+  })
   test('Shows the friend list', () => {
     const friends = Util.friendList(2)
     const mountedCard = mount(Index, {
-      mocks: Util.mockDataStore({ uid: '123', friends: friends, routeParams: { activity: 'play' }})
+      mocks: Util.mockDataStore({ uid: '123', friends: friends, routeParams: { activity: 'play' }}),
+      localVue,
+      vuetify
     })
-    expect(mountedCard.contains('[jest="friends-list"]')).toBe(true)
+    expect(mountedCard.find('[jest="friends-list"]').exists()).toBe(true)
     expect(mountedCard.findAll(".friend").length).toBe(2)
     expect(mountedCard.find(".headline").text()).toBe('Play')
     expect(mountedCard.find(".friend .name").text()).not.toBe('')
@@ -24,9 +32,11 @@ describe('up/_activity/index.vue', () => {
   test('Shows the friend list with multiple activities', () => {
     const friends = Util.friendList(2)
     const mountedCard = mount(Index, {
-      mocks: Util.mockDataStore({ uid: '123', friends: friends, routeParams: { activity: 'move-relax' }})
+      mocks: Util.mockDataStore({ uid: '123', friends: friends, routeParams: { activity: 'move-relax' }}),
+      localVue,
+      vuetify
     })
-    expect(mountedCard.contains('[jest="friends-list"]')).toBe(true)
+    expect(mountedCard.find('[jest="friends-list"]').exists()).toBe(true)
     expect(mountedCard.findAll(".friend").length).toBe(2)
     expect(mountedCard.find(".friend .name").text()).not.toBe('')
     expect(mountedCard.find(".headline").text()).toBe('Move or Relax')
@@ -34,9 +44,11 @@ describe('up/_activity/index.vue', () => {
   test('Shows the friend list with three activities', () => {
     const friends = Util.friendList(2)
     const mountedCard = mount(Index, {
-      mocks: Util.mockDataStore({ uid: '123', friends: friends, routeParams: { activity: 'move-relax-out' }})
+      mocks: Util.mockDataStore({ uid: '123', friends: friends, routeParams: { activity: 'move-relax-out' }}),
+      localVue,
+      vuetify
     })
-    expect(mountedCard.contains('[jest="friends-list"]')).toBe(true)
+    expect(mountedCard.find('[jest="friends-list"]').exists()).toBe(true)
     expect(mountedCard.findAll(".friend").length).toBe(2)
     expect(mountedCard.find(".friend .name").text()).not.toBe('')
     expect(mountedCard.find(".headline").text()).toBe('Move, Relax or Go out')
@@ -47,13 +59,15 @@ describe('up/_activity/index.vue', () => {
       { uid: 'uurGYXhegkXrW0Jy2rH4l75dxOf1', name: 'Arthur' }
     ]
     const mountedCard = mount(Index, {
-      mocks: Util.mockDataStore({ uid: '123', friends: friendList, routeParams: { activity: 'move-relax-out' }})
+      mocks: Util.mockDataStore({ uid: '123', friends: friendList, routeParams: { activity: 'move-relax-out' }}),
+      localVue,
+      vuetify
     })
-    expect(mountedCard.contains('[jest="friends-list"]')).toBe(true)
+    expect(mountedCard.find('[jest="friends-list"]').exists()).toBe(true)
     expect(mountedCard.findAll(".friend").length).toBe(2)
     expect(mountedCard.find(".friend .name").text()).toBe('Arthur')
   }),
-  test('Submits data to server', () => {
+  test('Submits data to server', async () => {
     let postedData = null
     const friends = Util.friendList(2)
     const mountedCard = mount(Index, {
@@ -68,20 +82,22 @@ describe('up/_activity/index.vue', () => {
             }
           )
         })
-      }})
+      }}),
+      localVue,
+      vuetify
     })
-    mountedCard.setData({
+    await mountedCard.setData({
       description: 'Let\'s play!'
     })
-    mountedCard.vm.selectAll()
-    mountedCard.vm.showUp()
+    await mountedCard.vm.selectAll()
+    await mountedCard.vm.showUp()
     expect(postedData).toEqual({
       activity: ['play'],
       friends: friends.map(item => item.uid),
       description: 'Let\'s play!'
     })
   }),
-  test('Handles multiple activities', () => {
+  test('Handles multiple activities', async () => {
     let postedData = null
     const friends = Util.friendList(2)
     const mountedCard = mount(Index, {
@@ -96,13 +112,15 @@ describe('up/_activity/index.vue', () => {
             }
           )
         })
-      }})
+      }}),
+      localVue,
+      vuetify
     })
-    mountedCard.setData({
+    await mountedCard.setData({
       description: 'Let\'s play!'
     })
-    mountedCard.vm.selectAll()
-    mountedCard.vm.showUp()
+    await mountedCard.vm.selectAll()
+    await mountedCard.vm.showUp()
     expect(postedData).toEqual({
       activity: ['play', 'out'],
       friends: friends.map(item => item.uid),
