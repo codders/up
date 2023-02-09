@@ -71,10 +71,18 @@ const mockWithStore = function({ store, router, routeParams, axios }) {
           }
           Promise.resolve()
         }
-      }
+      },
+      $on: (_x,_y) => {}
     },
     $route: {
       params: (routeParams || {})
+    },
+    $fire: {
+      auth: {
+        getRedirectResult: () => {
+          return Promise.resolve({ user: null })
+        }
+      }
     }
   }
 }

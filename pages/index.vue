@@ -95,6 +95,7 @@ export default {
     YouAreUpList,
     WhatsUpList,
     PulseLoader,
+    NotificationPopup
   },
   data() {
     return {
