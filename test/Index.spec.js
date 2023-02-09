@@ -28,7 +28,7 @@ describe('index.vue', () => {
     })
     await mountedForm.setData({ loading: false })
     expect(mountedForm.vm.loading).toBe(false)
-    expect(mountedForm.get('[jest="headline"]')).not.toEqual(null)
+    expect(mountedForm.findComponent('[jest="headline"]')).not.toEqual(null)
     expect(mountedForm.find('[jest="headline"]').text()).toBe('Welcome to Up, Arthur')
   })
 })

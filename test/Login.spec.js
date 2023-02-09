@@ -8,19 +8,21 @@ Vue.use(Vuetify)
 const localVue = createLocalVue()
 
 describe('index.vue', () => {
-  test('Shows login success message when logged in', () => {
+  test('Shows login success message when logged in', async () => {
     const mountedIndex = shallowMount(Index, {
       mocks: Util.mockDataStore({ uid: '123' }),
       localVue
     })
-    expect(mountedIndex.contains('[jest="logged-in-div"]')).toBe(true)
+    await mountedIndex.setData({ loading: false })
+    expect(mountedIndex.find('[jest="logged-in-div"]').exists()).toBe(true)
   }),
-  test('Shows login form when not logged in', () => {
+  test('Shows login form when not logged in', async () => {
     const store = Util.mockDataStore({})
     const mountedIndex = shallowMount(Index, {
       mocks: store,
       localVue
     })
-    expect(mountedIndex.contains('[jest="logged-in-div"]')).toBe(false)
+    await mountedIndex.setData({ loading: false })
+    expect(mountedIndex.find('[jest="logged-in-div"]').exists()).toBe(false)
   })
 })

@@ -1,41 +1,51 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
-import VeeValidate, { Validator } from 'vee-validate'
-import { mount, config } from '@vue/test-utils'
-import flushPromises from 'flush-promises'
+import { mount, config, createLocalVue } from '@vue/test-utils'
 import Util from '@/test/utils.js'
 
 import AddFriend from '@/pages/add-friend.vue'
 
 Vue.use(Vuetify)
-Vue.use(VeeValidate, null)
 
-config.stubs['nuxt-link'] = '<a><slot /></a>'
+config.stubs['nuxt-link'] = { template: "<div></div> "}
+
+const localVue = createLocalVue()
 
 describe('add-friend.vue', () => {
-  test('Shows directory listing', () => {
+  let vuetify
+  beforeEach(() => {
+    vuetify = new Vuetify()
+  })
+
+  test('Shows directory listing', async () => {
     const mountedForm = mount(AddFriend, {
-      mocks: Util.mockDataStore({ uid: '123' })
+      mocks: Util.mockDataStore({ uid: '123' }),
+      localVue,
+      vuetify
     })
-    mountedForm.setData({
+    await mountedForm.setData({
       directoryEntries: [
         { uid: 'abc', name: 'Arthur' },
         { uid: 'def', name: 'Jenny' }
       ]
     })
-    expect(mountedForm.contains('[jest="directory-listing"]')).toBe(true)
+    expect(mountedForm.find('[jest="directory-listing"]').exists()).toBe(true)
   }),
   test('Does not show directory listing for empty directory', () => {
     const mountedForm = mount(AddFriend, {
-      mocks: Util.mockDataStore({ uid: '123' })
+      mocks: Util.mockDataStore({ uid: '123' }),
+      localVue,
+      vuetify
     })
-    expect(mountedForm.contains('[jest="directory-listing"]')).toBe(false)
+    expect(mountedForm.find('[jest="directory-listing"]').exists()).toBe(false)
   }),
-  test('Entries shown matches directory size', () => {
+  test('Entries shown matches directory size', async () => {
     const mountedForm = mount(AddFriend, {
-      mocks: Util.mockDataStore({ uid: '123' })
+      mocks: Util.mockDataStore({ uid: '123' }),
+      localVue,
+      vuetify
     })
-    mountedForm.setData({
+    await mountedForm.setData({
       directoryEntries: [
         { uid: 'abc', name: 'Arthur' },
         { uid: 'def', name: 'Jenny' }
@@ -43,11 +53,13 @@ describe('add-friend.vue', () => {
     })
     expect(mountedForm.findAll('.entry').length).toBe(2)
   }),
-  test('Entries are sorted by name', () => {
+  test('Entries are sorted by name', async () => {
     const mountedForm = mount(AddFriend, {
-      mocks: Util.mockDataStore({ uid: '123' })
+      mocks: Util.mockDataStore({ uid: '123' }),
+      localVue,
+      vuetify
     })
-    mountedForm.setData({
+    await mountedForm.setData({
       directoryEntries: [
         { uid: 'abc', name: 'Zach' },
         { uid: 'def', name: 'Arthur' }
@@ -56,22 +68,24 @@ describe('add-friend.vue', () => {
     expect(mountedForm.findAll('.entry').length).toBe(2)
     expect(mountedForm.find('.entry').find('.v-list-item__title').text()).toBe('Arthur')
   }),
-  test('It should submit email when add-friend-by-email is clicked', () => {
+  test('It should submit email when add-friend-by-email is clicked', async () => {
     const dispatcher = []
     const dispatcherPromises = {
       addFriendByEmail: Promise.resolve()
     }
     const mountedForm = mount(AddFriend, {
-      mocks: Util.mockDataStore({ uid: '123', dispatcher, dispatcherPromises })
+      mocks: Util.mockDataStore({ uid: '123', dispatcher, dispatcherPromises }),
+      localVue,
+      vuetify
     })
-    mountedForm.setData({
+    await mountedForm.setData({
       email: 'test@example.com'
     })
     mountedForm.vm.addFriendByEmail()
     expect(dispatcher.length).toBe(1)
     expect(dispatcher[0].method).toBe('addFriendByEmail')
   }),
-  test('It should disable input while request is in flight', done => {
+  test('It should disable input while request is in flight', async () => {
     const dispatcher = []
     let resolver = null
     const dispatcherPromises = {
@@ -80,9 +94,11 @@ describe('add-friend.vue', () => {
       })
     }
     const mountedForm = mount(AddFriend, {
-      mocks: Util.mockDataStore({ uid: '123', dispatcher, dispatcherPromises })
+      mocks: Util.mockDataStore({ uid: '123', dispatcher, dispatcherPromises }),
+      localVue,
+      vuetify
     })
-    mountedForm.setData({
+    await mountedForm.setData({
       email: 'test@example.com'
     })
     expect(mountedForm.vm.inputEnabled).toBe(true)
@@ -91,12 +107,11 @@ describe('add-friend.vue', () => {
     expect(dispatcher[0].method).toBe('addFriendByEmail')
     expect(mountedForm.vm.inputEnabled).toBe(false)
     resolver()
-    mountedForm.vm.$nextTick().then(() => {
+    await mountedForm.vm.$nextTick().then(() => {
       expect(mountedForm.vm.inputEnabled).toBe(true)
-      done()
     })
   }),
-  test('It should show invite user option if request fails with 404', done => {
+  test('It should show invite user option if request fails with 404', async () => {
     const dispatcher = []
     let rejecter = null
     const addEmailPromise = new Promise((resolve, reject) => {
@@ -106,9 +121,11 @@ describe('add-friend.vue', () => {
       addFriendByEmail: addEmailPromise
     }
     const mountedForm = mount(AddFriend, {
-      mocks: Util.mockDataStore({ uid: '123', dispatcher, dispatcherPromises })
+      mocks: Util.mockDataStore({ uid: '123', dispatcher, dispatcherPromises }),
+      localVue,
+      vuetify
     })
-    mountedForm.setData({
+    await mountedForm.setData({
       email: 'test@example.com'
     })
     expect(mountedForm.vm.inputEnabled).toBe(true)
@@ -124,15 +141,14 @@ describe('add-friend.vue', () => {
         }
       }
     })
-    addEmailPromise.catch(err => {
-      mountedForm.vm.$nextTick().then(() => {
+    await addEmailPromise.catch(err => {
+      return mountedForm.vm.$nextTick().then(() => {
         expect(mountedForm.vm.inputEnabled).toBe(false)
         expect(mountedForm.vm.showInvite).toBe(true)
-        done()
       })
     })
   }),
-  test('It should show error if request fails with another error', done => {
+  test('It should show error if request fails with another error', async () => {
     const dispatcher = []
     let rejecter = null
     const addEmailPromise = new Promise((resolve, reject) => {
@@ -142,9 +158,11 @@ describe('add-friend.vue', () => {
       addFriendByEmail: addEmailPromise
     }
     const mountedForm = mount(AddFriend, {
-      mocks: Util.mockDataStore({ uid: '123', dispatcher, dispatcherPromises })
+      mocks: Util.mockDataStore({ uid: '123', dispatcher, dispatcherPromises }),
+      localVue,
+      vuetify
     })
-    mountedForm.setData({
+    await mountedForm.setData({
       email: 'test@example.com'
     })
     expect(mountedForm.vm.inputEnabled).toBe(true)
@@ -161,16 +179,15 @@ describe('add-friend.vue', () => {
         }
       }
     })
-    addEmailPromise.catch(err => {
-      mountedForm.vm.$nextTick().then(() => {
+    await addEmailPromise.catch(err => {
+      return mountedForm.vm.$nextTick().then(() => {
         expect(mountedForm.vm.inputEnabled).toBe(true)
         expect(mountedForm.vm.showInvite).toBe(false)
         expect(mountedForm.vm.addFriendError).toBe('Error Message')
-        done()
       })
     })
   }),
-  test('It should disable input while invite is sent and restore when done', done => {
+  test('It should disable input while invite is sent and restore when done', async () => {
     const dispatcher = []
     let resolver = null
     const sendInvitePromise = new Promise((resolve, reject) => {
@@ -180,9 +197,11 @@ describe('add-friend.vue', () => {
       inviteFriendByEmail: sendInvitePromise
     }
     const mountedForm = mount(AddFriend, {
-      mocks: Util.mockDataStore({ uid: '123', dispatcher, dispatcherPromises })
+      mocks: Util.mockDataStore({ uid: '123', dispatcher, dispatcherPromises }),
+      localVue,
+      vuetify
     })
-    mountedForm.setData({
+    await mountedForm.setData({
       email: 'test@example.com',
       showInvite: true,
       inputEnabled: false,
@@ -195,20 +214,21 @@ describe('add-friend.vue', () => {
     resolver({
       message: 'Invite Sent',
     })
-    mountedForm.vm.$nextTick().then(() => {
+    await mountedForm.vm.$nextTick().then(() => {
       expect(mountedForm.vm.inputEnabled).toBe(true)
       expect(mountedForm.vm.showInvite).toBe(false)
       expect(mountedForm.vm.sendInviteEnabled).toBe(true)
       expect(mountedForm.vm.addFriendError).toBe(null)
       expect(mountedForm.vm.email).toBe('')
-      done()
     })
   }),
-  test('It should hide the invite and enable input if edit addess is selected', () => {
+  test('It should hide the invite and enable input if edit addess is selected', async () => {
     const mountedForm = mount(AddFriend, {
-      mocks: Util.mockDataStore({ uid: '123' })
+      mocks: Util.mockDataStore({ uid: '123' }),
+      localVue,
+      vuetify
     })
-    mountedForm.setData({
+    await mountedForm.setData({
       email: 'test@example.com',
       showInvite: true,
       inputEnabled: false,
