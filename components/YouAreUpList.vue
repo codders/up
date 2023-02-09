@@ -22,12 +22,6 @@
   </div>
 </template>
 
-<style>
-div.v-spinner {
-  text-align: center;
-}
-</style>
-
 <script>
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import YouAreUp from '~/components/YouAreUp.vue'
@@ -72,3 +66,9 @@ export default {
   },
 }
 </script>
+
+<style>
+div.v-spinner {
+  text-align: center;
+}
+</style>

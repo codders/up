@@ -45,7 +45,7 @@
               v-model="formPassword"
               type="password"
               placeholder="password"
-              v-on:keyup.enter="emailSignIn"
+              @keyup.enter="emailSignIn"
             />
           </v-col>
           <v-col v-if="showSignUpForm">
@@ -54,7 +54,7 @@
               v-model="formConfirmPassword"
               type="password"
               placeholder="confirm password"
-              v-on:keyup.enter="emailSignUp"
+              @keyup.enter="emailSignUp"
             />
           </v-col>
         </v-row>
@@ -103,24 +103,6 @@
     </v-flex>
   </v-layout>
 </template>
-
-<style>
-h2.title {
-  text-align: center;
-}
-
-div.spread input {
-  border-style: inset;
-}
-
-div.spread p {
-  margin-bottom: 0px;
-}
-
-div.v-card input {
-  color: white;
-}
-</style>
 
 <script>
 export default {
@@ -246,3 +228,21 @@ export default {
   },
 }
 </script>
+
+<style>
+h2.title {
+  text-align: center;
+}
+
+div.spread input {
+  border-style: inset;
+}
+
+div.spread p {
+  margin-bottom: 0px;
+}
+
+div.v-card input {
+  color: white;
+}
+</style>

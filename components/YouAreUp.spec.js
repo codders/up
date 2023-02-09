@@ -18,7 +18,8 @@ describe('YouAreUp.vue', () => {
     })
     const activityText = mounted.find('.youre-up').find('.activity')
     expect(activityText.text()).toBe('Showing up to Go out or Move')
-  }),
+  })
+
   test('Renders activity details with description', async () => {
     const mounted = shallowMount(YouAreUp, {
       localVue
@@ -29,7 +30,8 @@ describe('YouAreUp.vue', () => {
     })
     const activityText = mounted.find('.youre-up').find('.activity')
     expect(activityText.text()).toBe('Showing up to Play or Move\n      : "Play with me!"')
-  }),
+  })
+
   test('Renders activity details with description and triple select', async () => {
     const mounted = shallowMount(YouAreUp, {
       localVue
@@ -40,7 +42,8 @@ describe('YouAreUp.vue', () => {
     })
     const activityText = mounted.find('.youre-up').find('.activity')
     expect(activityText.text()).toBe('Showing up to Play, Relax or Move\n      : "Play with me!"')
-  }),
+  })
+
   test('Does not render empty description', async () => {
     const mounted = shallowMount(YouAreUp, {
       localVue
@@ -51,7 +54,8 @@ describe('YouAreUp.vue', () => {
     })
     const activityText = mounted.find('.youre-up').find('.activity')
     expect(activityText.text()).toBe('Showing up to Play')
-  }),
+  })
+
   test('Delete record sends delete request', async () => {
     Vue.config.async = true
     const dispatcher = []
@@ -63,7 +67,8 @@ describe('YouAreUp.vue', () => {
     expect(dispatcher.length).toBe(1)
     expect(dispatcher[0].method).toBe('deleteUp')
     Vue.config.async = false
-  }),
+  })
+  
   test('Renders details of who is up', async () => {
     const mounted = shallowMount(YouAreUp, {
       localVue

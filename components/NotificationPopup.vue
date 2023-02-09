@@ -5,14 +5,6 @@
     </div>
 </template>
 
-<style>
-div.popover {
-    padding: 5px;
-    border: 1px solid white;
-    border-radius: 2px;
-}
-</style>
-
 <script>
 export default {
     name: "NotificationPopup",
@@ -62,3 +54,11 @@ export default {
 }
 
 </script>
+
+<style>
+div.popover {
+    padding: 5px;
+    border: 1px solid white;
+    border-radius: 2px;
+}
+</style>

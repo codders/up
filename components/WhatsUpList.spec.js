@@ -24,9 +24,9 @@ describe('WhatsUpList.vue', () => {
           }
         ],
        axios: {
-        '$get': function(request) {
-           return new Promise(function(rs,rj) {
-             rs([])
+        '$get': function(_) {
+           return new Promise(function(resolve, _reject) {
+             resolve([])
            })
          }
         }
@@ -35,13 +35,14 @@ describe('WhatsUpList.vue', () => {
     })
     expect(mountedIndex.find('[jest="something-up"]').exists()).toBe(true)
     expect(mountedIndex.find('[jest="something-up"]').findAll('whats-up-stub').length).toBe(1)
-  }),
+  })
+
   test('Shows nothing is up when there are not things up', () => {
      const mountedIndex = shallowMount(WhatsUpList, {
       mocks: Util.mockDataStore({ uid: '123', axios: {
-        '$get': function(request) {
-           return new Promise(function(rs,rj) {
-             rs([])
+        '$get': function(_) {
+           return new Promise(function(resolve, _reject) {
+             resolve([])
            })
          }
         }
@@ -50,7 +51,8 @@ describe('WhatsUpList.vue', () => {
     })
     mountedIndex.setData({ loading: false })
     expect(mountedIndex.find('[jest="nothing-up"]').exists()).toBe(true)
-  }),
+  })
+
   test('Does not show something if only I am up', () => {
     const mountedIndex = shallowMount(WhatsUpList, {
       mocks: Util.mockDataStore({ uid: 'fK0fHCRYb1QZ7NdMoqdYwgENejA2',
@@ -66,9 +68,9 @@ describe('WhatsUpList.vue', () => {
           }
         ],
        axios: {
-        '$get': function(request) {
-           return new Promise(function(rs,rj) {
-             rs([])
+        '$get': function(_) {
+           return new Promise(function(resolve,_reject) {
+             resolve([])
            })
          }
         }

@@ -10,6 +10,7 @@ const localVue = createLocalVue()
 config.stubs['router-link'] = { template: "<div></div> "}
 
 describe('WhatsUp.vue', () => {
+
   test('Renders activity details', async () => {
     const mounted = shallowMount(WhatsUp, {
       localVue
@@ -24,7 +25,8 @@ describe('WhatsUp.vue', () => {
     const descriptionText = mounted.find('.up v-list-item-content-stub v-list-item-subtitle-stub')
     expect(activityText.text()).toBe("14h57 - Arthur wants to\n      Go out or Move")
     expect(descriptionText.exists()).toBe(false)
-  }),
+  })
+
   test('Renders activity details with description', async () => {
     const mounted = shallowMount(WhatsUp, {
       localVue
@@ -40,7 +42,8 @@ describe('WhatsUp.vue', () => {
     const descriptionText = mounted.find('.up v-list-item-content-stub v-list-item-subtitle-stub')
     expect(activityText.text()).toBe('15h08 - Arthur wants to\n      Play or Move')
     expect(descriptionText.text()).toBe('Play with me!')
-  }),
+  })
+
   test('Renders activity details with description and triple select', async () => {
     const mounted = shallowMount(WhatsUp, {
       localVue
@@ -56,7 +59,8 @@ describe('WhatsUp.vue', () => {
     const descriptionText = mounted.find('.up v-list-item-content-stub v-list-item-subtitle-stub')
     expect(activityText.text()).toBe('12h40 - Arthur wants to\n      Play, Relax or Move')
     expect(descriptionText.text()).toBe('Play with me!')
-  }),
+  })
+  
   test('Does not render empty description', async () => {
     const mounted = shallowMount(WhatsUp, {
       localVue

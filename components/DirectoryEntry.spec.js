@@ -12,6 +12,7 @@ config.stubs['nuxt-link'] = { template: "<div></div> "}
 
 describe('DirectoryEntry.vue', () => {
   let vuetify
+
   beforeEach(() => {
     vuetify = new Vuetify()
   })
@@ -29,11 +30,12 @@ describe('DirectoryEntry.vue', () => {
     const tile = mounted.find('v-list-item-stub')
     expect(tile.find('v-list-item-title-stub').text()).toBe('Arthur')
   })
+
   test('Adding friend calls firestore', async () => {
     Vue.config.async = true
     const dispatcher = []
     const mountedForm = mount(DirectoryEntry, {
-      mocks: Util.mockDataStore({ uid: '123', dispatcher: dispatcher }),
+      mocks: Util.mockDataStore({ uid: '123', dispatcher }),
       localVue,
       vuetify
     })
@@ -41,12 +43,13 @@ describe('DirectoryEntry.vue', () => {
     expect(dispatcher.length).toBe(1)
     expect(dispatcher[0].method).toBe('addFriend')
     Vue.config.async = false
-  }),
+  })
+
   test('Removing friend calls firestore', async () => {
     Vue.config.async = true
     const dispatcher = []
     const mountedForm = mount(DirectoryEntry, {
-      mocks: Util.mockDataStore({ uid: '123', dispatcher: dispatcher }),
+      mocks: Util.mockDataStore({ uid: '123', dispatcher }),
       localVue,
       vuetify
     })
@@ -54,7 +57,8 @@ describe('DirectoryEntry.vue', () => {
     expect(dispatcher.length).toBe(1)
     expect(dispatcher[0].method).toBe('deleteFriend')
     Vue.config.async = false
-  }),
+  })
+
   test('Directory renders who is friend', () => {
     const mounted = shallowMount(DirectoryEntry, {
       mocks: Util.mockDataStore({
@@ -74,7 +78,8 @@ describe('DirectoryEntry.vue', () => {
     const tile = mounted.find('v-list-item-stub')
     expect(tile.findAll('.delete_action').length).toBe(1)
     expect(tile.findAll('.add_action').length).toBe(0)
-  }),
+  })
+
   test('Directory renders who is not friend', () => {
     const mounted = shallowMount(DirectoryEntry, {
       mocks: Util.mockDataStore({
