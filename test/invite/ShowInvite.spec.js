@@ -23,7 +23,8 @@ describe('invite/_id/index.vue', () => {
     })
     expect(mountedCard.find('[jest="inviter-name"]').text()).toBe('Arthur invited you to join up!')
     expect(mountedCard.find('[jest="email-mismatch"]').exists()).toBe(false)
-  }),
+  })
+
   test('Shows error if invite is intended for a different user', () => {
     const mountedCard = mount(Index, {
       mocks: Util.mockDataStore({
@@ -37,7 +38,8 @@ describe('invite/_id/index.vue', () => {
       email: 'arthur@example.com'
     })
     expect(mountedCard.find('[jest="email-mismatch"]').exists()).toBe(true)
-  }),
+  })
+
   test('Renders the login form if not logged in', () => {
     const mountedCard = mount(Index, {
       mocks: Util.mockDataStore({
@@ -49,7 +51,8 @@ describe('invite/_id/index.vue', () => {
       email: 'arthur@example.com'
     })
     expect(mountedCard.find('[jest="login"]').exists()).toBe(true)
-  }),
+  })
+
   test('Does not render login form if logged in', () => {
     const mountedCard = mount(Index, {
       mocks: Util.mockDataStore({
@@ -62,10 +65,11 @@ describe('invite/_id/index.vue', () => {
       email: 'arthur@example.com'
     })
     expect(mountedCard.find('[jest="login]').exists()).toBe(false)
-  }),
+  })
+
   test('Redirects to welcome page if invite accepted', () => {
-    var redirectPath = undefined
-    const mountedCard = mount(Index, {
+    let redirectPath
+    mount(Index, {
       mocks: Util.mockDataStore({
         routeParams: { id: 'abc' },
         router: {
@@ -83,10 +87,11 @@ describe('invite/_id/index.vue', () => {
       }
     })
     expect(redirectPath).toBe('/')
-  }),
+  })
+
   test('Redirects to not found if invite does not exist', () => {
-    var redirectPath = undefined
-    const mountedCard = mount(Index, {
+    let redirectPath
+    mount(Index, {
       mocks: Util.mockDataStore({
         routeParams: { id: 'abc' },
         router: {

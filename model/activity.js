@@ -28,7 +28,7 @@ const activities = [
 export const activityArrayToString = function (activities) {
   let description = ''
   const activityTexts = []
-  activities.map(function (key) {
+  activities.forEach(function (key) {
     activityTexts.push(getActivityName(key))
   })
   while (activityTexts.length > 2) {

@@ -12,11 +12,11 @@ firebase.initializeApp({
   appId: process.env.FIREBASE_APP_ID,
 });
 
-const messaging = firebase.messaging();
+firebase.messaging();
 
 // Setup event listeners for actions provided in the config:
 self.addEventListener('notificationclick', function(e) {
-  console.log("Got notification click!", e)
+  console.log("Got notification click!", e) // eslint-disable-line no-console
   const actions = [
     {
       action: 'go_to_up',
@@ -34,4 +34,4 @@ self.addEventListener('notificationclick', function(e) {
   }
 })
 
-console.log("This is the end of the messaging service worker 202202031753.")
+console.log("This is the end of the messaging service worker 202202031753.") // eslint-disable-line no-console

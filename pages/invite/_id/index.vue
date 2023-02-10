@@ -50,6 +50,7 @@ export default {
   },
   asyncData({ $axios, params, store }) {
     const headers = {}
+    const log = this.$log
     if (store.state.idToken !== null && store.state.idToken !== undefined) {
       headers.Authorization = 'Bearer ' + store.state.idToken
     }
@@ -69,11 +70,11 @@ export default {
               return response.data
             })
             .catch(function (err) {
-              console.log('Unable to accept invite', err) // eslint-disable-line no-console
+              log.error('Unable to accept invite', err) // eslint-disable-line no-console
             })
         } else {
           // esline-disable-next-line no-console
-          console.log(
+          log.debug(
             'not yet logged in - not sending invite',
             store.getters.activeUser
           )
@@ -81,7 +82,7 @@ export default {
         return response
       })
       .catch(function (err) {
-        console.log('Unable to load invite', err) // eslint-disable-line no-console
+        log.error('Unable to load invite', err) // eslint-disable-line no-console
         return {}
       })
   },
@@ -106,14 +107,15 @@ export default {
   watch: {
     loggedIn(newValue, oldValue) {
       const vm = this
-      console.log('Logged In changed from ' + oldValue + ' to ' + newValue) // eslint-disable-line no-console
+      const log = this.$log
+      log.debug('Logged In changed from ' + oldValue + ' to ' + newValue) // eslint-disable-line no-console
       if (oldValue === false && newValue === true) {
         postInviteAcceptance(
           this.$axios,
           this.$store.state.idToken,
           this.$route.params.id
-        ).then(function (result) {
-          console.log('Accepted invite') // eslint-disable-line no-console
+        ).then(function (_result) {
+          log.debug('Accepted invite') // eslint-disable-line no-console
           vm.$nuxt.$router.replace('/')
         })
       }

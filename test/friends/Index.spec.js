@@ -24,7 +24,8 @@ describe('friends.vue', () => {
       vuetify
     })
     expect(mountedForm.find('[jest="friends-list"]').exists()).toBe(false)
-  }),
+  })
+
   test('Shows friends list if there are friends', () => {
     const friendList = [
       { uid: 'vRHbWPYcJdVbv33kopy4fNWDgwg1', name: 'Arthur' },
@@ -38,7 +39,8 @@ describe('friends.vue', () => {
     expect(mountedForm.find('[jest="friends-list"]').exists()).toBe(true)
     expect(mountedForm.findAll(".friend").length).toBe(2)
     expect(mountedForm.find(".friend .name").text()).toBe('Arthur')
-  }),
+  })
+  
   test('Friend list should be sorted', () => {
     const friendList = [
       { uid: 'vRHbWPYcJdVbv33kopy4fNWDgwg1', name: 'Zach' },

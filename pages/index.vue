@@ -72,16 +72,6 @@
   </v-layout>
 </template>
 
-<style>
-.info-text {
-  width: 400px;
-}
-
-h3 {
-  cursor: pointer;
-}
-</style>
-
 <script>
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import LoginForm from '~/components/LoginForm.vue'
@@ -145,3 +135,13 @@ export default {
   },
 }
 </script>
+
+<style>
+.info-text {
+  width: 400px;
+}
+
+h3 {
+  cursor: pointer;
+}
+</style>

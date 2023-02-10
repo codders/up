@@ -63,27 +63,19 @@
   </v-layout>
 </template>
 
-<style>
-div.v-card input {
-  border: 1px;
-  border-style: inset;
-  color: white;
-}
-</style>
-
 <script>
 import { activityArrayToString } from '@/model/activity'
 import { sortFriends } from '@/model/friends'
 import { API_BASE_URL } from '@/model/api'
 
 export default {
-  async fetch({ store, params }) {
-    await store.dispatch('loadFriends')
-  },
   data: () => ({
     selected: {},
     description: '',
   }),
+  async fetch({ store }) {
+    await store.dispatch('loadFriends')
+  },
   computed: {
     friends() {
       return sortFriends(this.$store.getters.friends)
@@ -152,7 +144,7 @@ export default {
     showUp() {
       const selectedFriends = []
       const vm = this
-      Object.keys(this.$data.selected).map(function (friendId) {
+      Object.keys(this.$data.selected).forEach(function (friendId) {
         if (vm.$data.selected[friendId]) {
           selectedFriends.push(friendId)
         }
@@ -181,3 +173,11 @@ export default {
   },
 }
 </script>
+
+<style>
+div.v-card input {
+  border: 1px;
+  border-style: inset;
+  color: white;
+}
+</style>

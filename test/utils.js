@@ -1,8 +1,8 @@
 const makeUid = function(length) {
-  var text = ""
-  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+  let text = ""
+  const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 
-  for (var i = 0; i < length; i++)
+  for (let i = 0; i < length; i++)
     text += possible.charAt(Math.floor(Math.random() * possible.length))
 
   return text
@@ -15,7 +15,7 @@ const makeName = function() {
 
 export const friendList = function(friendCount) {
   const result = []
-  for (var i=0; i<friendCount; i++) {
+  for (let i=0; i<friendCount; i++) {
     result.push({
       uid: makeUid(15),
       name: makeName()
@@ -25,7 +25,7 @@ export const friendList = function(friendCount) {
 }
 
 const dataStore = function({ uid, friends, profile, dispatcher, dispatcherPromises, whatsUp }) {
-  const user = (uid === undefined ? null : { uid: uid })
+  const user = (uid === undefined ? null : { uid })
   return {
     state: {
       friends: (friends == null ? [] : friends),
@@ -37,7 +37,7 @@ const dataStore = function({ uid, friends, profile, dispatcher, dispatcherPromis
     },
     dispatch: (method, args) => {
       if (dispatcher !== undefined) {
-        dispatcher.push({ method: method, payload: args })
+        dispatcher.push({ method, payload: args })
         if (dispatcherPromises !== undefined && dispatcherPromises[method] !== undefined) {
           return dispatcherPromises[method]
         }
@@ -51,15 +51,15 @@ const dataStore = function({ uid, friends, profile, dispatcher, dispatcherPromis
   }
 }
 
-const mockDataStore = function({ uid, friends, profile, dispatcher, dispatcherPromises, router, routeParams, axios, whatsUp }) {
+export const mockDataStore = function({ uid, friends, profile, dispatcher, dispatcherPromises, router, routeParams, axios, whatsUp }) {
   return mockWithStore({ store: dataStore({ uid, profile, friends, dispatcher, dispatcherPromises, whatsUp }), router, routeParams, axios })
 }
 
-const mockWithStore = function({ store, router, routeParams, axios }) {
+export const mockWithStore = function({ store, router, routeParams, axios }) {
   return {
     $log: {
-      debug: (...args) => {},
-      error: (...args) => {}
+      debug: (..._args) => {},
+      error: (..._args) => {}
     },
     $axios: axios,
     $store: store,
@@ -88,8 +88,8 @@ const mockWithStore = function({ store, router, routeParams, axios }) {
 }
 
 const Util = {
-  mockDataStore: mockDataStore,
-  friendList: friendList
+  mockDataStore,
+  friendList
 }
 
 export default Util

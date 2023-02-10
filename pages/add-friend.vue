@@ -78,12 +78,6 @@
   </v-layout>
 </template>
 
-<style>
-div.flex input {
-  border-style: solid;
-}
-</style>
-
 <script>
 import DirectoryEntry from '@/components/DirectoryEntry'
 import { sortFriends } from '@/model/friends'
@@ -92,9 +86,6 @@ import { API_BASE_URL } from '@/model/api'
 export default {
   components: {
     DirectoryEntry,
-  },
-  async fetch({ store, params }) {
-    await store.dispatch('loadFriends')
   },
   asyncData({ $axios, store }) {
     return $axios
@@ -122,6 +113,9 @@ export default {
       sendInviteEnabled: true,
       addFriendError: null,
     }
+  },
+  async fetch({ store }) {
+    await store.dispatch('loadFriends')
   },
   computed: {
     sortedFriends() {
@@ -178,3 +172,9 @@ export default {
   },
 }
 </script>
+
+<style>
+div.flex input {
+  border-style: solid;
+}
+</style>

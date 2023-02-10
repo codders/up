@@ -39,10 +39,11 @@ describe('whatsup/_id/index.vue', () => {
       vuetify
     })
     expect(mountedCard.find('[jest="whats-up-item"]').exists()).toBe(true)
-  }),
+  })
+
   test('Redirects to not found if item does not exist', () => {
-    var redirectPath = undefined
-    const mountedCard = mount(Index, {
+    let redirectPath
+    mount(Index, {
       mocks: Util.mockDataStore({
         uid: '123',
         routeParams: { id: 'abc' },

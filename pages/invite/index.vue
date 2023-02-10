@@ -15,7 +15,6 @@ export default {
   beforeMount() {
     if (this.$nuxt.$route.query.key !== undefined) {
       this.$nuxt.$router.replace(`/invite/${this.$nuxt.$route.query.key}`)
-      return
     } else {
       this.$nuxt.$router.replace('/')
     }

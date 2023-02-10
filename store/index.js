@@ -128,11 +128,12 @@ export const actions = {
   },
 
   signInWithEmail({ dispatch }, payload) {
+    const log = this.$log
     return this.$fire.auth.signInWithEmailAndPassword(payload.email, payload.password)
       .then(function (result) {
-        console.log('Result', result)
+        log.debug('Result', result)
         return result.user.auth.currentUser.getIdToken().then(function (idToken) {
-          return dispatch('userChanged', { user: result.user, idToken: idToken }).then(() => {
+          return dispatch('userChanged', { user: result.user, idToken }).then(() => {
             dispatch('updateProfile', { name: payload.name })
           })
         })
@@ -140,9 +141,10 @@ export const actions = {
   },
 
   signUpWithEmail({ commit, dispatch }, payload) {
+    const log = this.$log
     return this.$fire.auth.createUserWithEmailAndPassword(payload.email, payload.password)
       .then(function (result) {
-        console.log('Create result', result)
+        log.debug('Create result', result)
         return result.user.auth.currentUser.getIdToken().then(function (idToken) {
           commit('setIdToken', idToken)
           return dispatch('updateProfile', { name: payload.name })
@@ -160,7 +162,7 @@ export const actions = {
       .catch((err) => console.log(err)) // eslint-disable-line no-console
   },
 
-  userChanged({ commit, state, dispatch }, {user, idToken}) {
+  userChanged({ commit, state }, {user, idToken}) {
     console.log('Got User Changed event', { user, idToken }) // eslint-disable-line no-console
     commit('setIdToken', idToken)
     if (state.user === undefined || state.user.uid !== user.uid) {
@@ -209,7 +211,7 @@ export const actions = {
       },
       url: API_BASE_URL + '/up/' + id,
     })
-      .then((response) => {
+      .then((_response) => {
         commit('deleteWhatsUp', id)
       })
       .catch((error) => {
@@ -241,7 +243,7 @@ export const actions = {
       })
   },
 
-  addFriend({ dispatch, state, commit }, friend) {
+  addFriend({ state, commit }, friend) {
     axios({
       method: 'post',
       url: API_BASE_URL + '/friends',
@@ -250,7 +252,7 @@ export const actions = {
         Authorization: 'Bearer ' + state.idToken,
       },
     })
-      .then((response) => {
+      .then((_response) => {
         commit('addFriend', friend)
       })
       .catch((error) => {
@@ -328,11 +330,12 @@ export const actions = {
 
   refreshSubscription({ dispatch, state, commit }) {
     const fire = this.$fire
+    const log = this.$log
     dispatch('askNotificationPermission')
       .then((result) => {
-        console.log('Got permission result', result)
+        log.debug('Got permission result', result)
         if (result !== 'granted') {
-          console.log(
+          log.info(
             'Notifications are blocked for this page. Go to settings to unblock them'
           )
           throw new Error('Notifications are blocked')
@@ -342,7 +345,7 @@ export const actions = {
       .then(function (pushSubscription) {
         // eslint-disable-next-line no-console
         const jsonPayload = JSON.stringify({ fcmToken: pushSubscription })
-        console.log('Received PushSubscription: ', jsonPayload)
+        log.debug('Received PushSubscription: ', jsonPayload)
         return axios({
           method: 'POST',
           headers: {
@@ -354,16 +357,16 @@ export const actions = {
             API_BASE_URL + '/saveSubscription',
         })
       })
-      .then(function (subscriptionSaved) {
-        console.log("Setting up foreground message processing")
+      .then(function (_subscriptionSaved) {
+        log.debug("Setting up foreground message processing")
         fire.messaging.onMessage((payload) => {
-          console.log("Got message in Foreground", payload)
+          log.debu("Got message in Foreground", payload)
           commit('addNotification', payload)
         })
       })
       .catch((error) => {
         if (error) {
-          console.log(
+          log.error(
             'Error asking for permission or subscribing to notification',
             error
           )
@@ -372,7 +375,7 @@ export const actions = {
   },
 
   askNotificationPermission() {
-    console.log('Asking for permission')
+    this.$log.debug('Asking for permission')
     return new Promise(function (resolve, reject) {
       const permissionResult = Notification.requestPermission(function (
         result

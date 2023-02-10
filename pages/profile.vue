@@ -38,24 +38,13 @@
   </v-layout>
 </template>
 
-<style>
-p.name {
-  padding-top: 1rem;
-}
-
-div.v-card div input {
-  border-style: inset;
-  color: white;
-}
-</style>
-
 <script>
 export default {
-  async fetch({ store, params }) {
-    await store.dispatch('loadProfile')
-  },
   data() {
     return { name: this.$store.state.profile.name }
+  },
+  async fetch({ store }) {
+    await store.dispatch('loadProfile')
   },
   computed: {
     avatarUrl() {
@@ -74,3 +63,14 @@ export default {
   },
 }
 </script>
+
+<style>
+p.name {
+  padding-top: 1rem;
+}
+
+div.v-card div input {
+  border-style: inset;
+  color: white;
+}
+</style>

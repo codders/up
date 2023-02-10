@@ -15,7 +15,8 @@ describe('index.vue', () => {
     })
     await mountedIndex.setData({ loading: false })
     expect(mountedIndex.find('[jest="logged-in-div"]').exists()).toBe(true)
-  }),
+  })
+  
   test('Shows login form when not logged in', async () => {
     const store = Util.mockDataStore({})
     const mountedIndex = shallowMount(Index, {

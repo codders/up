@@ -53,9 +53,6 @@
 import activitiesList from '@/model/activity.js'
 
 export default {
-  async fetch({ store, params }) {
-    await store.dispatch('loadFriends')
-  },
   data() {
     const friend = this.$store.getters.friends.find(
       (item) => item.uid === this.$route.params.id
@@ -74,6 +71,9 @@ export default {
       selected[activity.id] = selectVal
     }
     return { selected }
+  },
+  async fetch({ store }) {
+    await store.dispatch('loadFriends')
   },
   computed: {
     activities() {

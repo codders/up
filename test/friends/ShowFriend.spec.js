@@ -34,10 +34,11 @@ describe('friends/_id/index.vue', () => {
       localVue
     })
     expect(mountedCard.find('[jest="friend-name"]').text()).toBe('Arthur')
-  }),
+  })
+
   test('Redirects to not found if friend does not exist', () => {
-    var redirectPath = undefined
-    const mountedCard = mount(Index, {
+    let redirectPath
+    mount(Index, {
       mocks: Util.mockDataStore({
         uid: '123',
         routeParams: { id: 'abc' },

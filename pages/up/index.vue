@@ -84,7 +84,7 @@ export default {
     activityArray() {
       const selectedActivities = []
       const vm = this
-      Object.keys(this.selected).map(function (key, index) {
+      Object.keys(this.selected).forEach(function (key, _index) {
         if (vm.selected[key]) {
           selectedActivities.push(key)
         }

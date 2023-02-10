@@ -33,9 +33,9 @@ describe('whatsup/index.vue', () => {
           }
         ],
        axios: {
-        '$get': function(request) {
-           return new Promise(function(rs,rj) {
-             rs([])
+        '$get': function(_request) {
+           return new Promise(function(resolve,_reject) {
+             resolve([])
            })
          }
         }

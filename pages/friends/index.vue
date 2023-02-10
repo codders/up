@@ -53,7 +53,7 @@
 import { sortFriends } from '@/model/friends'
 
 export default {
-  async fetch({ store, params }) {
+  async fetch({ store }) {
     await store.dispatch('loadFriends')
   },
   computed: {
