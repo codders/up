@@ -15,7 +15,7 @@ const setupAws = function () {
   AWS.config.update({
     accessKeyId: smtpCredentials.accessKeyId.value(),
     secretAccessKey: smtpCredentials.secretAccessKey.value(),
-    region: smtpCredentials.region,
+    region: smtpCredentials.region
   })
   awsConfigured = true
 }
@@ -37,8 +37,8 @@ const templates = {
     What's up?
     Up is an app / social network to make it easy for people to meet up spontaneously
 
-    Visit https://up.codders.io/invite?key={{inviteid}} to find out more!`,
-  },
+    Visit https://up.codders.io/invite?key={{inviteid}} to find out more!`
+  }
 }
 
 const sendEmail: (
@@ -57,7 +57,7 @@ const sendEmail: (
   return new AWS.SES({ apiVersion: '2010-12-01' })
     .sendEmail({
       Destination: {
-        ToAddresses: [target],
+        ToAddresses: [target]
       },
       Message: {
         Body: {
@@ -69,20 +69,20 @@ const sendEmail: (
                 result[key] = escape(templateData[key])
                 return result
               }, <{ [id: string]: string }>{})
-            ),
+            )
           },
           Text: {
             Charset: 'UTF-8',
-            Data: Moustache.render(template.Text, templateData),
-          },
+            Data: Moustache.render(template.Text, templateData)
+          }
         },
         Subject: {
           Charset: 'UTF-8',
-          Data: Moustache.render(template.Subject, templateData),
-        },
+          Data: Moustache.render(template.Subject, templateData)
+        }
       },
       Source: 'notifications@up.codders.io',
-      ReplyToAddresses: ['no-reply@up.codders.io'],
+      ReplyToAddresses: ['no-reply@up.codders.io']
     })
     .promise()
 }
@@ -98,7 +98,7 @@ export const sendInvitationEmail: (
 ) {
   const templateData = {
     friendname: sourceName,
-    inviteid: inviteId,
+    inviteid: inviteId
   }
   return sendEmail(target, templates.invite, templateData)
 }

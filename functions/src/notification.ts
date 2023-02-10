@@ -1,7 +1,7 @@
 import {
   loadSubscription,
   deleteSubscription,
-  sendMessage,
+  sendMessage
 } from './firebase-wrapper'
 import * as up from './up-types'
 
@@ -20,7 +20,7 @@ const notifyUser: (arg0: string, arg1: Record<string, string>) => Promise<any> =
         console.log('Loaded fcmToken: ', token)
         return sendMessage(token, message, {
           title: "Something's up!",
-          body: 'Check in the app to see what just happened',
+          body: 'Check in the app to see what just happened'
         }).catch((err) => {
           console.log('Error sending message - need to delete subscription')
           return deleteSubscription(target).then((deleteResult) => {
@@ -29,14 +29,14 @@ const notifyUser: (arg0: string, arg1: Record<string, string>) => Promise<any> =
               return {
                 success: false,
                 uid: target,
-                message: 'Subscription expired (410)',
+                message: 'Subscription expired (410)'
               }
             } else {
               console.log('Subscription is no longer valid: ', err)
               return {
                 success: false,
                 uid: target,
-                message: 'Subscription is no longer valid: ' + err,
+                message: 'Subscription is no longer valid: ' + err
               }
             }
           })
@@ -47,7 +47,7 @@ const notifyUser: (arg0: string, arg1: Record<string, string>) => Promise<any> =
         return {
           success: false,
           uid: target,
-          message: 'Error loading subscription ' + err,
+          message: 'Error loading subscription ' + err
         }
       })
   }
@@ -62,7 +62,7 @@ export const sendShowUpNotification: (
   return notifyUser(record.inviteduid, {
     messageType: 'SHOW_UP',
     name: record.name,
-    description: record.description,
+    description: record.description
   })
 }
 
@@ -75,6 +75,6 @@ export const sendUpMatchNotification: (
     messageType: 'MATCH',
     name: senderName,
     activity: JSON.stringify(record.activity),
-    description: record.description,
+    description: record.description
   })
 }

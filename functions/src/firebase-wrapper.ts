@@ -4,7 +4,7 @@ import * as admin from 'firebase-admin'
 
 admin.initializeApp({
   credential: admin.credential.applicationDefault(),
-  databaseURL: 'https://up-now-a6da8.firebaseio.com',
+  databaseURL: 'https://up-now-a6da8.firebaseio.com'
 })
 
 export const sendMessage = (token: string, data: any, notification: any) => {
@@ -16,14 +16,14 @@ export const sendMessage = (token: string, data: any, notification: any) => {
       notification: Object.assign(
         { click_action: 'https://up.codders.io' },
         notification
-      ),
+      )
     },
     webpush: {
       notification: notification,
       fcm_options: {
-        link: 'https://up.codders.io/',
-      },
-    },
+        link: 'https://up.codders.io/'
+      }
+    }
   }
   return admin.messaging().send(payload)
 }
@@ -109,7 +109,7 @@ export const deleteSubscription: (arg0: string) => Promise<boolean> = (
     .collection('users')
     .doc(uid)
     .update({
-      subscription: admin.firestore.FieldValue.delete(),
+      subscription: admin.firestore.FieldValue.delete()
     })
     .catch(function (error) {
       console.error(
@@ -130,7 +130,7 @@ export const saveSubscription = (subscription: any, uid: string) => {
     .collection('users')
     .doc(uid)
     .update({
-      subscription: subscription,
+      subscription: subscription
     })
     .catch(function (error) {
       console.error(
@@ -185,7 +185,7 @@ export const loadSubscription: (arg0: string) => Promise<string> = (
 
 export const saveUp = (record: up.UpRecord) => {
   const savedRecord = Object.assign(record, {
-    timestamp: admin.firestore.FieldValue.serverTimestamp(),
+    timestamp: admin.firestore.FieldValue.serverTimestamp()
   })
   return admin
     .firestore()
@@ -205,7 +205,7 @@ export const saveInviteRecordForUser = (
   record: up.UpRequest
 ) => {
   const savedRecord = Object.assign(record, {
-    timestamp: admin.firestore.FieldValue.serverTimestamp(),
+    timestamp: admin.firestore.FieldValue.serverTimestamp()
   })
   return admin
     .firestore()
@@ -227,7 +227,7 @@ export const addFriendRecord = (uid: string, frienduid: string) => {
     created_at: admin.firestore.FieldValue.serverTimestamp(),
     created_by: uid,
     id: frienduid,
-    uid: frienduid,
+    uid: frienduid
   }
   return admin
     .firestore()
@@ -245,7 +245,7 @@ export const createSignupInvitation = (
   const savedRecord = {
     email: invitedemail,
     inviter: userId,
-    timestamp: admin.firestore.FieldValue.serverTimestamp(),
+    timestamp: admin.firestore.FieldValue.serverTimestamp()
   }
   return admin
     .firestore()
@@ -353,7 +353,7 @@ export const profileForUser = (uid: string): Promise<up.ProfileDetails> => {
         if (userDocData !== undefined) {
           return {
             name: userDocData.name,
-            photoURL: userDocData.photoURL,
+            photoURL: userDocData.photoURL
           }
         } else {
           throw new Error('User data doc undefined for user: ' + uid)
@@ -442,7 +442,7 @@ const loadFriendRecords = (uid: string): Promise<up.FriendRecord[]> => {
         const record = friendDoc.data()
         friends.push({
           uid: record.uid,
-          subscription: record.subscription,
+          subscription: record.subscription
         })
       })
       return friends
@@ -569,7 +569,7 @@ export const populateInviteRecord = (
             acceptedFriends: resolvedReplies
               .filter((item) => item[1])
               .map((item) => item[0]),
-            name: inviterName,
+            name: inviterName
           },
           invite
         )
@@ -653,7 +653,7 @@ export const loadProfile = (uid: string) => {
           created_at: admin.firestore.FieldValue.serverTimestamp(),
           created_by: uid,
           id: uid,
-          uid: uid,
+          uid: uid
         }
         return admin
           .firestore()
@@ -674,7 +674,7 @@ export const updateProfile = (
   const profileUpdate = Object.assign(
     {
       updated_at: admin.firestore.FieldValue.serverTimestamp(),
-      updated_by: uid,
+      updated_by: uid
     },
     profile
   )
@@ -706,7 +706,7 @@ const resolveNamesAndPhotos = (friends: up.FriendRecord[]) => {
               Object.assign(
                 {
                   name: profile.name,
-                  photoURL: profile.photoURL,
+                  photoURL: profile.photoURL
                 },
                 friend
               )

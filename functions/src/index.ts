@@ -23,7 +23,7 @@ import {
   respondToUp,
   populateInviteRecord,
   saveInviteRecordForUser,
-  saveSubscription,
+  saveSubscription
 } from './firebase-wrapper'
 import { findMatches, getUpRecordsForRequest } from './up-logic'
 import { sendShowUpNotification, sendUpMatchNotification } from './notification'
@@ -35,7 +35,7 @@ const cors = require('cors')
 const app = express()
 
 const corsOptions = {
-  origin: 'https://up.codders.io',
+  origin: 'https://up.codders.io'
 }
 
 app.use(validateFirebaseIdToken)
@@ -203,7 +203,7 @@ app.post(
       .then((writeResult) => {
         response.status(201).send({
           uid: friend.uid,
-          name: friend.name,
+          name: friend.name
         })
       })
       .catch((err) => {
@@ -253,11 +253,11 @@ app.post(
         const parentUpRequest: up.UpRequest = {
           activity: record.activity,
           description: record.description,
-          friends: record.friends,
+          friends: record.friends
         }
         return Promise.all([
           saveInviteRecordForUser(request.user.uid, parentUpRequest),
-          loadInterestRegisterForUser(request.user.uid, record.friends),
+          loadInterestRegisterForUser(request.user.uid, record.friends)
         ]).then(function (results) {
           console.log('Loaded interest register', results)
           Object.values(results[1]).forEach(function (friend) {
@@ -268,7 +268,7 @@ app.post(
             results[1]
           const upRequest = Object.assign(parentUpRequest, {
             id: parentRecordId,
-            uid: request.user.uid,
+            uid: request.user.uid
           })
           const upRecords = getUpRecordsForRequest(
             upRequest,
@@ -293,7 +293,7 @@ app.post(
                   response.status(201).send({
                     success: true,
                     message: 'You are up!',
-                    upRequest: invite,
+                    upRequest: invite
                   })
                 }
               )
@@ -302,7 +302,7 @@ app.post(
               console.log('Error writing record', err)
               response.status(500).send({
                 success: false,
-                message: err,
+                message: err
               })
             })
         })
@@ -311,7 +311,7 @@ app.post(
         console.log('Unable to load name for user: ', err)
         response.status(500).send({
           success: false,
-          message: err,
+          message: err
         })
       })
   }
@@ -327,7 +327,7 @@ app.post(
         console.log('Got subscription write result', writeResults)
         response.status(201).send({
           success: true,
-          message: 'Subscription updated',
+          message: 'Subscription updated'
         })
       })
       .catch((err) => {
@@ -349,13 +349,13 @@ app.post(
             response.status(201).send({
               uid: friend.id,
               name: friend.name,
-              photoURL: friend.photoURL,
+              photoURL: friend.photoURL
             })
           })
           .catch((err) => {
             console.log('Unable to save friend record', err)
             response.status(500).send({
-              message: 'Unable to save friend record',
+              message: 'Unable to save friend record'
             })
           })
       })
@@ -363,7 +363,7 @@ app.post(
         console.log('Error adding friend', err)
         response.status(404).send({
           code: 'NOT_FOUND',
-          message: 'Unable to find friend record ' + err,
+          message: 'Unable to find friend record ' + err
         })
       })
   }
@@ -379,7 +379,7 @@ app.post(
         console.log('email exists in system - not sending invite')
         response.status(409).send({
           code: 'ALREADY_EXISTS',
-          message: 'Email address matches existing user',
+          message: 'Email address matches existing user'
         })
       })
       .catch((err) => {
@@ -391,20 +391,20 @@ app.post(
                 .then((result) => {
                   console.log('Email sent')
                   response.status(201).send({
-                    message: 'Invitation sent',
+                    message: 'Invitation sent'
                   })
                 })
                 .catch((inviteerr) => {
                   console.log('Error sending invitation', inviteerr)
                   response.status(500).send({
-                    message: 'Unable to send invitation',
+                    message: 'Unable to send invitation'
                   })
                 })
             })
             .catch((error) => {
               console.log('Unable to create signup invite record', error)
               response.status(500).send({
-                message: 'Unable to create signup invite record',
+                message: 'Unable to create signup invite record'
               })
             })
         })

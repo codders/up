@@ -7,5 +7,5 @@ const pub = defineString('VAPID_PUBLIC_KEY')
 
 export const vapidKey: vapid.Key = {
   pub: pub,
-  secret: secret,
+  secret: secret
 }

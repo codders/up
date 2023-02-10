@@ -33,9 +33,9 @@ export const getUpRecordsForRequest = function (
         isUp: false,
         timestamp: {
           _seconds: 0,
-          _nanoseconds: 0,
+          _nanoseconds: 0
         },
-        inviteduid: inviteduid,
+        inviteduid: inviteduid
       }
       result.push(record)
     }
