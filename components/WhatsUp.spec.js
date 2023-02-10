@@ -9,6 +9,14 @@ const localVue = createLocalVue()
 
 config.stubs['router-link'] = { template: '<div></div> ' }
 
+function format_time(s) {
+  const dtFormat = new Intl.DateTimeFormat('en-GB', {
+    timeStyle: 'short',
+  });
+
+  return dtFormat.format(new Date(s * 1e3)).replace(":", "h");
+}
+
 describe('WhatsUp.vue', () => {
   test('Renders activity details', async () => {
     const mounted = shallowMount(WhatsUp, {
@@ -27,7 +35,7 @@ describe('WhatsUp.vue', () => {
       '.up v-list-item-content-stub v-list-item-subtitle-stub'
     )
     expect(activityText.text()).toBe(
-      '14h57 - Arthur wants to\n      Go out or Move'
+      `${format_time(1573567067)} - Arthur wants to\n      Go out or Move`
     )
     expect(descriptionText.exists()).toBe(false)
   })
@@ -50,7 +58,7 @@ describe('WhatsUp.vue', () => {
       '.up v-list-item-content-stub v-list-item-subtitle-stub'
     )
     expect(activityText.text()).toBe(
-      '15h08 - Arthur wants to\n      Play or Move'
+      `${format_time(1573567700)} - Arthur wants to\n      Play or Move`
     )
     expect(descriptionText.text()).toBe('Play with me!')
   })
@@ -73,7 +81,7 @@ describe('WhatsUp.vue', () => {
       '.up v-list-item-content-stub v-list-item-subtitle-stub'
     )
     expect(activityText.text()).toBe(
-      '12h40 - Arthur wants to\n      Play, Relax or Move'
+      `${format_time(1571568000)} - Arthur wants to\n      Play, Relax or Move`
     )
     expect(descriptionText.text()).toBe('Play with me!')
   })
