@@ -12,7 +12,7 @@ config.stubs['router-link'] = { template: '<div></div> ' }
 function formatTime(s) {
   const dtFormat = new Intl.DateTimeFormat('en-GB', {
     timeStyle: 'short',
-    timeZone: 'Europe/Berlin'
+    timeZone: 'Europe/Berlin',
   })
 
   return dtFormat.format(new Date(s * 1e3)).replace(':', 'h')
