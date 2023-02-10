@@ -1,23 +1,23 @@
 export interface Request {
   headers: {
-    authorization: string
-  }
+    authorization: string;
+  };
   cookies: {
-    __session: string
-  }
+    __session: string;
+  };
   user: {
-    uid: string
-    [key: string]: any
-  }
+    uid: string;
+    [key: string]: any;
+  };
   body: {
-    [key: string]: any
-  }
-  method: string
-  path: string
-  params: any
+    [key: string]: any;
+  };
+  method: string;
+  path: string;
+  params: any;
 }
 
 export interface Response {
-  status: (code: number) => Response
-  send: (message: { [key: string]: any } | string) => void
+  status: (code: number) => Response;
+  send: (message: { [key: string]: any } | string) => void;
 }

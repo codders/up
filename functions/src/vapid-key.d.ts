@@ -1,6 +1,6 @@
-import { StringParam } from 'firebase-functions/lib/params/types'
+import { StringParam } from 'firebase-functions/lib/params/types';
 
 export interface Key {
-  pub: StringParam
-  secret: StringParam
+  pub: StringParam;
+  secret: StringParam;
 }

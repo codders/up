@@ -1,6 +1,6 @@
-import 'firebase-functions-test'
+import 'firebase-functions-test';
 
-import { findMatches, getUpRecordsForRequest } from '../src/up-logic'
+import { findMatches, getUpRecordsForRequest } from '../src/up-logic';
 
 describe('matching logic', () => {
   it('should not return empty', () => {
@@ -19,10 +19,10 @@ describe('matching logic', () => {
             _nanoseconds: 2,
           },
         },
-      ]).length
-    ).not.toBe(0)
-  })
-})
+      ]).length,
+    ).not.toBe(0);
+  });
+});
 
 describe('up record generation logic', () => {
   it('should create up records if people are interested to receive them', () => {
@@ -37,9 +37,9 @@ describe('up record generation logic', () => {
       'Username',
       {
         def: { uid: 'def', activity: ['play', 'move'] },
-      }
-    )
-    expect(createdRecords.length).toBe(1)
+      },
+    );
+    expect(createdRecords.length).toBe(1);
   }),
     it('should not create up records if people are not interested to receive them', () => {
       const createdRecords = getUpRecordsForRequest(
@@ -53,8 +53,8 @@ describe('up record generation logic', () => {
         'Username',
         {
           def: { uid: 'def', activity: ['eat'] },
-        }
-      )
-      expect(createdRecords.length).toBe(0)
-    })
-})
+        },
+      );
+      expect(createdRecords.length).toBe(0);
+    });
+});

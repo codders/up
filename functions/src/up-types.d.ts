@@ -1,86 +1,86 @@
 export interface UpRecord {
-  activity: string[]
-  inviteduid: string
-  description: string
-  uid: string
-  parentId: string
+  activity: string[];
+  inviteduid: string;
+  description: string;
+  uid: string;
+  parentId: string;
   timestamp: {
-    _seconds: number
-    _nanoseconds: number
-  }
-  isUp: boolean
+    _seconds: number;
+    _nanoseconds: number;
+  };
+  isUp: boolean;
 }
 
 export interface UpRecordWithName extends UpRecord {
-  name: string
+  name: string;
 }
 
 export interface SavedUpRecord extends UpRecord {
-  id: string
+  id: string;
 }
 
 export interface SavedUpRecordWithName extends SavedUpRecord {
-  name: string
+  name: string;
 }
 
 export interface UpRequest {
-  activity: string[]
-  description: string
-  friends: string[]
+  activity: string[];
+  description: string;
+  friends: string[];
 }
 
 export interface SavedUpRequest extends UpRequest {
-  id: string
-  uid: string
+  id: string;
+  uid: string;
 }
 
 export interface SavedUpRequestWithNameAndAcceptedFriends
   extends SavedUpRequest {
-  acceptedFriends: string[]
-  pendingFriends: string[]
-  name: string
+  acceptedFriends: string[];
+  pendingFriends: string[];
+  name: string;
 }
 
 export interface DirectoryEntry {
-  uid: string
-  name: string
+  uid: string;
+  name: string;
 }
 
 export interface InterestRegister {
-  uid: string
-  activity: string[]
+  uid: string;
+  activity: string[];
 }
 
 export interface UserRecord {
-  id: string
-  name: string
-  photoURL?: string
+  id: string;
+  name: string;
+  photoURL?: string;
 }
 
 export interface ProfileDetails {
-  name: string
-  photoURL: string
+  name: string;
+  photoURL: string;
 }
 
 export interface FriendRecord {
-  uid: string
-  photoURL?: string
-  subscription: { [id: string]: boolean }
+  uid: string;
+  photoURL?: string;
+  subscription: { [id: string]: boolean };
 }
 
 export interface FriendRecordWithName extends FriendRecord {
-  name: string
+  name: string;
 }
 
 export interface SignupInvite {
-  email: string
-  inviter: string
+  email: string;
+  inviter: string;
 }
 
 export interface SavedSignupInvite extends SignupInvite {
-  id: string
+  id: string;
 }
 
 export interface SavedSignupInviteWithName extends SavedSignupInvite {
-  inviterName: string
+  inviterName: string;
 }

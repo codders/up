@@ -1,24 +1,24 @@
-import { smtpCredentials } from './smtp-credentials'
-import * as Moustache from 'mustache'
-const AWS = require('aws-sdk')
-const escape = require('escape-html')
+import { smtpCredentials } from './smtp-credentials';
+import * as Moustache from 'mustache';
+const AWS = require('aws-sdk');
+const escape = require('escape-html');
 
 interface EmailTemplate {
-  Html: string
-  Text: string
-  Subject: string
+  Html: string;
+  Text: string;
+  Subject: string;
 }
 
-let awsConfigured = false
+let awsConfigured = false;
 
 const setupAws = function () {
   AWS.config.update({
     accessKeyId: smtpCredentials.accessKeyId.value(),
     secretAccessKey: smtpCredentials.secretAccessKey.value(),
-    region: smtpCredentials.region
-  })
-  awsConfigured = true
-}
+    region: smtpCredentials.region,
+  });
+  awsConfigured = true;
+};
 
 const templates = {
   invite: {
@@ -37,27 +37,27 @@ const templates = {
     What's up?
     Up is an app / social network to make it easy for people to meet up spontaneously
 
-    Visit https://up.codders.io/invite?key={{inviteid}} to find out more!`
-  }
-}
+    Visit https://up.codders.io/invite?key={{inviteid}} to find out more!`,
+  },
+};
 
 const sendEmail: (
   arg0: string,
   arg1: EmailTemplate,
-  arg2: { [id: string]: string }
+  arg2: { [id: string]: string },
 ) => Promise<any> = function (
   target: string,
   template: EmailTemplate,
-  templateData: { [id: string]: string }
+  templateData: { [id: string]: string },
 ) {
-  console.log('Sending mail to ' + target)
+  console.log('Sending mail to ' + target);
   if (!awsConfigured) {
-    setupAws()
+    setupAws();
   }
   return new AWS.SES({ apiVersion: '2010-12-01' })
     .sendEmail({
       Destination: {
-        ToAddresses: [target]
+        ToAddresses: [target],
       },
       Message: {
         Body: {
@@ -66,39 +66,39 @@ const sendEmail: (
             Data: Moustache.render(
               template.Html,
               Object.keys(templateData).reduce(function (result, key) {
-                result[key] = escape(templateData[key])
-                return result
-              }, <{ [id: string]: string }>{})
-            )
+                result[key] = escape(templateData[key]);
+                return result;
+              }, <{ [id: string]: string }>{}),
+            ),
           },
           Text: {
             Charset: 'UTF-8',
-            Data: Moustache.render(template.Text, templateData)
-          }
+            Data: Moustache.render(template.Text, templateData),
+          },
         },
         Subject: {
           Charset: 'UTF-8',
-          Data: Moustache.render(template.Subject, templateData)
-        }
+          Data: Moustache.render(template.Subject, templateData),
+        },
       },
       Source: 'notifications@up.codders.io',
-      ReplyToAddresses: ['no-reply@up.codders.io']
+      ReplyToAddresses: ['no-reply@up.codders.io'],
     })
-    .promise()
-}
+    .promise();
+};
 
 export const sendInvitationEmail: (
   arg0: string,
   arg1: string,
-  arg2: string
+  arg2: string,
 ) => Promise<any> = function (
   target: string,
   inviteId: string,
-  sourceName: string
+  sourceName: string,
 ) {
   const templateData = {
     friendname: sourceName,
-    inviteid: inviteId
-  }
-  return sendEmail(target, templates.invite, templateData)
-}
+    inviteid: inviteId,
+  };
+  return sendEmail(target, templates.invite, templateData);
+};
