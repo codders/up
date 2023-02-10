@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { mount, config, createLocalVue } from '@vue/test-utils'
-import Util from '@/test/utils.js'
+import { mockDataStore } from '@/test/utils.js'
 
 import Index from '@/pages/youreup/index.vue'
 
@@ -20,7 +20,7 @@ describe('youreup/index.vue', () => {
   })
   test('Shows a list of what you are up to', () => {
     const mountedIndex = mount(Index, {
-      mocks: Util.mockDataStore({
+      mocks: mockDataStore({
         uid: '123',
         whatsUp: [
           {

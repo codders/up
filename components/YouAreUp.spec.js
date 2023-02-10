@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import Util from '@/test/utils.js'
+import { mockDataStore } from '@/test/utils.js'
 
 import YouAreUp from '@/components/YouAreUp.vue'
 
@@ -64,7 +64,7 @@ describe('YouAreUp.vue', () => {
     Vue.config.async = true
     const dispatcher = []
     const mounted = shallowMount(YouAreUp, {
-      mocks: Util.mockDataStore({ dispatcher }),
+      mocks: mockDataStore({ dispatcher }),
       localVue,
     })
     await mounted.vm.cancelUpRequest('abc')

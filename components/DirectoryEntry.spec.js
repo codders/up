@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { createLocalVue, shallowMount, mount, config } from '@vue/test-utils'
-import Util from '@/test/utils.js'
+import { mockDataStore } from '@/test/utils.js'
 
 import DirectoryEntry from '@/components/DirectoryEntry.vue'
 
@@ -19,7 +19,7 @@ describe('DirectoryEntry.vue', () => {
 
   test('Renders friend details', async () => {
     const mounted = shallowMount(DirectoryEntry, {
-      mocks: Util.mockDataStore({}),
+      mocks: mockDataStore({}),
       localVue,
       vuetify,
     })
@@ -35,7 +35,7 @@ describe('DirectoryEntry.vue', () => {
     Vue.config.async = true
     const dispatcher = []
     const mountedForm = mount(DirectoryEntry, {
-      mocks: Util.mockDataStore({ uid: '123', dispatcher }),
+      mocks: mockDataStore({ uid: '123', dispatcher }),
       localVue,
       vuetify,
     })
@@ -49,7 +49,7 @@ describe('DirectoryEntry.vue', () => {
     Vue.config.async = true
     const dispatcher = []
     const mountedForm = mount(DirectoryEntry, {
-      mocks: Util.mockDataStore({ uid: '123', dispatcher }),
+      mocks: mockDataStore({ uid: '123', dispatcher }),
       localVue,
       vuetify,
     })
@@ -61,7 +61,7 @@ describe('DirectoryEntry.vue', () => {
 
   test('Directory renders who is friend', () => {
     const mounted = shallowMount(DirectoryEntry, {
-      mocks: Util.mockDataStore({
+      mocks: mockDataStore({
         uid: '123',
         friends: [
           {
@@ -84,7 +84,7 @@ describe('DirectoryEntry.vue', () => {
 
   test('Directory renders who is not friend', () => {
     const mounted = shallowMount(DirectoryEntry, {
-      mocks: Util.mockDataStore({
+      mocks: mockDataStore({
         uid: '123',
         friends: [
           {

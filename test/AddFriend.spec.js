@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { mount, config, createLocalVue } from '@vue/test-utils'
-import Util from '@/test/utils.js'
+import { mockDataStore } from '@/test/utils.js'
 
 import AddFriend from '@/pages/add-friend.vue'
 
@@ -19,7 +19,7 @@ describe('add-friend.vue', () => {
 
   test('Shows directory listing', async () => {
     const mountedForm = mount(AddFriend, {
-      mocks: Util.mockDataStore({ uid: '123' }),
+      mocks: mockDataStore({ uid: '123' }),
       localVue,
       vuetify,
     })
@@ -34,7 +34,7 @@ describe('add-friend.vue', () => {
 
   test('Does not show directory listing for empty directory', () => {
     const mountedForm = mount(AddFriend, {
-      mocks: Util.mockDataStore({ uid: '123' }),
+      mocks: mockDataStore({ uid: '123' }),
       localVue,
       vuetify,
     })
@@ -43,7 +43,7 @@ describe('add-friend.vue', () => {
 
   test('Entries shown matches directory size', async () => {
     const mountedForm = mount(AddFriend, {
-      mocks: Util.mockDataStore({ uid: '123' }),
+      mocks: mockDataStore({ uid: '123' }),
       localVue,
       vuetify,
     })
@@ -58,7 +58,7 @@ describe('add-friend.vue', () => {
 
   test('Entries are sorted by name', async () => {
     const mountedForm = mount(AddFriend, {
-      mocks: Util.mockDataStore({ uid: '123' }),
+      mocks: mockDataStore({ uid: '123' }),
       localVue,
       vuetify,
     })
@@ -80,7 +80,7 @@ describe('add-friend.vue', () => {
       addFriendByEmail: Promise.resolve(),
     }
     const mountedForm = mount(AddFriend, {
-      mocks: Util.mockDataStore({ uid: '123', dispatcher, dispatcherPromises }),
+      mocks: mockDataStore({ uid: '123', dispatcher, dispatcherPromises }),
       localVue,
       vuetify,
     })
@@ -101,7 +101,7 @@ describe('add-friend.vue', () => {
       }),
     }
     const mountedForm = mount(AddFriend, {
-      mocks: Util.mockDataStore({ uid: '123', dispatcher, dispatcherPromises }),
+      mocks: mockDataStore({ uid: '123', dispatcher, dispatcherPromises }),
       localVue,
       vuetify,
     })
@@ -129,7 +129,7 @@ describe('add-friend.vue', () => {
       addFriendByEmail: addEmailPromise,
     }
     const mountedForm = mount(AddFriend, {
-      mocks: Util.mockDataStore({ uid: '123', dispatcher, dispatcherPromises }),
+      mocks: mockDataStore({ uid: '123', dispatcher, dispatcherPromises }),
       localVue,
       vuetify,
     })
@@ -167,7 +167,7 @@ describe('add-friend.vue', () => {
       addFriendByEmail: addEmailPromise,
     }
     const mountedForm = mount(AddFriend, {
-      mocks: Util.mockDataStore({ uid: '123', dispatcher, dispatcherPromises }),
+      mocks: mockDataStore({ uid: '123', dispatcher, dispatcherPromises }),
       localVue,
       vuetify,
     })
@@ -207,7 +207,7 @@ describe('add-friend.vue', () => {
       inviteFriendByEmail: sendInvitePromise,
     }
     const mountedForm = mount(AddFriend, {
-      mocks: Util.mockDataStore({ uid: '123', dispatcher, dispatcherPromises }),
+      mocks: mockDataStore({ uid: '123', dispatcher, dispatcherPromises }),
       localVue,
       vuetify,
     })
@@ -235,7 +235,7 @@ describe('add-friend.vue', () => {
 
   test('It should hide the invite and enable input if edit addess is selected', async () => {
     const mountedForm = mount(AddFriend, {
-      mocks: Util.mockDataStore({ uid: '123' }),
+      mocks: mockDataStore({ uid: '123' }),
       localVue,
       vuetify,
     })

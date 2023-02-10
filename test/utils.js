@@ -119,10 +119,3 @@ export const mockWithStore = function ({ store, router, routeParams, axios }) {
     },
   }
 }
-
-const Util = {
-  mockDataStore,
-  friendList,
-}
-
-export default Util

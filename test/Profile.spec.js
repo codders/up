@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { mount, config, createLocalVue } from '@vue/test-utils'
-import Util from '@/test/utils.js'
+import { mockDataStore } from '@/test/utils.js'
 
 import Profile from '@/pages/profile.vue'
 
@@ -19,7 +19,7 @@ describe('profile.vue', () => {
 
   test("Displays the user's name", () => {
     const mountedForm = mount(Profile, {
-      mocks: Util.mockDataStore({ uid: '123', profile: { name: 'Arthur' } }),
+      mocks: mockDataStore({ uid: '123', profile: { name: 'Arthur' } }),
       localVue,
       vuetify,
     })

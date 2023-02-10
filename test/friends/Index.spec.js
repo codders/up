@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { mount, config, createLocalVue } from '@vue/test-utils'
-import Util from '@/test/utils.js'
+import { mockDataStore } from '@/test/utils.js'
 
 import Friends from '@/pages/friends/index.vue'
 
@@ -19,7 +19,7 @@ describe('friends.vue', () => {
 
   test('Does not show friends list if list is empty', () => {
     const mountedForm = mount(Friends, {
-      mocks: Util.mockDataStore({ uid: '123' }),
+      mocks: mockDataStore({ uid: '123' }),
       localVue,
       vuetify,
     })
@@ -32,7 +32,7 @@ describe('friends.vue', () => {
       { uid: 'uurGYXhegkXrW0Jy2rH4l75dxOf1', name: 'Bob' },
     ]
     const mountedForm = mount(Friends, {
-      mocks: Util.mockDataStore({ uid: '123', friends: friendList }),
+      mocks: mockDataStore({ uid: '123', friends: friendList }),
       localVue,
       vuetify,
     })
@@ -47,7 +47,7 @@ describe('friends.vue', () => {
       { uid: 'uurGYXhegkXrW0Jy2rH4l75dxOf1', name: 'Arthur' },
     ]
     const mountedForm = mount(Friends, {
-      mocks: Util.mockDataStore({ uid: '123', friends: friendList }),
+      mocks: mockDataStore({ uid: '123', friends: friendList }),
       localVue,
       vuetify,
     })

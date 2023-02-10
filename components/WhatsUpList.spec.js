@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import Util from '@/test/utils.js'
+import { mockDataStore } from '@/test/utils.js'
 
 import WhatsUpList from '@/components/WhatsUpList.vue'
 
@@ -11,7 +11,7 @@ const localVue = createLocalVue()
 describe('WhatsUpList.vue', () => {
   test('Shows something is up when there are things up', () => {
     const mountedIndex = shallowMount(WhatsUpList, {
-      mocks: Util.mockDataStore({
+      mocks: mockDataStore({
         uid: '123',
         whatsUp: [
           {
@@ -43,7 +43,7 @@ describe('WhatsUpList.vue', () => {
 
   test('Shows nothing is up when there are not things up', () => {
     const mountedIndex = shallowMount(WhatsUpList, {
-      mocks: Util.mockDataStore({
+      mocks: mockDataStore({
         uid: '123',
         axios: {
           $get: function (_) {
@@ -61,7 +61,7 @@ describe('WhatsUpList.vue', () => {
 
   test('Does not show something if only I am up', () => {
     const mountedIndex = shallowMount(WhatsUpList, {
-      mocks: Util.mockDataStore({
+      mocks: mockDataStore({
         uid: 'fK0fHCRYb1QZ7NdMoqdYwgENejA2',
         whatsUp: [
           {

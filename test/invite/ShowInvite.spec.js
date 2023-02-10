@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { mount, config } from '@vue/test-utils'
-import Util from '@/test/utils.js'
+import { mockDataStore } from '@/test/utils.js'
 
 import Index from '@/pages/invite/_id/index.vue'
 
@@ -13,7 +13,7 @@ config.stubs['nuxt-child'] = { template: '<br />' }
 describe('invite/_id/index.vue', () => {
   test('Renders the invitation when not logged in', async () => {
     const mountedCard = mount(Index, {
-      mocks: Util.mockDataStore({
+      mocks: mockDataStore({
         routeParams: { id: 'abc' },
       }),
     })
@@ -29,7 +29,7 @@ describe('invite/_id/index.vue', () => {
 
   test('Shows error if invite is intended for a different user', () => {
     const mountedCard = mount(Index, {
-      mocks: Util.mockDataStore({
+      mocks: mockDataStore({
         uid: 'abc',
         routeParams: { id: 'abc' },
         profile: { email: 'sam@example.com' },
@@ -44,7 +44,7 @@ describe('invite/_id/index.vue', () => {
 
   test('Renders the login form if not logged in', () => {
     const mountedCard = mount(Index, {
-      mocks: Util.mockDataStore({
+      mocks: mockDataStore({
         routeParams: { id: 'abc' },
       }),
     })
@@ -57,7 +57,7 @@ describe('invite/_id/index.vue', () => {
 
   test('Does not render login form if logged in', () => {
     const mountedCard = mount(Index, {
-      mocks: Util.mockDataStore({
+      mocks: mockDataStore({
         uid: 'abc',
         routeParams: { id: 'abc' },
       }),
@@ -72,7 +72,7 @@ describe('invite/_id/index.vue', () => {
   test('Redirects to welcome page if invite accepted', () => {
     let redirectPath
     mount(Index, {
-      mocks: Util.mockDataStore({
+      mocks: mockDataStore({
         routeParams: { id: 'abc' },
         router: {
           push(path) {
@@ -94,7 +94,7 @@ describe('invite/_id/index.vue', () => {
   test('Redirects to not found if invite does not exist', () => {
     let redirectPath
     mount(Index, {
-      mocks: Util.mockDataStore({
+      mocks: mockDataStore({
         routeParams: { id: 'abc' },
         router: {
           push(path) {

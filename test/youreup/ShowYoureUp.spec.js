@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { mount, config, createLocalVue } from '@vue/test-utils'
-import Util from '@/test/utils.js'
+import { mockDataStore } from '@/test/utils.js'
 
 import Index from '@/pages/youreup/_id/index.vue'
 
@@ -19,7 +19,7 @@ describe('youreup/_id/index.vue', () => {
   })
   test('Renders the youreup item', () => {
     const mountedCard = mount(Index, {
-      mocks: Util.mockDataStore({
+      mocks: mockDataStore({
         uid: '123',
         routeParams: { id: '123' },
         whatsUp: [
@@ -45,7 +45,7 @@ describe('youreup/_id/index.vue', () => {
   test('Redirects to not found if item does not exist', () => {
     let redirectPath
     mount(Index, {
-      mocks: Util.mockDataStore({
+      mocks: mockDataStore({
         uid: '123',
         routeParams: { id: 'abc' },
         router: {

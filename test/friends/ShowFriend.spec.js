@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { mount, config, createLocalVue } from '@vue/test-utils'
-import Util from '@/test/utils.js'
+import { mockDataStore } from '@/test/utils.js'
 
 import Index from '@/pages/friends/_id/index.vue'
 
@@ -20,7 +20,7 @@ describe('friends/_id/index.vue', () => {
 
   test('Renders the whatsup item', () => {
     const mountedCard = mount(Index, {
-      mocks: Util.mockDataStore({
+      mocks: mockDataStore({
         uid: '123',
         routeParams: { id: 'abc' },
         friends: [
@@ -39,7 +39,7 @@ describe('friends/_id/index.vue', () => {
   test('Redirects to not found if friend does not exist', () => {
     let redirectPath
     mount(Index, {
-      mocks: Util.mockDataStore({
+      mocks: mockDataStore({
         uid: '123',
         routeParams: { id: 'abc' },
         router: {

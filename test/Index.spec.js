@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import { mount, config, createLocalVue } from '@vue/test-utils'
-import Util from '@/test/utils.js'
+import { mockDataStore } from '@/test/utils.js'
 
 import Index from '@/pages/index.vue'
 
@@ -22,7 +22,7 @@ describe('index.vue', () => {
 
   test('Displays the greeting string', async () => {
     const mountedForm = mount(Index, {
-      mocks: Util.mockDataStore({ uid: '123', profile: { name: 'Arthur' } }),
+      mocks: mockDataStore({ uid: '123', profile: { name: 'Arthur' } }),
       localVue,
       vuetify,
     })
