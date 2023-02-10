@@ -14,10 +14,6 @@ jobs:
   ci:
     runs-on: ${{ matrix.os }}
 
-    defaults:
-      run:
-        working-directory: functions
-
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -42,10 +38,16 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install dependencies 👨🏻‍💻
-        run: cd functions && npm ci --prefer-offline --no-audit
+        run:
+          command: npm ci --prefer-offline --no-audit
+          working-directory: functions
 
       - name: Run linter 👀
-        run: cd functions && npm run lint
+        run:
+          command: npm run lint
+          working-directory: functions
 
       - name: Run tests 🧪
-        run: cd functions && npm run test
+        run:
+          command: npm run test
+          working-directory: functions
