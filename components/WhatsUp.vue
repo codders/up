@@ -66,6 +66,7 @@ export default {
     getTime() {
       const dtFormat = new Intl.DateTimeFormat('en-GB', {
         timeStyle: 'short',
+        timeZone: 'Europe/Berlin'
       })
       try {
         return dtFormat.format(this.timestamp * 1000).replace(':', 'h')
