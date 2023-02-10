@@ -9,7 +9,7 @@ const localVue = createLocalVue()
 
 config.stubs['router-link'] = { template: '<div></div> ' }
 
-function format_time(s) {
+function formatTime(s) {
   const dtFormat = new Intl.DateTimeFormat('en-GB', {
     timeStyle: 'short',
   });
@@ -35,7 +35,7 @@ describe('WhatsUp.vue', () => {
       '.up v-list-item-content-stub v-list-item-subtitle-stub'
     )
     expect(activityText.text()).toBe(
-      `${format_time(1573567067)} - Arthur wants to\n      Go out or Move`
+      `${formatTime(1573567067)} - Arthur wants to\n      Go out or Move`
     )
     expect(descriptionText.exists()).toBe(false)
   })
@@ -58,7 +58,7 @@ describe('WhatsUp.vue', () => {
       '.up v-list-item-content-stub v-list-item-subtitle-stub'
     )
     expect(activityText.text()).toBe(
-      `${format_time(1573567700)} - Arthur wants to\n      Play or Move`
+      `${formatTime(1573567700)} - Arthur wants to\n      Play or Move`
     )
     expect(descriptionText.text()).toBe('Play with me!')
   })
@@ -81,7 +81,7 @@ describe('WhatsUp.vue', () => {
       '.up v-list-item-content-stub v-list-item-subtitle-stub'
     )
     expect(activityText.text()).toBe(
-      `${format_time(1571568000)} - Arthur wants to\n      Play, Relax or Move`
+      `${formatTime(1571568000)} - Arthur wants to\n      Play, Relax or Move`
     )
     expect(descriptionText.text()).toBe('Play with me!')
   })
