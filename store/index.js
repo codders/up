@@ -131,6 +131,47 @@ export const actions = {
     return this.$fire.auth.signInWithRedirect(provider)
   },
 
+  signInWithDiscord(_ctx) {
+    window.location.href = API_BASE_URL + "/discord/login"
+  },
+
+  discordLoginToken(_ctx, discordCode) {
+    console.log("Attempted to exchange code " + discordCode + " for customerauth token") // eslint-disable-line no-console
+    return axios({
+      method: 'post',
+      url: API_BASE_URL + '/discord/token',
+      data: { code: discordCode },
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((postResponse) => {
+        console.log("Got token response:", postResponse)
+        return postResponse.data.customAuthToken
+      })
+      .catch((error) => {
+        console.log('Unable to exchange discord token', error) // eslint-disable-line no-console
+      })
+  },
+
+  signInWithCustomToken({ dispatch }, jwtToken) {
+    console.log("Signing in with temp jwt token". jwtToken) // eslint-disable-line no-console
+    return this.$fire.auth
+      .signInWithCustomToken(jwtToken)
+      .then(function (result) {
+        console.log('Custom Login Result', result) // eslint-disable-line no-console
+        return result.user.auth.currentUser
+          .getIdToken()
+          .then(function (idToken) {
+            return dispatch('userChanged', { user: result.user, idToken }).then(
+              () => {
+                dispatch('updateProfile', { name: payload.name })
+              }
+            )
+          })
+      })
+  },
+
   signInWithEmail({ dispatch }, payload) {
     return this.$fire.auth
       .signInWithEmailAndPassword(payload.email, payload.password)

@@ -106,20 +106,29 @@ export default {
   },
   created() {
     this.loading = true
-    this.$fire.auth
-      .getRedirectResult()
-      .then((result) => {
-        if (result.user !== null) {
-          return result.user.auth.currentUser.getIdToken().then((token) => {
-            return this.$store.dispatch('userChanged', {
-              user: result.user,
-              idToken: token,
+    let redirectPromise
+    if ("code" in this.$route.query) {
+      redirectPromise = this.$store.dispatch('discordLoginToken', this.$route.query.code)
+        .then((result) => {
+          return this.$store.dispatch('signInWithCustomToken', result)
+        })
+    } else {
+      redirectPromise = this.$fire.auth
+        .getRedirectResult()
+        .then((result) => {
+          if (result.user !== null) {
+            return result.user.auth.currentUser.getIdToken().then((token) => {
+              return this.$store.dispatch('userChanged', {
+                user: result.user,
+                idToken: token,
+              })
             })
-          })
-        } else {
-          return Promise.resolve()
-        }
-      })
+          } else {
+            return Promise.resolve()
+          }
+        })
+    }
+    redirectPromise
       .then(() => {
         return this.$store.dispatch('establishSession')
       })

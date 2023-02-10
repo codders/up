@@ -14,6 +14,15 @@
             </v-btn>
           </v-col>
           <v-col class="text-center">
+            <v-btn
+              class="signin mr-2"
+              color="primary"
+              @click.native="discordSignUp"
+            >
+              Discord
+            </v-btn>
+          </v-col>
+          <v-col class="text-center">
             <v-btn class="signin" color="primary" @click.native="showEmailForm">
               E-Mail
             </v-btn>
@@ -221,6 +230,20 @@ export default {
           log.error(e.message)
         })
     },
+    discordSignUp() {
+      const log = this.$log
+      log.debug('Signing in with discord...')
+      this.$emit('login-process-started')
+      this.$store
+        .dispatch('signInWithDiscord')
+        .then((result) => {
+          log.debug('inside then statement on login')
+          log.debug('result: ', result)
+        })
+        .catch((e) => {
+          log.error(e.message)
+        })
+    }
   },
 }
 </script>

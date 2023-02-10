@@ -24,6 +24,7 @@ import {
   populateInviteRecord,
   saveInviteRecordForUser,
   saveSubscription,
+  createCustomAuthToken,
 } from './firebase-wrapper';
 import { findMatches, getUpRecordsForRequest } from './up-logic';
 import {
@@ -31,6 +32,7 @@ import {
   sendUpMatchNotification,
 } from './notification';
 import { sendInvitationEmail } from './emailer';
+import { generateDiscordAuthUrl, fetchDiscordAccessToken } from './discord';
 
 const express = require('express');
 const cookieParser = require('cookie-parser')();
@@ -411,6 +413,51 @@ app.post(
               });
             });
         });
+      });
+  },
+);
+
+/** Unauthenticated Routes - see validateFirebaseToken */
+app.get(
+  '/discord/login',
+  (request: expressTypes.Request, response: expressTypes.Response) => {
+    console.log('Redirecting to discord auth user');
+    if (
+      request.headers.referer === undefined ||
+      request.headers.referer === ''
+    ) {
+      response.status(403).send({ message: 'no referer header set' });
+      return;
+    }
+    response.redirect(301, generateDiscordAuthUrl(request.headers.referer));
+  },
+);
+
+app.post(
+  '/discord/token',
+  (request: expressTypes.Request, response: expressTypes.Response) => {
+    console.log('Fetching discord oauth token');
+    // per https://discordjs.guide/oauth2/#authorization-code-grant-flow
+    if (request.headers.origin === undefined || request.headers.origin === '') {
+      response.status(403).send({ message: 'no origin header set' });
+      return;
+    }
+    const code = request.body.code;
+    if (code === undefined) {
+      response.status(401).send({ message: 'Bad request - no code supplied' });
+      return;
+    }
+    fetchDiscordAccessToken(code.toString(), request.headers.origin + '/')
+      .then((discordToken) => {
+        return createCustomAuthToken(discordToken).then((authToken) => {
+          response.status(201).send({ customAuthToken: authToken });
+        });
+      })
+      .catch((err) => {
+        console.log('Error creating discord access token', err);
+        response
+          .status(500)
+          .send({ error: 'API Error creating custom token (see logs)' });
       });
   },
 );

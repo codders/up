@@ -1,6 +1,7 @@
 import * as up from './up-types';
 import * as express from './express-types';
 import * as admin from 'firebase-admin';
+import { DiscordToken, fetchDiscordUserObject } from './discord';
 
 admin.initializeApp({
   credential: admin.credential.applicationDefault(),
@@ -55,6 +56,10 @@ export const validateFirebaseIdToken = (
       console.log('Skipping auth for invite route');
       next();
       return;
+    } else if (req.path.startsWith('/discord')) {
+      console.log('Skipping auth for discord login');
+      next();
+      return;
     } else {
       console.error(
         'No Firebase ID token was passed as a Bearer token in the Authorization header.',
@@ -98,6 +103,15 @@ export const validateFirebaseIdToken = (
       console.error('Error while verifying Firebase ID token:', error);
       res.status(403).send('Unauthorized');
     });
+};
+
+export const createCustomAuthToken: (arg0: DiscordToken) => Promise<string> = (
+  token: DiscordToken,
+) => {
+  console.log('Creating custom token for discord access token', token);
+  return fetchDiscordUserObject(token).then((discordUser) => {
+    return admin.auth().createCustomToken(discordUser.id);
+  });
 };
 
 export const deleteSubscription: (arg0: string) => Promise<boolean> = (
