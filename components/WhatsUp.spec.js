@@ -12,9 +12,9 @@ config.stubs['router-link'] = { template: '<div></div> ' }
 function formatTime(s) {
   const dtFormat = new Intl.DateTimeFormat('en-GB', {
     timeStyle: 'short',
-  });
+  })
 
-  return dtFormat.format(new Date(s * 1e3)).replace(":", "h");
+  return dtFormat.format(new Date(s * 1e3)).replace(':', 'h')
 }
 
 describe('WhatsUp.vue', () => {
