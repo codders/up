@@ -64,8 +64,14 @@ export default {
   },
   computed: {
     getTime() {
-      const date = new Date(this.timestamp * 1000)
-      return date.getHours() + 'h' + (date.getMinutes() + '').padStart(2, '0')
+      const dtFormat = new Intl.DateTimeFormat('en-GB', {
+        timeStyle: 'short',
+      })
+      try {
+        return dtFormat.format(this.timestamp * 1000).replace(':', 'h')
+      } catch (err) {
+        return this.timestamp
+      }
     },
   },
   methods: {
