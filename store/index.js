@@ -132,11 +132,10 @@ export const actions = {
   },
 
   signInWithEmail({ dispatch }, payload) {
-    const log = this.$log
     return this.$fire.auth
       .signInWithEmailAndPassword(payload.email, payload.password)
       .then(function (result) {
-        log.debug('Result', result)
+        console.log('Result', result) // eslint-disable-line no-console
         return result.user.auth.currentUser
           .getIdToken()
           .then(function (idToken) {
@@ -150,11 +149,10 @@ export const actions = {
   },
 
   signUpWithEmail({ commit, dispatch }, payload) {
-    const log = this.$log
     return this.$fire.auth
       .createUserWithEmailAndPassword(payload.email, payload.password)
       .then(function (result) {
-        log.debug('Create result', result)
+        console.log('Create result', result) // eslint-disable-line no-console
         return result.user.auth.currentUser
           .getIdToken()
           .then(function (idToken) {
@@ -341,13 +339,12 @@ export const actions = {
 
   refreshSubscription({ dispatch, state, commit }) {
     const fire = this.$fire
-    const log = this.$log
     dispatch('askNotificationPermission')
       .then((result) => {
-        log.debug('Got permission result', result)
+        console.log('Got permission result', result) // eslint-disable-line no-console
         if (result !== 'granted') {
-          log.info(
-            'Notifications are blocked for this page. Go to settings to unblock them'
+          console.log(
+            'Notifications are blocked for this page. Go to settings to unblock them' // eslint-disable-line no-console
           )
           throw new Error('Notifications are blocked')
         }
@@ -358,7 +355,7 @@ export const actions = {
       .then(function (pushSubscription) {
         // eslint-disable-next-line no-console
         const jsonPayload = JSON.stringify({ fcmToken: pushSubscription })
-        log.debug('Received PushSubscription: ', jsonPayload)
+        console.log('Received PushSubscription: ', jsonPayload) // eslint-disable-line no-console
         return axios({
           method: 'POST',
           headers: {
@@ -370,24 +367,24 @@ export const actions = {
         })
       })
       .then(function (_subscriptionSaved) {
-        log.debug('Setting up foreground message processing')
+        console.log('Setting up foreground message processing') // eslint-disable-line no-console
         fire.messaging.onMessage((payload) => {
-          log.debu('Got message in Foreground', payload)
+          console.log('Got message in Foreground', payload) // eslint-disable-line no-console
           commit('addNotification', payload)
         })
       })
       .catch((error) => {
         if (error) {
-          log.error(
+          console.log(
             'Error asking for permission or subscribing to notification',
             error
-          )
+          ) // eslint-disable-line no-console
         }
       })
   },
 
   askNotificationPermission() {
-    this.$log.debug('Asking for permission')
+    console.log('Asking for permission') // eslint-disable-line no-console
     return new Promise(function (resolve, reject) {
       const permissionResult = Notification.requestPermission(function (
         result
