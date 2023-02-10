@@ -38,16 +38,13 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install dependencies 👨🏻‍💻
-        run:
-          command: npm ci --prefer-offline --no-audit
-          working-directory: functions
+        run: npm ci --prefer-offline --no-audit
+        working-directory: functions
 
       - name: Run linter 👀
-        run:
-          command: npm run lint
-          working-directory: functions
+        run: npm run lint
+        working-directory: functions
 
       - name: Run tests 🧪
-        run:
-          command: npm run test
-          working-directory: functions
+        run: npm run test
+        working-directory: functions
