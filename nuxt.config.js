@@ -4,17 +4,17 @@ const logOptions = {
   // optional : defaults to true if not specified
   isEnabled: true,
   // required ['debug', 'info', 'warn', 'error', 'fatal']
-  logLevel : 'debug',
+  logLevel: 'debug',
   // optional : defaults to false if not specified
-  stringifyArguments : false,
+  stringifyArguments: false,
   // optional : defaults to false if not specified
-  showLogLevel : false,
+  showLogLevel: false,
   // optional : defaults to false if not specified
-  showMethodName : false,
+  showMethodName: false,
   // optional : defaults to '|' if not specified
   separator: '|',
   // optional : defaults to false if not specified
-  showConsoleColors: false
+  showConsoleColors: false,
 }
 
 export default {
@@ -38,9 +38,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [
-    { src: '~/plugins/persistedState.client.js' }
-  ],
+  plugins: [{ src: '~/plugins/persistedState.client.js' }],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -76,10 +74,10 @@ export default {
         services: {
           auth: true,
           firestore: true,
-          messaging: true
-        }
-      }
-    ]
+          messaging: true,
+        },
+      },
+    ],
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -106,20 +104,20 @@ export default {
   // Firebase Firestore config
   firestore: {
     enablePersistence: {
-      synchronizeTabs: true
+      synchronizeTabs: true,
     },
   },
 
   // Firebase messaging config
   messaging: {
-    createServiceWorker: false
+    createServiceWorker: false,
   },
 
   proxy: {
     '/app/': {
       target: 'https://europe-west1-up-now-a6da8.cloudfunctions.net/',
-      changeOrigin: true
-    }
+      changeOrigin: true,
+    },
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
@@ -127,10 +125,10 @@ export default {
     customVariables: ['~/assets/variables.scss'],
     defaultAssets: {
       font: true,
-      icons: 'md'
+      icons: 'md',
     },
     icons: {
-      iconfont: 'md'
+      iconfont: 'md',
     },
     theme: {
       dark: true,

@@ -21,13 +21,11 @@
             <v-row>
               <v-col class="info-text">
                 <h2>Privacy FAQ</h2>
-                <h3 @click="toggle('q1')">
-                  What happens with my data?
-                </h3>
+                <h3 @click="toggle('q1')">What happens with my data?</h3>
                 <div v-if="showParagraph.q1">
                   <p>
-                    <em>Up</em> uses your login data to identify you to the system
-                    and to other users.
+                    <em>Up</em> uses your login data to identify you to the
+                    system and to other users.
                   </p>
                   <p>
                     <b>If you login with Google</b> an app-specific ID will be
@@ -38,7 +36,8 @@
                   </p>
                   <p>
                     <b>If you login with e-mail</b>, you will be asked to supply
-                    your <b>e-mail address</b>, <b>name</b>, and a <b>password</b>
+                    your <b>e-mail address</b>, <b>name</b>, and a
+                    <b>password</b>
                     that will be used to create your profile. An app-specific ID
                     will be generated that will be used to identify you in
                     <em>Up</em>'s database.
@@ -58,9 +57,7 @@
           <v-card-text v-else>
             <whats-up-list />
             <you-are-up-list />
-            <v-btn color="primary" rounded nuxt to="/up">
-              Show Up
-            </v-btn>
+            <v-btn color="primary" rounded nuxt to="/up"> Show Up </v-btn>
             <div v-if="$store.getters.activeUser" jest="logged-in-div" />
             <div v-if="!pushSupport">
               <p>Sorry, your user agent does not support notifications :(</p>
@@ -85,13 +82,13 @@ export default {
     YouAreUpList,
     WhatsUpList,
     PulseLoader,
-    NotificationPopup
+    NotificationPopup,
   },
   data() {
     return {
       showParagraph: { q1: false, q2: false },
       loading: true,
-      notificationVisible: false
+      notificationVisible: false,
     }
   },
   computed: {
@@ -109,23 +106,28 @@ export default {
   },
   created() {
     this.loading = true
-    this.$fire.auth.getRedirectResult().then((result) => {
-      if (result.user !== null) {
-        return result.user.auth.currentUser.getIdToken().then((token) => {
-          return this.$store.dispatch("userChanged", { user: result.user, idToken: token })
-        })
-      } else {
-        return Promise.resolve()
-      }
-    })
-    .then(() => {
-      return this.$store.dispatch("establishSession")
-    })
-    .then(() => {
-      this.loading = false
-    })
+    this.$fire.auth
+      .getRedirectResult()
+      .then((result) => {
+        if (result.user !== null) {
+          return result.user.auth.currentUser.getIdToken().then((token) => {
+            return this.$store.dispatch('userChanged', {
+              user: result.user,
+              idToken: token,
+            })
+          })
+        } else {
+          return Promise.resolve()
+        }
+      })
+      .then(() => {
+        return this.$store.dispatch('establishSession')
+      })
+      .then(() => {
+        this.loading = false
+      })
     this.$nuxt.$on('login-process-started', () => {
-      this.loading = true;
+      this.loading = true
     })
   },
   methods: {

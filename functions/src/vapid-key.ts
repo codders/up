@@ -1,4 +1,4 @@
-import { defineString } from 'firebase-functions/params';
+import { defineString } from 'firebase-functions/params'
 
 import * as vapid from './vapid-key.d'
 
@@ -7,5 +7,5 @@ const pub = defineString('VAPID_PUBLIC_KEY')
 
 export const vapidKey: vapid.Key = {
   pub: pub,
-  secret: secret
+  secret: secret,
 }

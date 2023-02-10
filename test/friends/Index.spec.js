@@ -9,7 +9,7 @@ Vue.use(Vuetify)
 
 const localVue = createLocalVue()
 
-config.stubs['nuxt-link'] = { template: "<div></div> "}
+config.stubs['nuxt-link'] = { template: '<div></div> ' }
 
 describe('friends.vue', () => {
   let vuetify
@@ -21,7 +21,7 @@ describe('friends.vue', () => {
     const mountedForm = mount(Friends, {
       mocks: Util.mockDataStore({ uid: '123' }),
       localVue,
-      vuetify
+      vuetify,
     })
     expect(mountedForm.find('[jest="friends-list"]').exists()).toBe(false)
   })
@@ -29,30 +29,30 @@ describe('friends.vue', () => {
   test('Shows friends list if there are friends', () => {
     const friendList = [
       { uid: 'vRHbWPYcJdVbv33kopy4fNWDgwg1', name: 'Arthur' },
-      { uid: 'uurGYXhegkXrW0Jy2rH4l75dxOf1', name: 'Bob' }
+      { uid: 'uurGYXhegkXrW0Jy2rH4l75dxOf1', name: 'Bob' },
     ]
     const mountedForm = mount(Friends, {
       mocks: Util.mockDataStore({ uid: '123', friends: friendList }),
       localVue,
-      vuetify
+      vuetify,
     })
     expect(mountedForm.find('[jest="friends-list"]').exists()).toBe(true)
-    expect(mountedForm.findAll(".friend").length).toBe(2)
-    expect(mountedForm.find(".friend .name").text()).toBe('Arthur')
+    expect(mountedForm.findAll('.friend').length).toBe(2)
+    expect(mountedForm.find('.friend .name').text()).toBe('Arthur')
   })
-  
+
   test('Friend list should be sorted', () => {
     const friendList = [
       { uid: 'vRHbWPYcJdVbv33kopy4fNWDgwg1', name: 'Zach' },
-      { uid: 'uurGYXhegkXrW0Jy2rH4l75dxOf1', name: 'Arthur' }
+      { uid: 'uurGYXhegkXrW0Jy2rH4l75dxOf1', name: 'Arthur' },
     ]
     const mountedForm = mount(Friends, {
       mocks: Util.mockDataStore({ uid: '123', friends: friendList }),
       localVue,
-      vuetify
+      vuetify,
     })
     expect(mountedForm.find('[jest="friends-list"]').exists()).toBe(true)
-    expect(mountedForm.findAll(".friend").length).toBe(2)
-    expect(mountedForm.find(".friend .name").text()).toBe('Arthur')
+    expect(mountedForm.findAll('.friend').length).toBe(2)
+    expect(mountedForm.find('.friend .name').text()).toBe('Arthur')
   })
 })

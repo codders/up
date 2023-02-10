@@ -1,19 +1,19 @@
 export interface Request {
   headers: {
-    authorization: string;
-  },
+    authorization: string
+  }
   cookies: {
-    __session: string;
-  },
+    __session: string
+  }
   user: {
-    uid: string,
+    uid: string
     [key: string]: any
-  },
+  }
   body: {
     [key: string]: any
-  },
-  method: string,
-  path: string,
+  }
+  method: string
+  path: string
   params: any
 }
 

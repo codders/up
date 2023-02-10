@@ -2,9 +2,7 @@
   <v-layout column align-center justify-center>
     <v-flex xs12 sm8 md6>
       <v-card jest="youre-up-item">
-        <v-card-title class="headline">
-          Whats Up Invitation
-        </v-card-title>
+        <v-card-title class="headline"> Whats Up Invitation </v-card-title>
         <v-card-text v-if="youreUpItem() !== undefined">
           <h1>{{ getTitleForActivity(youreUpItem()) }}</h1>
           <p v-if="youreUpItem().description !== undefined">
@@ -50,9 +48,7 @@
           </v-btn>
         </v-card-text>
         <v-card-actions>
-          <v-btn color="primary" text nuxt to="/">
-            GO BACK
-          </v-btn>
+          <v-btn color="primary" text nuxt to="/"> GO BACK </v-btn>
           <v-spacer />
         </v-card-actions>
       </v-card>

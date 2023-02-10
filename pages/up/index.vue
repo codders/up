@@ -2,9 +2,7 @@
   <v-layout column align-center justify-center>
     <v-flex xs12 sm8 md6>
       <v-card>
-        <v-card-title class="headline">
-          What do you want to do?
-        </v-card-title>
+        <v-card-title class="headline"> What do you want to do? </v-card-title>
         <v-card-text>
           <v-list two-line jest="activities-list">
             <v-list-item
@@ -23,7 +21,10 @@
                 </v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-action>
-                <v-checkbox v-model="selected[activity.id]" @click="selectActivity(activity)" />
+                <v-checkbox
+                  v-model="selected[activity.id]"
+                  @click="selectActivity(activity)"
+                />
               </v-list-item-action>
             </v-list-item>
           </v-list>

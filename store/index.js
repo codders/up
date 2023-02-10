@@ -38,7 +38,7 @@ export const getters = {
   },
 }
 
-let notificationId = 0;
+let notificationId = 0
 
 export const mutations = {
   setUser(state, payload) {
@@ -84,10 +84,14 @@ export const mutations = {
   },
   addNotification(state, payload) {
     notificationId++
-    state.notifications.push(Object.assign({ id: notificationId }, payload.data))
+    state.notifications.push(
+      Object.assign({ id: notificationId }, payload.data)
+    )
   },
   clearNotification(state, notificationId) {
-    const index = state.notifications.findIndex((item) => item.id === notificationId)
+    const index = state.notifications.findIndex(
+      (item) => item.id === notificationId
+    )
     if (index !== -1) {
       state.notifications.splice(index, 1)
     }
@@ -123,32 +127,40 @@ export const mutations = {
 
 export const actions = {
   signInWithGoogle(_ctx) {
-    const provider = new this.$fireModule.auth.GoogleAuthProvider();
-    return this.$fire.auth.signInWithRedirect(provider);
+    const provider = new this.$fireModule.auth.GoogleAuthProvider()
+    return this.$fire.auth.signInWithRedirect(provider)
   },
 
   signInWithEmail({ dispatch }, payload) {
     const log = this.$log
-    return this.$fire.auth.signInWithEmailAndPassword(payload.email, payload.password)
+    return this.$fire.auth
+      .signInWithEmailAndPassword(payload.email, payload.password)
       .then(function (result) {
         log.debug('Result', result)
-        return result.user.auth.currentUser.getIdToken().then(function (idToken) {
-          return dispatch('userChanged', { user: result.user, idToken }).then(() => {
-            dispatch('updateProfile', { name: payload.name })
+        return result.user.auth.currentUser
+          .getIdToken()
+          .then(function (idToken) {
+            return dispatch('userChanged', { user: result.user, idToken }).then(
+              () => {
+                dispatch('updateProfile', { name: payload.name })
+              }
+            )
           })
-        })
       })
   },
 
   signUpWithEmail({ commit, dispatch }, payload) {
     const log = this.$log
-    return this.$fire.auth.createUserWithEmailAndPassword(payload.email, payload.password)
+    return this.$fire.auth
+      .createUserWithEmailAndPassword(payload.email, payload.password)
       .then(function (result) {
         log.debug('Create result', result)
-        return result.user.auth.currentUser.getIdToken().then(function (idToken) {
-          commit('setIdToken', idToken)
-          return dispatch('updateProfile', { name: payload.name })
-        })
+        return result.user.auth.currentUser
+          .getIdToken()
+          .then(function (idToken) {
+            commit('setIdToken', idToken)
+            return dispatch('updateProfile', { name: payload.name })
+          })
       })
   },
 
@@ -162,7 +174,7 @@ export const actions = {
       .catch((err) => console.log(err)) // eslint-disable-line no-console
   },
 
-  userChanged({ commit, state }, {user, idToken}) {
+  userChanged({ commit, state }, { user, idToken }) {
     console.log('Got User Changed event', { user, idToken }) // eslint-disable-line no-console
     commit('setIdToken', idToken)
     if (state.user === undefined || state.user.uid !== user.uid) {
@@ -178,8 +190,7 @@ export const actions = {
 
   establishSession({ state, dispatch }) {
     if (state.user.uid !== null) {
-      return dispatch('loadProfile')
-        .then(dispatch('refreshSubscription'))
+      return dispatch('loadProfile').then(dispatch('refreshSubscription'))
     } else {
       return Promise.resolve()
     }
@@ -340,7 +351,9 @@ export const actions = {
           )
           throw new Error('Notifications are blocked')
         }
-        return fire.messaging.getToken({ vapidKey: process.env.VAPID_PUBLIC_KEY })
+        return fire.messaging.getToken({
+          vapidKey: process.env.VAPID_PUBLIC_KEY,
+        })
       })
       .then(function (pushSubscription) {
         // eslint-disable-next-line no-console
@@ -353,14 +366,13 @@ export const actions = {
             'Content-Type': 'application/json',
           },
           data: jsonPayload,
-          url:
-            API_BASE_URL + '/saveSubscription',
+          url: API_BASE_URL + '/saveSubscription',
         })
       })
       .then(function (_subscriptionSaved) {
-        log.debug("Setting up foreground message processing")
+        log.debug('Setting up foreground message processing')
         fire.messaging.onMessage((payload) => {
-          log.debu("Got message in Foreground", payload)
+          log.debu('Got message in Foreground', payload)
           commit('addNotification', payload)
         })
       })

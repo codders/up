@@ -7,73 +7,94 @@ import WhatsUp from '@/components/WhatsUp.vue'
 Vue.use(Vuetify)
 const localVue = createLocalVue()
 
-config.stubs['router-link'] = { template: "<div></div> "}
+config.stubs['router-link'] = { template: '<div></div> ' }
 
 describe('WhatsUp.vue', () => {
-
   test('Renders activity details', async () => {
     const mounted = shallowMount(WhatsUp, {
-      localVue
+      localVue,
     })
     await mounted.setProps({
       activity: ['out', 'move'],
       name: 'Arthur',
       uid: 'abc',
-      timestamp: 1573567067
+      timestamp: 1573567067,
     })
-    const activityText = mounted.find('.up v-list-item-content-stub v-list-item-title-stub')
-    const descriptionText = mounted.find('.up v-list-item-content-stub v-list-item-subtitle-stub')
-    expect(activityText.text()).toBe("14h57 - Arthur wants to\n      Go out or Move")
+    const activityText = mounted.find(
+      '.up v-list-item-content-stub v-list-item-title-stub'
+    )
+    const descriptionText = mounted.find(
+      '.up v-list-item-content-stub v-list-item-subtitle-stub'
+    )
+    expect(activityText.text()).toBe(
+      '14h57 - Arthur wants to\n      Go out or Move'
+    )
     expect(descriptionText.exists()).toBe(false)
   })
 
   test('Renders activity details with description', async () => {
     const mounted = shallowMount(WhatsUp, {
-      localVue
+      localVue,
     })
     await mounted.setProps({
       activity: ['play', 'move'],
       description: 'Play with me!',
       name: 'Arthur',
       uid: 'abc',
-      timestamp: 1573567700
+      timestamp: 1573567700,
     })
-    const activityText = mounted.find('.up v-list-item-content-stub v-list-item-title-stub')
-    const descriptionText = mounted.find('.up v-list-item-content-stub v-list-item-subtitle-stub')
-    expect(activityText.text()).toBe('15h08 - Arthur wants to\n      Play or Move')
+    const activityText = mounted.find(
+      '.up v-list-item-content-stub v-list-item-title-stub'
+    )
+    const descriptionText = mounted.find(
+      '.up v-list-item-content-stub v-list-item-subtitle-stub'
+    )
+    expect(activityText.text()).toBe(
+      '15h08 - Arthur wants to\n      Play or Move'
+    )
     expect(descriptionText.text()).toBe('Play with me!')
   })
 
   test('Renders activity details with description and triple select', async () => {
     const mounted = shallowMount(WhatsUp, {
-      localVue
+      localVue,
     })
     await mounted.setProps({
       activity: ['play', 'relax', 'move'],
       name: 'Arthur',
       description: 'Play with me!',
       uid: 'abc',
-      timestamp: 1571568000
+      timestamp: 1571568000,
     })
-    const activityText = mounted.find('.up v-list-item-content-stub v-list-item-title-stub')
-    const descriptionText = mounted.find('.up v-list-item-content-stub v-list-item-subtitle-stub')
-    expect(activityText.text()).toBe('12h40 - Arthur wants to\n      Play, Relax or Move')
+    const activityText = mounted.find(
+      '.up v-list-item-content-stub v-list-item-title-stub'
+    )
+    const descriptionText = mounted.find(
+      '.up v-list-item-content-stub v-list-item-subtitle-stub'
+    )
+    expect(activityText.text()).toBe(
+      '12h40 - Arthur wants to\n      Play, Relax or Move'
+    )
     expect(descriptionText.text()).toBe('Play with me!')
   })
-  
+
   test('Does not render empty description', async () => {
     const mounted = shallowMount(WhatsUp, {
-      localVue
+      localVue,
     })
     await mounted.setProps({
       activity: ['play'],
       name: 'Arthur',
       description: '',
       uid: 'abc',
-      timestamp: 1561568000
+      timestamp: 1561568000,
     })
-    const activityText = mounted.find('.up v-list-item-content-stub v-list-item-title-stub')
-    const descriptionText = mounted.find('.up v-list-item-content-stub v-list-item-subtitle-stub')
+    const activityText = mounted.find(
+      '.up v-list-item-content-stub v-list-item-title-stub'
+    )
+    const descriptionText = mounted.find(
+      '.up v-list-item-content-stub v-list-item-subtitle-stub'
+    )
     expect(activityText.text()).toBe('18h53 - Arthur wants to\n      Play')
     expect(descriptionText.exists()).toBe(false)
   })

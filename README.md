@@ -11,7 +11,7 @@ Vuetify, Jest, SPA
 
 ## Build Setup
 
-``` bash
+```bash
 # install dependencies
 $ npm install
 
@@ -25,28 +25,28 @@ For detailed explanation on how things work, checkout [Nuxt.js docs](https://nux
 
 Login to firebase with
 
-``` bash
+```bash
   firebase login
 ```
 
 and initialise the project with
 
-``` bash
+```bash
   firebase init
 ```
 
-You will want to enable the database, storage and hosting modules. There will be a lot of questions, but the defaults are fine here, except that you should set the *public* folder to 'dist'.
+You will want to enable the database, storage and hosting modules. There will be a lot of questions, but the defaults are fine here, except that you should set the _public_ folder to 'dist'.
 
 You can then deploy your site with
 
-``` bash
+```bash
   npm run build
   firebase deploy
 ```
 
 or alternatively
 
-``` bash
+```bash
   npm run fdeploy
 ```
 
@@ -56,7 +56,7 @@ Additional configuration for push notifications and e-mail sending is described 
 
 To run the Firebase server locally:
 
-``` bash
+```bash
   npm run build
   firebase serve
 ```
@@ -71,18 +71,18 @@ There is support for push notifications in the application. You will need to gen
 
 When you have your Vapid Key, you will need to create a file `./functions/src/vapid-key.ts` with the following content:
 
-``` typescript
+```typescript
 export const vapidKey: vapid.Key = {
   pub: '[YOUR PUBLIC KEY]',
-  secret: '[YOUR PRIVATE KEY]'
+  secret: '[YOUR PRIVATE KEY]',
 }
 ```
 
 and on the client side, a corresponding file with just the public part that the client can use at `./model/vapid-key.js`:
 
-``` javascript
+```javascript
 export const vapidKey = {
-  pub: '[YOUR PUBLIC KEY]'
+  pub: '[YOUR PUBLIC KEY]',
 }
 ```
 
@@ -90,11 +90,11 @@ export const vapidKey = {
 
 The server sends emails to users to enable features like non-push notifications and invitations. The current implementation uses AWS SES. You will need to generate API keys for an IAM user with permission for `SendEmail` and `SendRawEmail`, and include the details in a file in `./functions/src/smtp-credentials.ts`:
 
-``` typescript
+```typescript
 export const smtpCredentials = {
   accessKeyId: '[YOUR ACCESS KEY ID]',
   secretAccessKey: '[YOUR SECRET ACCESS KEY]',
-  region: '[YOUR AWS REGION]'
+  region: '[YOUR AWS REGION]',
 }
 ```
 
@@ -104,7 +104,7 @@ export const smtpCredentials = {
 
 If you have trouble running the development server, it might be that there are not enough kernel watches available. You might see an 'ENOSPC' error from Node when you run `npm run dev`. In this case:
 
-``` bash
+```bash
 sudo sysctl fs.inotify.max_user_watches=524288
 ```
 

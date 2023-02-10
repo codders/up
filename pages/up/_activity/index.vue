@@ -9,9 +9,7 @@
           <h3>with these friends</h3>
           <v-list jest="friends-list">
             <v-list-item class="selectall" @click="selectAll()">
-              <v-list-item-content>
-                [ select all ]
-              </v-list-item-content>
+              <v-list-item-content> [ select all ] </v-list-item-content>
               <v-list-item-action>
                 <v-checkbox
                   v-model="allSelected"
@@ -163,8 +161,7 @@ export default {
           description: this.$data.description,
           friends: selectedFriends,
         },
-        url:
-          API_BASE_URL + '/saveRecord',
+        url: API_BASE_URL + '/saveRecord',
       }).then(function (response) {
         vm.$store.dispatch('addUpRecord', response.data.upRequest)
         vm.$nuxt.$router.replace({ path: '/' })

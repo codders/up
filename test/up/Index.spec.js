@@ -9,7 +9,7 @@ Vue.use(Vuetify)
 
 const localVue = createLocalVue()
 
-config.stubs['nuxt-link'] = { template: "<div></div> "}
+config.stubs['nuxt-link'] = { template: '<div></div> ' }
 config.stubs['nuxt-child'] = { template: '<br />' }
 
 describe('up/index.vue', () => {
@@ -19,11 +19,14 @@ describe('up/index.vue', () => {
   })
   test('Shows a list of activities', () => {
     const mountedCard = mount(Index, {
-      mocks: Util.mockDataStore({ uid: '123', routeParams: { activity: 'Play', time: 'Now' }}),
+      mocks: Util.mockDataStore({
+        uid: '123',
+        routeParams: { activity: 'Play', time: 'Now' },
+      }),
       localVue,
-      vuetify
+      vuetify,
     })
     expect(mountedCard.find('[jest="activities-list"]').exists()).toBe(true)
-    expect(mountedCard.findAll(".activity").length).toBe(4)
+    expect(mountedCard.findAll('.activity').length).toBe(4)
   })
 })

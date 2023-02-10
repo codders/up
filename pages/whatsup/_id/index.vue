@@ -2,9 +2,7 @@
   <v-layout column align-center justify-center>
     <v-flex xs12 sm8 md6>
       <v-card jest="whats-up-item">
-        <v-card-title class="headline">
-          Whats Up Invitation
-        </v-card-title>
+        <v-card-title class="headline"> Whats Up Invitation </v-card-title>
         <v-card-text v-if="whatsUpItem() !== undefined">
           <h1>{{ whatsUpItem().name }}</h1>
           <h3>wants to {{ getTitleForActivity(whatsUpItem()) }}</h3>

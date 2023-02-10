@@ -6,12 +6,9 @@
     "outDir": "lib",
     "sourceMap": true,
     "strict": true,
-    "types": [ "jest" ],
+    "types": ["jest"],
     "target": "es2015"
   },
   "compileOnSave": true,
-  "include": [
-    "src",
-    "lib"
-  ]
+  "include": ["src", "lib"]
 }

@@ -7,7 +7,7 @@ export interface UpRecord {
   timestamp: {
     _seconds: number
     _nanoseconds: number
-  },
+  }
   isUp: boolean
 }
 
@@ -30,13 +30,14 @@ export interface UpRequest {
 }
 
 export interface SavedUpRequest extends UpRequest {
-  id: string,
+  id: string
   uid: string
 }
 
-export interface SavedUpRequestWithNameAndAcceptedFriends extends SavedUpRequest {
-  acceptedFriends: string[],
-  pendingFriends: string[],
+export interface SavedUpRequestWithNameAndAcceptedFriends
+  extends SavedUpRequest {
+  acceptedFriends: string[]
+  pendingFriends: string[]
   name: string
 }
 
@@ -46,24 +47,24 @@ export interface DirectoryEntry {
 }
 
 export interface InterestRegister {
-  uid: string,
+  uid: string
   activity: string[]
 }
 
 export interface UserRecord {
-  id: string,
-  name: string,
+  id: string
+  name: string
   photoURL?: string
 }
 
 export interface ProfileDetails {
-  name: string,
+  name: string
   photoURL: string
 }
 
 export interface FriendRecord {
-  uid: string,
-  photoURL?: string,
+  uid: string
+  photoURL?: string
   subscription: { [id: string]: boolean }
 }
 
@@ -72,8 +73,8 @@ export interface FriendRecordWithName extends FriendRecord {
 }
 
 export interface SignupInvite {
-    email: string,
-    inviter: string
+  email: string
+  inviter: string
 }
 
 export interface SavedSignupInvite extends SignupInvite {

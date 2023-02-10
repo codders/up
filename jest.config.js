@@ -10,10 +10,8 @@ module.exports = {
     '^.+\\.js$': 'babel-jest',
     '.*\\.vue$': '@vue/vue2-jest',
   },
-  modulePathIgnorePatterns: ["<rootDir>/functions/"],
-  transformIgnorePatterns: [
-    "/node_modules/(?!vue-spinner|vuetify)"
-  ],
+  modulePathIgnorePatterns: ['<rootDir>/functions/'],
+  transformIgnorePatterns: ['/node_modules/(?!vue-spinner|vuetify)'],
   collectCoverage: true,
   collectCoverageFrom: [
     '<rootDir>/components/**/*.vue',

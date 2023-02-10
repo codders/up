@@ -31,9 +31,7 @@ import { API_BASE_URL } from '@/model/api'
 function postInviteAcceptance(axios, idToken, inviteId) {
   return axios({
     method: 'post',
-    url:
-      API_BASE_URL + '/invite/' +
-      inviteId,
+    url: API_BASE_URL + '/invite/' + inviteId,
     data: {
       accept: true,
     },
@@ -55,11 +53,7 @@ export default {
       headers.Authorization = 'Bearer ' + store.state.idToken
     }
     return $axios
-      .$get(
-        API_BASE_URL + '/invite/' +
-          params.id,
-        { headers }
-      )
+      .$get(API_BASE_URL + '/invite/' + params.id, { headers })
       .then(function (response) {
         if (
           store.getters.activeUser !== null &&

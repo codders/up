@@ -9,7 +9,7 @@ Vue.use(Vuetify)
 
 const localVue = createLocalVue()
 
-config.stubs['nuxt-link'] = { template: "<div></div> "}
+config.stubs['nuxt-link'] = { template: '<div></div> ' }
 config.stubs['nuxt-child'] = { template: '<br />' }
 
 describe('whatsup/_id/index.vue', () => {
@@ -23,20 +23,21 @@ describe('whatsup/_id/index.vue', () => {
         uid: '123',
         routeParams: { id: 'abc' },
         whatsUp: [
-            {"inviteemail":"arthur.taylor@gmail.com",
-             "activity":["play","out"],
-             "uid":"fK0fHCRYb1QZ7NdMoqdYwgENejA2",
-             "id": "abc",
-             "description": "Let's do something",
-             "timestamp": {
-                "_seconds":1554534507,
-                "_nanoseconds":0
-              }
-            }
-          ]
-        }),
+          {
+            inviteemail: 'arthur.taylor@gmail.com',
+            activity: ['play', 'out'],
+            uid: 'fK0fHCRYb1QZ7NdMoqdYwgENejA2',
+            id: 'abc',
+            description: "Let's do something",
+            timestamp: {
+              _seconds: 1554534507,
+              _nanoseconds: 0,
+            },
+          },
+        ],
+      }),
       localVue,
-      vuetify
+      vuetify,
     })
     expect(mountedCard.find('[jest="whats-up-item"]').exists()).toBe(true)
   })
@@ -50,23 +51,24 @@ describe('whatsup/_id/index.vue', () => {
         router: {
           push(path) {
             redirectPath = path
-          }
+          },
         },
         whatsUp: [
-            {"inviteemail":"arthur.taylor@gmail.com",
-             "activity":["play","out"],
-             "uid":"fK0fHCRYb1QZ7NdMoqdYwgENejA2",
-             "id": "def",
-             "description": "Let's do something",
-             "timestamp": {
-                "_seconds":1554534507,
-                "_nanoseconds":0
-              }
-            }
-          ]
-        }),
+          {
+            inviteemail: 'arthur.taylor@gmail.com',
+            activity: ['play', 'out'],
+            uid: 'fK0fHCRYb1QZ7NdMoqdYwgENejA2',
+            id: 'def',
+            description: "Let's do something",
+            timestamp: {
+              _seconds: 1554534507,
+              _nanoseconds: 0,
+            },
+          },
+        ],
+      }),
       localVue,
-      vuetify
+      vuetify,
     })
     expect(redirectPath).toBe('/whatsup/unknown_item')
   })

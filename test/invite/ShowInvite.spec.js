@@ -7,21 +7,23 @@ import Index from '@/pages/invite/_id/index.vue'
 
 Vue.use(Vuetify)
 
-config.stubs['nuxt-link'] = { template: "<div></div> "}
+config.stubs['nuxt-link'] = { template: '<div></div> ' }
 config.stubs['nuxt-child'] = { template: '<br />' }
 
 describe('invite/_id/index.vue', () => {
   test('Renders the invitation when not logged in', async () => {
     const mountedCard = mount(Index, {
       mocks: Util.mockDataStore({
-        routeParams: { id: 'abc' }
-      })
+        routeParams: { id: 'abc' },
+      }),
     })
     await mountedCard.setData({
       inviterName: 'Arthur',
-      email: 'arthur@example.com'
+      email: 'arthur@example.com',
     })
-    expect(mountedCard.find('[jest="inviter-name"]').text()).toBe('Arthur invited you to join up!')
+    expect(mountedCard.find('[jest="inviter-name"]').text()).toBe(
+      'Arthur invited you to join up!'
+    )
     expect(mountedCard.find('[jest="email-mismatch"]').exists()).toBe(false)
   })
 
@@ -30,12 +32,12 @@ describe('invite/_id/index.vue', () => {
       mocks: Util.mockDataStore({
         uid: 'abc',
         routeParams: { id: 'abc' },
-        profile: { email: 'sam@example.com' }
-      })
+        profile: { email: 'sam@example.com' },
+      }),
     })
     mountedCard.setData({
       inviterName: 'Arthur',
-      email: 'arthur@example.com'
+      email: 'arthur@example.com',
     })
     expect(mountedCard.find('[jest="email-mismatch"]').exists()).toBe(true)
   })
@@ -43,12 +45,12 @@ describe('invite/_id/index.vue', () => {
   test('Renders the login form if not logged in', () => {
     const mountedCard = mount(Index, {
       mocks: Util.mockDataStore({
-        routeParams: { id: 'abc' }
-      })
+        routeParams: { id: 'abc' },
+      }),
     })
     mountedCard.setData({
       inviterName: 'Arthur',
-      email: 'arthur@example.com'
+      email: 'arthur@example.com',
     })
     expect(mountedCard.find('[jest="login"]').exists()).toBe(true)
   })
@@ -57,12 +59,12 @@ describe('invite/_id/index.vue', () => {
     const mountedCard = mount(Index, {
       mocks: Util.mockDataStore({
         uid: 'abc',
-        routeParams: { id: 'abc' }
-      })
+        routeParams: { id: 'abc' },
+      }),
     })
     mountedCard.setData({
       inviterName: 'Arthur',
-      email: 'arthur@example.com'
+      email: 'arthur@example.com',
     })
     expect(mountedCard.find('[jest="login]').exists()).toBe(false)
   })
@@ -75,16 +77,16 @@ describe('invite/_id/index.vue', () => {
         router: {
           push(path) {
             redirectPath = path
-          }
-        }
+          },
+        },
       }),
-      data: function() {
+      data: function () {
         return {
           inviterName: 'Arthur',
           email: 'arthur@example.com',
-          accepted: true
+          accepted: true,
         }
-      }
+      },
     })
     expect(redirectPath).toBe('/')
   })
@@ -97,9 +99,9 @@ describe('invite/_id/index.vue', () => {
         router: {
           push(path) {
             redirectPath = path
-          }
-        }
-      })
+          },
+        },
+      }),
     })
     expect(redirectPath).toBe('/invite/unknown_invite')
   })

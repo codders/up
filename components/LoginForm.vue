@@ -2,9 +2,7 @@
   <v-layout>
     <v-flex text-xs-center>
       <div v-if="showLoginButtons">
-        <h2 class="title mb-2">
-          Sign In with
-        </h2>
+        <h2 class="title mb-2">Sign In with</h2>
         <v-row class="login-buttons spread">
           <v-col class="text-center">
             <v-btn
@@ -60,7 +58,7 @@
         </v-row>
         <v-row v-if="signInError !== null">
           <v-col>
-            <p style="color: red;">
+            <p style="color: red">
               {{ signInError }}
             </p>
           </v-col>
@@ -94,9 +92,7 @@
             </v-btn>
           </v-col>
           <v-col>
-            <v-btn @click.native="cancelEmailSignIn">
-              Cancel
-            </v-btn>
+            <v-btn @click.native="cancelEmailSignIn"> Cancel </v-btn>
           </v-col>
         </v-row>
       </v-container>
@@ -213,7 +209,7 @@ export default {
     },
     googleSignUp() {
       const log = this.$log
-      log.debug("Signing in with google...")
+      log.debug('Signing in with google...')
       this.$emit('login-process-started')
       this.$store
         .dispatch('signInWithGoogle')

@@ -2,9 +2,7 @@
   <v-layout column align-center justify-center>
     <v-flex xs12 sm8 md6>
       <v-card>
-        <v-card-title class="headline">
-          What's Up right now
-        </v-card-title>
+        <v-card-title class="headline"> What's Up right now </v-card-title>
         <v-card-text>
           <whats-up-list />
         </v-card-text>

@@ -9,7 +9,7 @@ Vue.use(Vuetify)
 
 const localVue = createLocalVue()
 
-config.stubs['nuxt-link'] = { template: "<div></div> "}
+config.stubs['nuxt-link'] = { template: '<div></div> ' }
 
 describe('profile.vue', () => {
   let vuetify
@@ -17,11 +17,11 @@ describe('profile.vue', () => {
     vuetify = new Vuetify()
   })
 
-  test('Displays the user\'s name', () => {
+  test("Displays the user's name", () => {
     const mountedForm = mount(Profile, {
       mocks: Util.mockDataStore({ uid: '123', profile: { name: 'Arthur' } }),
       localVue,
-      vuetify
+      vuetify,
     })
     expect(mountedForm.findComponent('[jest="name"]')).not.toEqual(null)
     expect(mountedForm.vm.$data.name).toBe('Arthur')

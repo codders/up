@@ -9,10 +9,10 @@ Vue.use(Vuetify)
 
 const localVue = createLocalVue()
 
-config.stubs['nuxt-link'] = { template: "<div></div> "}
-config.stubs['whats-up-list'] = { template: "<div></div> "}
-config.stubs['you-are-up-list'] = { template: "<div></div> "}
-config.stubs['notification-popup'] = { template: "<div></div>" }
+config.stubs['nuxt-link'] = { template: '<div></div> ' }
+config.stubs['whats-up-list'] = { template: '<div></div> ' }
+config.stubs['you-are-up-list'] = { template: '<div></div> ' }
+config.stubs['notification-popup'] = { template: '<div></div>' }
 
 describe('index.vue', () => {
   let vuetify
@@ -24,11 +24,13 @@ describe('index.vue', () => {
     const mountedForm = mount(Index, {
       mocks: Util.mockDataStore({ uid: '123', profile: { name: 'Arthur' } }),
       localVue,
-      vuetify
+      vuetify,
     })
     await mountedForm.setData({ loading: false })
     expect(mountedForm.vm.loading).toBe(false)
     expect(mountedForm.findComponent('[jest="headline"]')).not.toEqual(null)
-    expect(mountedForm.find('[jest="headline"]').text()).toBe('Welcome to Up, Arthur')
+    expect(mountedForm.find('[jest="headline"]').text()).toBe(
+      'Welcome to Up, Arthur'
+    )
   })
 })

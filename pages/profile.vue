@@ -1,9 +1,7 @@
 <template>
   <v-layout column align-center justify-center>
     <v-card>
-      <v-card-title class="headline">
-        Your Profile
-      </v-card-title>
+      <v-card-title class="headline"> Your Profile </v-card-title>
       <v-card-text>
         <v-row align="center" justify="center">
           <v-img

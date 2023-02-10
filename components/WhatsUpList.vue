@@ -67,14 +67,11 @@ export default {
     const vm = this
     this.loading = true
     this.$axios
-      .$get(
-        API_BASE_URL + '/whatsUp',
-        {
-          headers: {
-            Authorization: 'Bearer ' + this.$store.state.idToken,
-          },
-        }
-      )
+      .$get(API_BASE_URL + '/whatsUp', {
+        headers: {
+          Authorization: 'Bearer ' + this.$store.state.idToken,
+        },
+      })
       .then((response) => {
         vm.$store.commit('mergeWhatsUpRecords', response)
         vm.loading = false

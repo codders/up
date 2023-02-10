@@ -2,9 +2,7 @@
   <v-layout column align-center justify-center>
     <v-flex xs12 sm8 md6>
       <v-card>
-        <v-card-title class="headline">
-          Your Friends
-        </v-card-title>
+        <v-card-title class="headline"> Your Friends </v-card-title>
         <v-card-text>
           <template v-if="friendCount > 0">
             <v-list jest="friends-list">

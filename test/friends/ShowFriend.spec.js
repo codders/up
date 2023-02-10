@@ -9,8 +9,8 @@ Vue.use(Vuetify)
 
 const localVue = createLocalVue()
 
-config.stubs['nuxt-link'] = { template: "<div></div> "}
-config.stubs['nuxt-child'] = { template: "<br/>"}
+config.stubs['nuxt-link'] = { template: '<div></div> ' }
+config.stubs['nuxt-child'] = { template: '<br/>' }
 
 describe('friends/_id/index.vue', () => {
   let vuetify
@@ -26,12 +26,12 @@ describe('friends/_id/index.vue', () => {
         friends: [
           {
             uid: 'abc',
-            name: 'Arthur'
-          }
-        ]
+            name: 'Arthur',
+          },
+        ],
       }),
       vuetify,
-      localVue
+      localVue,
     })
     expect(mountedCard.find('[jest="friend-name"]').text()).toBe('Arthur')
   })
@@ -45,11 +45,11 @@ describe('friends/_id/index.vue', () => {
         router: {
           push(path) {
             redirectPath = path
-          }
-        }
+          },
+        },
       }),
       vuetify,
-      localVue
+      localVue,
     })
     expect(redirectPath).toBe('/friends/unknown_friend')
   })

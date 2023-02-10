@@ -2,9 +2,7 @@
   <v-layout column justify-center align-center>
     <v-flex xs12 sm8 md6>
       <v-card>
-        <v-card-title>
-          Add a friend
-        </v-card-title>
+        <v-card-title> Add a friend </v-card-title>
         <v-card-text>
           <h3>Add by e-mail address</h3>
           <div>
@@ -45,7 +43,7 @@
             </v-btn>
           </div>
           <div v-if="addFriendError !== null">
-            <p style="color: red;">
+            <p style="color: red">
               {{ addFriendError }}
             </p>
           </div>
@@ -89,14 +87,11 @@ export default {
   },
   asyncData({ $axios, store }) {
     return $axios
-      .$get(
-        API_BASE_URL + '/directory',
-        {
-          headers: {
-            Authorization: 'Bearer ' + store.state.idToken,
-          },
-        }
-      )
+      .$get(API_BASE_URL + '/directory', {
+        headers: {
+          Authorization: 'Bearer ' + store.state.idToken,
+        },
+      })
       .then((response) => {
         return { directoryEntries: response }
       })

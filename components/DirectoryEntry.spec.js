@@ -8,7 +8,7 @@ import DirectoryEntry from '@/components/DirectoryEntry.vue'
 Vue.use(Vuetify)
 const localVue = createLocalVue()
 
-config.stubs['nuxt-link'] = { template: "<div></div> "}
+config.stubs['nuxt-link'] = { template: '<div></div> ' }
 
 describe('DirectoryEntry.vue', () => {
   let vuetify
@@ -21,11 +21,11 @@ describe('DirectoryEntry.vue', () => {
     const mounted = shallowMount(DirectoryEntry, {
       mocks: Util.mockDataStore({}),
       localVue,
-      vuetify
+      vuetify,
     })
     await mounted.setProps({
       uid: 'abc',
-      name: 'Arthur'
+      name: 'Arthur',
     })
     const tile = mounted.find('v-list-item-stub')
     expect(tile.find('v-list-item-title-stub').text()).toBe('Arthur')
@@ -37,7 +37,7 @@ describe('DirectoryEntry.vue', () => {
     const mountedForm = mount(DirectoryEntry, {
       mocks: Util.mockDataStore({ uid: '123', dispatcher }),
       localVue,
-      vuetify
+      vuetify,
     })
     await mountedForm.vm.addFriend()
     expect(dispatcher.length).toBe(1)
@@ -51,7 +51,7 @@ describe('DirectoryEntry.vue', () => {
     const mountedForm = mount(DirectoryEntry, {
       mocks: Util.mockDataStore({ uid: '123', dispatcher }),
       localVue,
-      vuetify
+      vuetify,
     })
     await mountedForm.vm.deleteFriend()
     expect(dispatcher.length).toBe(1)
@@ -63,17 +63,19 @@ describe('DirectoryEntry.vue', () => {
     const mounted = shallowMount(DirectoryEntry, {
       mocks: Util.mockDataStore({
         uid: '123',
-        friends: [{
-          uid: 'abc',
-          name: 'Arthur'
-        }]
+        friends: [
+          {
+            uid: 'abc',
+            name: 'Arthur',
+          },
+        ],
       }),
       localVue,
-      vuetify
+      vuetify,
     })
     mounted.setProps({
       uid: 'abc',
-      name: 'Arthur'
+      name: 'Arthur',
     })
     const tile = mounted.find('v-list-item-stub')
     expect(tile.findAll('.delete_action').length).toBe(1)
@@ -84,21 +86,22 @@ describe('DirectoryEntry.vue', () => {
     const mounted = shallowMount(DirectoryEntry, {
       mocks: Util.mockDataStore({
         uid: '123',
-        friends: [{
-          uid: 'abd',
-          name: 'Arthur'
-        }]
+        friends: [
+          {
+            uid: 'abd',
+            name: 'Arthur',
+          },
+        ],
       }),
       localVue,
-      vuetify
+      vuetify,
     })
     mounted.setProps({
       uid: 'abc',
-      name: 'Arthur'
+      name: 'Arthur',
     })
     const tile = mounted.find('v-list-item-stub')
     expect(tile.findAll('.delete_action').length).toBe(0)
     expect(tile.findAll('.add_action').length).toBe(1)
   })
-
 })
