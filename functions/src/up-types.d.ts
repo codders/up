@@ -46,6 +46,10 @@ export interface DirectoryEntry {
   name: string;
 }
 
+export interface DirectoryEntryWithPhoto extends DirectoryEntry {
+  photoURL?: string
+}
+
 export interface InterestRegister {
   uid: string;
   activity: string[];

@@ -1,14 +1,18 @@
 import * as up from './up-types';
 import * as express from './express-types';
 import * as admin from 'firebase-admin';
-import { DiscordAuth, DiscordToken, fetchDiscordUserObject } from './discord';
+import {
+  DiscordAuth,
+  DiscordToken,
+  fetchDiscordUserObject
+ } from './discord';
 
 admin.initializeApp({
   credential: admin.credential.applicationDefault(),
   databaseURL: 'https://up-now-a6da8.firebaseio.com',
 });
 
-export const sendMessage = (token: string, data: any, notification: any) => {
+export const sendMessage = (token: string, data: any, notification: any): Promise<string> => {
   const payload = {
     token: token,
     data: data || {},
@@ -205,7 +209,7 @@ export const loadSubscription: (arg0: string) => Promise<string> = (
     });
 };
 
-export const saveUp = (record: up.UpRecord) => {
+export const saveUp = (record: up.UpRecord): Promise<string> => {
   const savedRecord = Object.assign(record, {
     timestamp: admin.firestore.FieldValue.serverTimestamp(),
   });
@@ -239,7 +243,7 @@ export const saveDiscordUserDetails = (
 export const saveInviteRecordForUser = (
   userId: string,
   record: up.UpRequest,
-) => {
+): Promise<string> => {
   const savedRecord = Object.assign(record, {
     timestamp: admin.firestore.FieldValue.serverTimestamp(),
   });
@@ -277,7 +281,7 @@ export const addFriendRecord = (uid: string, frienduid: string) => {
 export const createSignupInvitation = (
   userId: string,
   invitedemail: string,
-) => {
+): Promise<string> => {
   const savedRecord = {
     email: invitedemail,
     inviter: userId,
@@ -313,7 +317,7 @@ export const acceptSignupInvitation = (
     });
 };
 
-export const loadSignupInvitation = (inviteId: string) => {
+export const loadSignupInvitation = (inviteId: string): Promise<up.SavedSignupInvite> => {
   return admin
     .firestore()
     .collection('signup-invitations')
@@ -730,7 +734,7 @@ export const loadUp = (uid: string) => {
   return loadUpByField('inviteduid', uid);
 };
 
-const resolveNamesAndPhotos = (friends: up.FriendRecord[]) => {
+const resolveNamesAndPhotos = (friends: up.FriendRecord[]): Promise<up.DirectoryEntryWithPhoto[]> => {
   const entries: up.DirectoryEntry[] = [];
   const promises: PromiseLike<void | up.DirectoryEntry>[] = [];
   friends.forEach(function (friend) {
@@ -759,48 +763,90 @@ const resolveNamesAndPhotos = (friends: up.FriendRecord[]) => {
   });
 };
 
-export const loadFriends = (uid: string) => {
+const isDiscordUser = (uid: string): Promise<boolean> => {
+  return admin
+    .firestore()
+    .collection('custom-auth')
+    .doc('discord')
+    .collection('users')
+    .doc(uid)
+    .get().then(function (doc) {
+      return doc.exists
+    })
+}
+
+const getDiscordToken = (uid: string): Promise<DiscordToken> => {
+  return admin
+    .firestore()
+    .collection('custom-auth')
+    .doc('discord')
+    .collection('users')
+    .doc(uid)
+    .get().then(function (doc) {
+      if (doc.exists) {
+        const data = doc.data()!
+        return {
+          access_token: data.access_token,
+          token_type: data.token_type,
+          expires_in: data.expires_in,
+          refresh_token: data.refresh_token,
+          scope: data.scope
+        } as DiscordToken
+      } else {
+        console.log('User ' + uid + ' is not a discord user');
+        throw new Error('User ' + uid + ' is not a discord user');
+      }
+    })
+}
+
+export const loadFriends = (uid: string): Promise<up.DirectoryEntryWithPhoto[]> => {
   console.log('Loading friends for user', uid);
   return loadFriendRecords(uid).then(function (frienduids: up.FriendRecord[]) {
     return resolveNamesAndPhotos(frienduids);
   });
 };
 
-export const loadDirectory = (uid: string) => {
-  return loadFriendRecords(uid)
-    .then(function (friendrecords: up.FriendRecord[]) {
-      const promises: PromiseLike<up.FriendRecord[]>[] = [];
-      friendrecords.forEach(function (friendrecord) {
-        promises.push(
-          loadFriendRecords(friendrecord.uid).then(function (
-            friendfriendrecords: up.FriendRecord[],
-          ) {
-            if (
-              friendfriendrecords.findIndex((item) => item.uid === uid) !== -1
+export const loadDirectory = (uid: string): Promise<up.DirectoryEntryWithPhoto[]> => {
+  let friendListPromise = isDiscordUser(uid).then((isDiscord) => {
+    if (isDiscord) {
+      return getDiscordToken(uid).then((token) => { return [] })
+    } else {
+      return loadFriendRecords(uid)
+      .then(function (friendrecords: up.FriendRecord[]) {
+        const promises: PromiseLike<up.FriendRecord[]>[] = [];
+        friendrecords.forEach(function (friendrecord) {
+          promises.push(
+            loadFriendRecords(friendrecord.uid).then(function (
+              friendfriendrecords: up.FriendRecord[],
             ) {
-              return friendfriendrecords.filter((item) => item.uid !== uid);
-            } else {
-              return [];
-            }
-          }),
-        );
-      });
-      promises.push(Promise.resolve(friendrecords));
-      return Promise.all(promises);
-    })
-    .then(function (friendrecordarrays: up.FriendRecord[][]) {
-      const uniqueFriends: up.FriendRecord[] = [];
-      const emptyArray: up.FriendRecord[] = [];
-      emptyArray.concat
-        .apply([], friendrecordarrays)
-        .forEach(function (friendrecord) {
-          if (
-            uniqueFriends.findIndex((item) => item.uid === friendrecord.uid) ===
-            -1
-          ) {
-            uniqueFriends.push(friendrecord);
-          }
+              if (
+                friendfriendrecords.findIndex((item) => item.uid === uid) !== -1
+              ) {
+                return friendfriendrecords.filter((item) => item.uid !== uid);
+              } else {
+                return [];
+              }
+            }),
+          );
         });
-      return resolveNamesAndPhotos(uniqueFriends);
-    });
+        promises.push(Promise.resolve(friendrecords));
+        return Promise.all(promises);
+      })
+    }
+  })
+  return friendListPromise.then(function (friendrecordarrays: up.FriendRecord[][]) {
+    const uniqueFriends: up.FriendRecord[] = [];
+    const emptyArray: up.FriendRecord[] = [];
+    emptyArray.concat
+      .apply([], friendrecordarrays)
+      .forEach(function (friendrecord) {
+        if (
+          uniqueFriends.findIndex((item) => item.uid === friendrecord.uid) ===
+          -1
+        ) {
+          uniqueFriends.push(friendrecord);
+        }
+      });
+    return resolveNamesAndPhotos(uniqueFriends);
+  });
 };
