@@ -41,20 +41,21 @@ describe('up record generation logic', () => {
     );
     expect(createdRecords.length).toBe(1);
   }),
-    it('should not create up records if people are not interested to receive them', () => {
-      const createdRecords = getUpRecordsForRequest(
-        {
-          activity: ['play'],
-          description: 'fish',
-          id: 'abd',
-          uid: 'abc',
-          friends: ['def'],
-        },
-        'Username',
-        {
-          def: { uid: 'def', activity: ['eat'] },
-        },
-      );
-      expect(createdRecords.length).toBe(0);
-    });
+
+  it('should not create up records if people are not interested to receive them', () => {
+    const createdRecords = getUpRecordsForRequest(
+      {
+        activity: ['play'],
+        description: 'fish',
+        id: 'abd',
+        uid: 'abc',
+        friends: ['def'],
+      },
+      'Username',
+      {
+        def: { uid: 'def', activity: ['eat'] },
+      },
+    );
+    expect(createdRecords.length).toBe(0);
+  });
 });
