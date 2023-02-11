@@ -23,7 +23,17 @@ describe('profile.vue', () => {
       localVue,
       vuetify,
     })
-    expect(mountedForm.findComponent('[jest="name"]')).not.toEqual(null)
+    expect(mountedForm.find('[jest="name"]')).not.toEqual(null)
     expect(mountedForm.vm.$data.name).toBe('Arthur')
+  })
+
+  test("Works when no name is set", () => {
+    const mountedForm = mount(Profile, {
+      mocks: mockDataStore({ uid: '123', profile: { } }),
+      localVue,
+      vuetify,
+    })
+    expect(mountedForm.find('[jest="name"]').text()).toEqual("")
+    expect(mountedForm.vm.$data.name).toBe('')
   })
 })

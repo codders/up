@@ -1,7 +1,7 @@
 import * as up from './up-types';
 import * as express from './express-types';
 import * as admin from 'firebase-admin';
-import { DiscordToken, fetchDiscordUserObject } from './discord';
+import { DiscordAuth, DiscordToken, fetchDiscordUserObject } from './discord';
 
 admin.initializeApp({
   credential: admin.credential.applicationDefault(),
@@ -105,12 +105,20 @@ export const validateFirebaseIdToken = (
     });
 };
 
-export const createCustomAuthToken: (arg0: DiscordToken) => Promise<string> = (
-  token: DiscordToken,
-) => {
+export const createCustomAuthToken: (
+  arg0: DiscordToken,
+) => Promise<DiscordAuth> = (token: DiscordToken) => {
   console.log('Creating custom token for discord access token', token);
   return fetchDiscordUserObject(token).then((discordUser) => {
-    return admin.auth().createCustomToken(discordUser.id);
+    return admin
+      .auth()
+      .createCustomToken(discordUser.id)
+      .then((customToken) => {
+        return {
+          authToken: customToken,
+          user: discordUser,
+        };
+      });
   });
 };
 
@@ -212,6 +220,20 @@ export const saveUp = (record: up.UpRecord) => {
       console.error('Unable to save up record', record);
       return 'error';
     });
+};
+
+export const saveDiscordUserDetails = (
+  discordToken: DiscordToken,
+  discordAuth: DiscordAuth,
+) => {
+  const savedRecord = Object.assign({}, discordAuth.user, discordToken);
+  return admin
+    .firestore()
+    .collection('custom-auth')
+    .doc('discord')
+    .collection('users')
+    .doc(discordAuth.user.id)
+    .set(savedRecord);
 };
 
 export const saveInviteRecordForUser = (

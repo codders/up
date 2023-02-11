@@ -109,8 +109,10 @@ export default {
     let redirectPromise
     if ("code" in this.$route.query) {
       redirectPromise = this.$store.dispatch('discordLoginToken', this.$route.query.code)
-        .then((result) => {
-          return this.$store.dispatch('signInWithCustomToken', result)
+        .then((discordAuth) => {
+          return this.$store.dispatch('signInWithCustomToken', discordAuth)
+        }).then(() => {
+          return this.$router.replace('/')
         })
     } else {
       redirectPromise = this.$fire.auth

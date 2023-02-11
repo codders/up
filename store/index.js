@@ -147,15 +147,17 @@ export const actions = {
     })
       .then((postResponse) => {
         console.log("Got token response:", postResponse)
-        return postResponse.data.customAuthToken
+        return postResponse.data
       })
       .catch((error) => {
         console.log('Unable to exchange discord token', error) // eslint-disable-line no-console
       })
   },
 
-  signInWithCustomToken({ dispatch }, jwtToken) {
-    console.log("Signing in with temp jwt token". jwtToken) // eslint-disable-line no-console
+  signInWithCustomToken({ dispatch }, discordAuth) {
+    console.log("Signing in with temp jwt token", discordAuth) // eslint-disable-line no-console
+    const jwtToken = discordAuth.authToken
+    const userProfile = discordAuth.user
     return this.$fire.auth
       .signInWithCustomToken(jwtToken)
       .then(function (result) {
@@ -165,7 +167,7 @@ export const actions = {
           .then(function (idToken) {
             return dispatch('userChanged', { user: result.user, idToken }).then(
               () => {
-                dispatch('updateProfile', { name: payload.name })
+                dispatch('updateProfile', { name: (userProfile.display_name || userProfile.username) })
               }
             )
           })
@@ -460,7 +462,7 @@ export const actions = {
           profileUpdate.name = state.user.displayName
           changed = true
         }
-        if (response.data.email == null) {
+        if (response.data.email == null && state.user.displayName !== null) {
           profileUpdate.email = state.user.email
           changed = true
         }
@@ -481,6 +483,7 @@ export const actions = {
   },
 
   updateProfile({ state, commit }, profileUpdate) {
+    console.log("Saving profile update", profileUpdate)
     return axios({
       method: 'post',
       url: API_BASE_URL + '/profile',

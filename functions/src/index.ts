@@ -25,6 +25,7 @@ import {
   saveInviteRecordForUser,
   saveSubscription,
   createCustomAuthToken,
+  saveDiscordUserDetails,
 } from './firebase-wrapper';
 import { findMatches, getUpRecordsForRequest } from './up-logic';
 import {
@@ -449,8 +450,10 @@ app.post(
     }
     fetchDiscordAccessToken(code.toString(), request.headers.origin + '/')
       .then((discordToken) => {
-        return createCustomAuthToken(discordToken).then((authToken) => {
-          response.status(201).send({ customAuthToken: authToken });
+        return createCustomAuthToken(discordToken).then((discordAuth) => {
+          return saveDiscordUserDetails(discordToken, discordAuth).then(() => {
+            response.status(201).send(discordAuth);
+          });
         });
       })
       .catch((err) => {

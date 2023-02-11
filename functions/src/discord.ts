@@ -25,6 +25,12 @@ export interface DiscordUser {
   accent_color: number;
   premium_type: number;
   public_flags: number;
+  display_name: string;
+}
+
+export interface DiscordAuth {
+  authToken: string;
+  user: DiscordUser;
 }
 
 export const generateDiscordAuthUrl = (referer: string): string => {

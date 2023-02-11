@@ -39,7 +39,7 @@
 <script>
 export default {
   data() {
-    return { name: this.$store.state.profile.name }
+    return { name: this.$store.state.profile.name || "" }
   },
   async fetch({ store }) {
     await store.dispatch('loadProfile')
