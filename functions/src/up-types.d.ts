@@ -47,7 +47,7 @@ export interface DirectoryEntry {
 }
 
 export interface DirectoryEntryWithPhoto extends DirectoryEntry {
-  photoURL?: string
+  photoURL?: string;
 }
 
 export interface InterestRegister {
@@ -63,7 +63,7 @@ export interface UserRecord {
 
 export interface ProfileDetails {
   name: string;
-  photoURL: string;
+  photoURL?: string;
 }
 
 export interface FriendRecord {

@@ -46,3 +46,23 @@ export const getUpRecordsForRequest = function (
 export const findMatches = function (whatsUp: up.UpRecordWithName[]) {
   return whatsUp;
 };
+
+export const profileDetailsToObject = (
+  profile: up.ProfileDetails,
+): Record<string, string> => {
+  const result: Record<string, string> = {};
+  result.name = profile.name;
+  if (profile.photoURL !== undefined) {
+    result.photoURL = profile.photoURL;
+  }
+  return result;
+};
+
+export const objectToProfileDetails = (
+  obj: Record<string, string>,
+): up.ProfileDetails => {
+  return {
+    name: obj.name,
+    photoURL: obj.photoURL,
+  };
+};

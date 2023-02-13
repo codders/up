@@ -27,7 +27,11 @@ import {
   createCustomAuthToken,
   saveDiscordUserDetails,
 } from './firebase-wrapper';
-import { findMatches, getUpRecordsForRequest } from './up-logic';
+import {
+  findMatches,
+  getUpRecordsForRequest,
+  objectToProfileDetails,
+} from './up-logic';
 import {
   sendShowUpNotification,
   sendUpMatchNotification,
@@ -133,7 +137,7 @@ app.post(
   '/profile',
   (request: expressTypes.Request, response: expressTypes.Response) => {
     console.log('Updating profile for user ' + request.user.uid);
-    updateProfile(request.user.uid, Object.assign({}, request.body))
+    updateProfile(request.user.uid, objectToProfileDetails(request.body))
       .then((profile) => {
         response.status(201).send(profile);
       })
