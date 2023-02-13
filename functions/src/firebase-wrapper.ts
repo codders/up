@@ -815,7 +815,7 @@ export const loadDirectory = (
         return fetchDiscordUserList().then((guildMembers) => {
           return Promise.all(
             guildMembers
-              .filter((member) => !member.user.bot)
+              .filter((member) => !member.user.bot && member.user.id !== uid)
               .map((member) => createOrLoadFriendRecordForMember(member)),
           );
         });
