@@ -28,7 +28,7 @@
     "@types/mustache": "^4.2.2",
     "@types/node": "^18.11.18",
     "@types/web-push": "^3.3.2",
-    "aws-sdk": "^2.1306.0",
+    "aws-sdk": "^2.1354.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "escape-html": "^1.0.3",
