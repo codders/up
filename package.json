@@ -20,7 +20,7 @@
     "@nuxtjs/proxy": "^2.1.0",
     "@nuxtjs/pwa": "^3.3.5",
     "core-js": "^3.25.3",
-    "nuxt": "^2.15.8",
+    "nuxt": "^3.4.3",
     "nuxt-log": "^0.1.0",
     "vue": "^2.7.10",
     "vue-server-renderer": "^2.7.10",
